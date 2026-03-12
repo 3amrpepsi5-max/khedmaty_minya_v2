@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<title>المفضلة — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── HEADER ── */
+.fav-header{position:sticky;top:0;z-index:100;background:var(--green);padding:12px 16px;box-shadow:0 2px 16px rgba(27,67,50,.3)}
+.fav-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fav-back{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t);flex-shrink:0}
+.fav-back:active{transform:scale(.9)}
+.fav-title{font-size:16px;font-weight:900;color:white;flex:1}
+.fav-count-badge{background:rgba(255,255,255,.2);color:white;font-size:12px;font-weight:800;padding:3px 10px;border-radius:50px}
+
+/* ── TABS ── */
+.fav-tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border)}
+.fav-tab{flex:1;padding:11px 8px;font-size:13px;font-weight:700;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t)}
+.fav-tab.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* ── SORT ROW ── */
+.sort-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface)}
+.sort-label{font-size:12px;color:var(--text-muted);font-weight:600}
+.sort-select{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--text-main);font-family:var(--font);cursor:pointer;outline:none}
+
+/* ── FAV CARD (list mode) ── */
+.fav-list{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.fav-card{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;transition:var(--t)}
+.fav-card:active{transform:scale(.98)}
+.fc-top{display:flex;align-items:stretch}
+.fc-img{width:86px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;position:relative}
+.fc-open-dot{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;border:2px solid white}
+.fc-open-dot.open{background:#27AE60;animation:blink 1.5s infinite}
+.fc-open-dot.closed{background:#E74C3C}
+.fc-body{flex:1;padding:11px 12px 8px}
+.fc-name{font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.fc-cat{font-size:10px;background:var(--green-pale);color:var(--green);padding:2px 7px;border-radius:4px;font-weight:700}
+.fc-area{font-size:10.5px;color:var(--text-muted)}
+.fc-rating{display:flex;align-items:center;gap:3px;font-size:11.5px;font-weight:800}
+.fc-rating .st{color:var(--gold)}
+.fc-rating .rc{color:var(--text-muted);font-weight:400;font-size:10px}
+.fc-note{font-size:11px;color:var(--text-muted);font-style:italic;margin-top:3px;display:flex;align-items:center;gap:4px}
+.fc-note.has-note{color:var(--green)}
+.fc-actions{display:flex;gap:6px;padding:0 12px 10px}
+.fc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px;border-radius:9px;font-size:12px;font-weight:700;transition:var(--t);border:none;cursor:pointer;font-family:var(--font);text-decoration:none}
+.fc-btn.call{background:var(--green);color:white}
+.fc-btn.wa  {background:#25D366;color:white}
+.fc-btn.del {background:var(--surface2);color:var(--gold-dark);border:1px solid var(--border)}
+.fc-btn:active{opacity:.8}
+
+/* ── GRID MODE ── */
+.fav-list.grid-mode{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fav-list.grid-mode .fav-card{display:flex;flex-direction:column}
+.fav-list.grid-mode .fc-top{flex-direction:column}
+.fav-list.grid-mode .fc-img{width:100%;height:96px}
+.fav-list.grid-mode .fc-actions{padding:0 8px 8px}
+.fav-list.grid-mode .fc-btn{font-size:11px;padding:6px}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle{display:flex;gap:3px;background:var(--surface2);border-radius:8px;padding:3px}
+.vt-btn{width:32px;height:26px;border-radius:6px;display:grid;place-items:center;font-size:14px;cursor:pointer;background:none;border:none;transition:var(--t);color:var(--text-muted);font-family:var(--font)}
+.vt-btn.active{background:var(--surface);color:var(--green);box-shadow:var(--shadow-sm)}
+
+/* ── NOTE SHEET ── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;opacity:0;pointer-events:none;transition:.3s}
+.sheet-overlay.show{opacity:1;pointer-events:all}
+.note-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;z-index:501;transform:translateY(100%);transition:.35s cubic-bezier(.4,0,.2,1);padding-bottom:env(safe-area-inset-bottom,0)}
+.note-sheet.show{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.note-body{padding:18px}
+.note-title{font-size:15px;font-weight:900;margin-bottom:12px}
+.note-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;font-size:14px;font-family:var(--font);color:var(--text-main);outline:none;resize:none;height:100px;background:var(--surface2);transition:var(--t)}
+.note-input:focus{border-color:var(--green);background:var(--surface)}
+.note-btns{display:flex;gap:10px;margin-top:12px}
+.note-save{flex:2;padding:12px;background:var(--green);color:white;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:800;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.note-save:active{opacity:.85}
+.note-cancel{flex:1;padding:12px;background:var(--surface2);color:var(--text-muted);border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)}
+
+/* ── EMPTY ── */
+.fav-empty{text-align:center;padding:60px 20px}
+.fav-empty-icon{font-size:56px;margin-bottom:12px}
+.fav-empty-title{font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:6px}
+.fav-empty-sub{font-size:13px;color:var(--text-muted);line-height:1.55;margin-bottom:20px}
+.fav-empty-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:11px 24px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;border:none;font-family:var(--font)}
+</style>
+</head>
+<body>
+
+<header class="fav-header">
+  <div class="fav-hdr">
+    <button class="fav-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <span class="fav-title">❤️ المفضلة</span>
+    <span class="fav-count-badge" id="favCountBadge">0</span>
+  </div>
+  <!-- Search -->
+  <div class="sbox" role="search">
+    <span class="si" aria-hidden="true">🔍</span>
+    <input type="search" id="favSearch" placeholder="ابحث في مفضلتك..." autocomplete="off" aria-label="بحث في المفضلة">
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="fav-tabs" role="tablist">
+  <button class="fav-tab active" data-cat="all"         role="tab" aria-selected="true">الكل</button>
+  <button class="fav-tab" data-cat="maintenance"        role="tab" aria-selected="false">🔧 صيانة</button>
+  <button class="fav-tab" data-cat="food"               role="tab" aria-selected="false">🍽️ مطاعم</button>
+  <button class="fav-tab" data-cat="health"             role="tab" aria-selected="false">🏥 صحة</button>
+  <button class="fav-tab" data-cat="other"              role="tab" aria-selected="false">🔹 أخرى</button>
+</div>
+
+<!-- SORT ROW -->
+<div class="sort-row">
+  <span class="sort-label" id="countLabel">0 مزود في المفضلة</span>
+  <div style="display:flex;align-items:center;gap:8px">
+    <select class="sort-select" id="sortSelect" onchange="renderFavs()" aria-label="ترتيب">
+      <option value="added">الأحدث إضافةً</option>
+      <option value="rating">الأعلى تقييماً</option>
+      <option value="name">أبجدياً</option>
+    </select>
+    <div class="view-toggle">
+      <button class="vt-btn active" id="listBtn" onclick="setView('list')" aria-label="عرض قائمة">☰</button>
+      <button class="vt-btn"        id="gridBtn" onclick="setView('grid')" aria-label="عرض شبكة">⊞</button>
+    </div>
+  </div>
+</div>
+
+<main class="page-body" style="padding-top:0;padding-bottom:90px">
+  <div class="fav-list" id="favList" role="list"></div>
+</main>
+
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<!-- NOTE SHEET -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+<div class="note-sheet" id="noteSheet" role="dialog" aria-modal="true" aria-label="إضافة ملاحظة">
+  <div class="sheet-handle"></div>
+  <div class="note-body">
+    <p class="note-title" id="noteTitle">📝 ملاحظة على المزود</p>
+    <textarea class="note-input" id="noteInput" placeholder="مثال: السعر 80 ج، يجي السبت فقط..."></textarea>
+    <div class="note-btns">
+      <button class="note-save" onclick="saveNote()" id="noteSaveBtn">حفظ الملاحظة</button>
+      <button class="note-cancel" onclick="closeSheet()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+/* ── ALL VENDORS DB ── */
+const ALL_VENDORS = {
+  'v001':{id:'v001',name:'أستاذ محمد الكهربائي',cat:'maintenance',icon:'⚡',rating:4.9,reviews:312,open:true, phone:'01012345678',area:'المنيا'},
+  'v002':{id:'v002',name:'مطعم البيت الكبير',   cat:'food',       icon:'🍽️',rating:4.7,reviews:189,open:true, phone:'01098765432',area:'ملوي'},
+  'v003':{id:'v003',name:'دكتور أحمد — طب عام', cat:'health',     icon:'🏥',rating:4.8,reviews:245,open:false,phone:'01156789012',area:'المنيا'},
+  'v004':{id:'v004',name:'سريع للتوصيل',         cat:'other',      icon:'🛵',rating:4.6,reviews:98, open:true, phone:'01234567890',area:'المنيا'},
+  'v005':{id:'v005',name:'أستاذ عمر — فيزياء',  cat:'other',      icon:'📚',rating:4.9,reviews:421,open:true, phone:'01312345678',area:'مغاغة'},
+  'v007':{id:'v007',name:'مهندس سباكة معتمد',   cat:'maintenance',icon:'🔧',rating:4.7,reviews:203,open:true, phone:'01712345678',area:'مطاي'},
+  'v010':{id:'v010',name:'تكييفات الراحة',       cat:'maintenance',icon:'❄️',rating:4.8,reviews:289,open:true, phone:'01322345678',area:'ملوي'},
+  'v017':{id:'v017',name:'دكتور ياسر — أطفال',  cat:'health',     icon:'👶',rating:4.9,reviews:521,open:true, phone:'01522345678',area:'المنيا'},
+};
+
+const FAV_KEY   = 'kh_favs';
+const NOTES_KEY = 'kh_fav_notes';
+const ADDED_KEY = 'kh_fav_added';
+
+let favIds  = JSON.parse(localStorage.getItem(FAV_KEY)   || '["v001","v002","v003","v010"]');
+let notes   = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+let addedAt = JSON.parse(localStorage.getItem(ADDED_KEY) || '{}');
+let activeTab = 'all';
+let activeView= 'list';
+let searchQ   = '';
+let editingId = null;
+
+/* ── RENDER ── */
+function getFavVendors() {
+  const sort  = document.getElementById('sortSelect')?.value || 'added';
+  let vendors = favIds.map(id => ALL_VENDORS[id]).filter(Boolean).filter(v => {
+    if (activeTab !== 'all' && v.cat !== activeTab) return false;
+    if (searchQ && !v.name.includes(searchQ) && !v.area.includes(searchQ)) return false;
+    return true;
+  });
+  if (sort === 'rating') vendors.sort((a,b) => b.rating - a.rating);
+  else if (sort === 'name') vendors.sort((a,b) => a.name.localeCompare(b.name, 'ar'));
+  else vendors.sort((a,b) => (addedAt[b.id]||0) - (addedAt[a.id]||0));
+  return vendors;
+}
+
+function renderFavs() {
+  const vendors = getFavVendors();
+  const list = document.getElementById('favList');
+  const total = favIds.length;
+
+  document.getElementById('favCountBadge').textContent = total;
+  document.getElementById('countLabel').textContent    = vendors.length + ' مزود في المفضلة';
+  list.className = 'fav-list' + (activeView === 'grid' ? ' grid-mode' : '');
+
+  if (!vendors.length) {
+    list.innerHTML = `
+      <div class="fav-empty" style="grid-column:1/-1">
+        <div class="fav-empty-icon">${favIds.length ? '🔍' : '❤️'}</div>
+        <p class="fav-empty-title">${favIds.length ? 'لا نتائج' : 'مفضلتك فارغة!'}</p>
+        <p class="fav-empty-sub">${favIds.length ? 'جرّب بحث مختلف أو قسم آخر' : 'اضغط ❤️ على أي مزود لإضافته للمفضلة'}</p>
+        <button class="fav-empty-btn" onclick="window.location.href='search.html'">🔍 استكشف المزودين</button>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = vendors.map(v => {
+    const note = notes[v.id] || '';
+    return `
+    <div class="fav-card" id="fcard-${v.id}" role="listitem" onclick="goTo('vendor.html?id=${v.id}')">
+      <div class="fc-top">
+        <div class="fc-img" aria-hidden="true">
+          ${v.icon}
+          <span class="fc-open-dot ${v.open?'open':'closed'}" title="${v.open?'مفتوح':'مغلق'}"></span>
+        </div>
+        <div class="fc-body">
+          <p class="fc-name">${v.name}</p>
+          <div class="fc-meta">
+            <span class="fc-cat">${catLabel(v.cat)}</span>
+            <span class="fc-area">📍 ${v.area}</span>
+          </div>
+          <div class="fc-rating"><span class="st">★</span>${v.rating}<span class="rc">(${v.reviews})</span></div>
+          ${note
+            ? `<p class="fc-note has-note" onclick="openNote(event,'${v.id}')">📝 ${note}</p>`
+            : `<p class="fc-note" onclick="openNote(event,'${v.id}')">➕ أضف ملاحظة</p>`}
+        </div>
+      </div>
+      <div class="fc-actions">
+        <a href="tel:${v.phone}" class="fc-btn call" onclick="event.stopPropagation()" aria-label="اتصال">📞</a>
+        <a href="https://wa.me/2${v.phone}" class="fc-btn wa" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="واتساب">💬</a>
+        <button class="fc-btn del" onclick="removeFav(event,'${v.id}')" aria-label="إزالة من المفضلة">🗑️ إزالة</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function catLabel(c) {
+  return {maintenance:'🔧 صيانة',food:'🍽️ مطعم',health:'🏥 صحة',other:'🔹 أخرى'}[c] || c;
+}
+
+/* ── REMOVE ── */
+function removeFav(e, id) {
+  e.stopPropagation();
+  const card = document.getElementById('fcard-' + id);
+  if (card) { card.style.transform='scale(0)'; card.style.opacity='0'; card.style.transition='.25s'; }
+  setTimeout(() => {
+    favIds = favIds.filter(x => x !== id);
+    localStorage.setItem(FAV_KEY, JSON.stringify(favIds));
+    renderFavs();
+    showToast('💔 تم الإزالة من المفضلة', 'err');
+  }, 260);
+}
+
+/* ── NOTES ── */
+function openNote(e, id) {
+  e.stopPropagation();
+  editingId = id;
+  const v = ALL_VENDORS[id];
+  document.getElementById('noteTitle').textContent = '📝 ملاحظة — ' + (v?.name || '');
+  document.getElementById('noteInput').value = notes[id] || '';
+  document.getElementById('sheetOverlay').classList.add('show');
+  document.getElementById('noteSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('noteInput').focus(), 400);
+}
+
+function saveNote() {
+  const val = document.getElementById('noteInput').value.trim();
+  if (editingId) {
+    if (val) notes[editingId] = val;
+    else delete notes[editingId];
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+    renderFavs();
+    showToast('✅ تم حفظ الملاحظة');
+  }
+  closeSheet();
+}
+
+function closeSheet() {
+  document.getElementById('sheetOverlay').classList.remove('show');
+  document.getElementById('noteSheet').classList.remove('show');
+  document.body.style.overflow = '';
+  editingId = null;
+}
+
+/* ── TABS ── */
+document.querySelectorAll('.fav-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.fav-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    this.classList.add('active'); this.setAttribute('aria-selected','true');
+    activeTab = this.dataset.cat;
+    renderFavs();
+  });
+});
+
+/* ── SEARCH ── */
+document.getElementById('favSearch').addEventListener('input', function () {
+  searchQ = this.value.trim();
+  renderFavs();
+});
+
+/* ── VIEW TOGGLE ── */
+function setView(v) {
+  activeView = v;
+  document.getElementById('listBtn').classList.toggle('active', v==='list');
+  document.getElementById('gridBtn').classList.toggle('active', v==='grid');
+  renderFavs();
+}
+
+function goTo(url) { window.location.href = url; }
+
+function showToast(msg, type='ok') {
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className='toast '+type; t.textContent=msg;
+  c.appendChild(t); setTimeout(()=>t.remove(),2800);
+}
+
+renderFavs();
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<title>سجّل نشاطك — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── HERO ── */
+.reg-hero{background:linear-gradient(140deg,var(--green-dark),var(--green-mid));padding:0;position:relative;overflow:hidden}
+.reg-hero-bg{position:absolute;inset:0;font-size:160px;display:flex;align-items:center;justify-content:center;opacity:.07;pointer-events:none;user-select:none}
+.reg-hero-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:relative;z-index:5}
+.reg-back{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.reg-back:active{transform:scale(.9)}
+.reg-hero-body{padding:8px 16px 24px;text-align:center;position:relative;z-index:5}
+.reg-hero-icon{font-size:44px;margin-bottom:10px}
+.reg-hero-title{font-size:20px;font-weight:900;color:white;margin-bottom:5px}
+.reg-hero-sub{font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.55}
+
+/* ── TRUST PILLS ── */
+.trust-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.trust-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:50px;padding:5px 12px;font-size:11px;color:white;font-weight:700;backdrop-filter:blur(4px)}
+
+/* ── PLANS ── */
+.plans-section{padding:16px}
+.plans-title{font-size:15px;font-weight:900;color:var(--text-main);margin-bottom:12px;text-align:center}
+.plans-grid{display:flex;flex-direction:column;gap:10px}
+.plan-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:var(--t);position:relative}
+.plan-card.selected{border-color:var(--green);background:var(--green-pale)}
+.plan-card:active{transform:scale(.98)}
+.plan-badge{position:absolute;top:-10px;right:14px;background:var(--gold);color:var(--green-dark);font-size:10px;font-weight:900;padding:3px 10px;border-radius:50px;box-shadow:0 2px 8px rgba(244,162,97,.4)}
+.plan-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.plan-name{font-size:15px;font-weight:900;color:var(--text-main)}
+.plan-price{font-size:20px;font-weight:900;color:var(--green-dark)}
+.plan-price span{font-size:11px;color:var(--text-muted);font-weight:600}
+.plan-desc{font-size:12px;color:var(--text-muted);margin-bottom:8px;line-height:1.45}
+.plan-features{display:flex;flex-direction:column;gap:4px}
+.plan-feat{font-size:11.5px;color:var(--text-main);display:flex;align-items:center;gap:6px;font-weight:600}
+.plan-feat .f-ico{font-size:13px;flex-shrink:0}
+.plan-sel{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:var(--t);display:grid;place-items:center;font-size:11px}
+.plan-card.selected .plan-sel{background:var(--green);border-color:var(--green);color:white}
+
+/* ── PROGRESS STEPS ── */
+.prog-wrap{padding:14px 16px 0;background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:0;z-index:90}
+.prog-steps{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.prog-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+.prog-step:not(:last-child)::after{content:'';position:absolute;top:13px;left:calc(-50% + 14px);right:calc(50% + 14px);height:2px;background:var(--border);z-index:0}
+.prog-step.done:not(:last-child)::after,.prog-step.active:not(:last-child)::after{background:var(--green)}
+.prog-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;z-index:1;transition:var(--t)}
+.prog-step.todo   .prog-num{background:var(--surface2);color:var(--text-muted);border:2px solid var(--border)}
+.prog-step.active .prog-num{background:var(--green);color:white;border:2px solid var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.18)}
+.prog-step.done   .prog-num{background:var(--green-dark);color:white;border:2px solid var(--green-dark)}
+.prog-lbl{font-size:9.5px;font-weight:700;color:var(--text-muted);text-align:center}
+.prog-step.active .prog-lbl,.prog-step.done .prog-lbl{color:var(--green)}
+.prog-bar{height:4px;background:var(--surface2);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* ── FORM PANELS ── */
+.form-panel{display:none;padding:16px}
+.form-panel.active{display:block}
+.fp-title{font-size:16px;font-weight:900;color:var(--text-main);margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.fp-sub{font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.45}
+.field{margin-bottom:14px}
+.field-label{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.field-label .req{color:#E74C3C;font-size:14px}
+.field-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;font-size:14px;font-family:var(--font);color:var(--text-main);outline:none;transition:var(--t)}
+.field-input:focus{border-color:var(--green);background:var(--surface);box-shadow:0 0 0 3px rgba(45,106,79,.08)}
+.field-input::placeholder{color:var(--text-muted)}
+textarea.field-input{resize:none;height:90px;line-height:1.5}
+select.field-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M6 8L0 0h12z' fill='%236B7C6E'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 12px center;padding-left:32px}
+.field-input.err{border-color:#E74C3C;background:#FFF5F5}
+.field-hint{font-size:10.5px;color:var(--text-muted);margin-top:4px}
+.field-err{font-size:10.5px;color:#E74C3C;margin-top:4px;display:none}
+.field-input.err ~ .field-err{display:block}
+
+/* ── CATEGORY SELECTOR ── */
+.cat-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.cat-pick-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;background:var(--surface2);border:2px solid transparent;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font);transition:var(--t)}
+.cat-pick-btn:active{transform:scale(.93)}
+.cat-pick-btn.sel{background:var(--green-pale);border-color:var(--green)}
+.cat-pick-ico{font-size:24px}
+.cat-pick-lbl{font-size:10px;font-weight:800;color:var(--text-main)}
+
+/* ── HOURS GRID ── */
+.hours-builder{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.hour-row{display:flex;align-items:center;gap:8px}
+.hour-day-lbl{width:54px;font-size:12px;font-weight:700;color:var(--text-main);flex-shrink:0}
+.hour-toggle{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;cursor:pointer;border:none;font-family:var(--font);flex-shrink:0;transition:var(--t)}
+.hour-toggle.on{background:var(--green)}
+.hour-toggle::after{content:'';position:absolute;width:16px;height:16px;background:white;border-radius:50%;top:2px;right:2px;transition:var(--t);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.hour-toggle.on::after{right:18px}
+.hour-inputs{display:flex;align-items:center;gap:5px;flex:1;opacity:.4;pointer-events:none;transition:var(--t)}
+.hour-inputs.active{opacity:1;pointer-events:all}
+.hour-time{flex:1;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12px;font-family:var(--font);color:var(--text-main);outline:none;text-align:center}
+.hour-sep{font-size:11px;color:var(--text-muted)}
+
+/* ── PHOTO UPLOAD ── */
+.photo-upload-area{border:2px dashed var(--border);border-radius:var(--radius-md);padding:24px;text-align:center;cursor:pointer;transition:var(--t);background:var(--surface2);margin-bottom:14px}
+.photo-upload-area:hover{border-color:var(--green);background:var(--green-pale)}
+.photo-upload-area.has-file{border-color:var(--green);border-style:solid;background:var(--green-pale)}
+.pu-icon{font-size:32px;margin-bottom:8px}
+.pu-title{font-size:13px;font-weight:800;color:var(--text-main);margin-bottom:3px}
+.pu-sub{font-size:11px;color:var(--text-muted)}
+.photo-preview-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.photo-prev-item{width:70px;height:70px;border-radius:10px;background:var(--green-pale);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;cursor:pointer}
+.photo-prev-del{position:absolute;top:-6px;left:-6px;width:18px;height:18px;background:var(--gold-dark);border-radius:50%;display:grid;place-items:center;font-size:10px;color:white;border:none;cursor:pointer;font-family:var(--font)}
+
+/* ── NAV BUTTONS ── */
+.form-nav{display:flex;gap:10px;padding:14px 16px;border-top:1.5px solid var(--border);position:sticky;bottom:70px;background:var(--surface);z-index:80}
+.btn-prev{flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:13px;font-weight:800;color:var(--text-muted);cursor:pointer;font-family:var(--font);transition:var(--t)}
+.btn-prev:active{background:var(--border)}
+.btn-prev:disabled{opacity:.4;pointer-events:none}
+.btn-next{flex:2;padding:12px;background:var(--green);color:white;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:900;cursor:pointer;font-family:var(--font);transition:var(--t);display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-next:active{opacity:.88}
+.btn-next:disabled{opacity:.5;pointer-events:none}
+
+/* ── SUCCESS ── */
+.success-wrap{display:none;text-align:center;padding:40px 20px 120px}
+.succ-icon{font-size:64px;margin-bottom:14px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.succ-title{font-size:22px;font-weight:900;color:var(--green-dark);margin-bottom:8px}
+.succ-sub{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.succ-steps{background:var(--green-pale);border:1.5px solid var(--green);border-radius:var(--radius-md);padding:14px;margin-bottom:20px;text-align:right}
+.succ-step{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--border)}
+.succ-step:last-child{border-bottom:none}
+.succ-step-num{width:24px;height:24px;background:var(--green);color:white;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;flex-shrink:0}
+.succ-step-txt{font-size:12.5px;font-weight:700;color:var(--text-main)}
+.succ-btn-home{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:800;cursor:pointer;font-family:var(--font);margin-bottom:10px;transition:var(--t)}
+.succ-btn-home:active{opacity:.88}
+</style>
+</head>
+<body>
+
+<!-- ════════ HERO ════════ -->
+<div class="reg-hero" id="heroWrap">
+  <div class="reg-hero-bg" aria-hidden="true">🏪</div>
+  <div class="reg-hero-top">
+    <button class="reg-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <span style="font-size:13px;color:rgba(255,255,255,.8);font-weight:700">تسجيل مزود خدمة</span>
+    <div style="width:38px"></div>
+  </div>
+  <div class="reg-hero-body">
+    <div class="reg-hero-icon">🏪</div>
+    <h1 class="reg-hero-title">سجّل نشاطك التجاري</h1>
+    <p class="reg-hero-sub">اوصل لآلاف العملاء في محافظة المنيا<br>ابدأ من 50 جنيه فقط في الشهر</p>
+    <div class="trust-row">
+      <span class="trust-pill">✅ مجاناً لأول شهر</span>
+      <span class="trust-pill">⚡ ظهور فوري</span>
+      <span class="trust-pill">📞 دعم مستمر</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PLANS (اختيار الباقة) ════════ -->
+<div id="plansSection">
+  <div class="plans-section">
+    <p class="plans-title">اختر الباقة المناسبة</p>
+    <div class="plans-grid">
+
+      <div class="plan-card" data-plan="free" onclick="selectPlan(this)">
+        <div class="plan-top">
+          <div>
+            <p class="plan-name">⚡ مجاني</p>
+            <p class="plan-desc">ابدأ بدون دفع — مناسب للبداية</p>
+          </div>
+          <div>
+            <p class="plan-price">0 ج<span>/شهر</span></p>
+            <div class="plan-sel" id="sel-free"></div>
+          </div>
+        </div>
+        <div class="plan-features">
+          <span class="plan-feat"><span class="f-ico">✅</span>ظهور في نتائج البحث</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>رقم الهاتف والواتساب</span>
+          <span class="plan-feat"><span class="f-ico">❌</span>لا يوجد أولوية في الترتيب</span>
+          <span class="plan-feat"><span class="f-ico">❌</span>بدون شارة "موثّق"</span>
+        </div>
+      </div>
+
+      <div class="plan-card selected" data-plan="basic" onclick="selectPlan(this)">
+        <div class="plan-badge">الأكثر طلباً</div>
+        <div class="plan-top">
+          <div>
+            <p class="plan-name">🌟 أساسي</p>
+            <p class="plan-desc">للأعمال النامية — شهر مجاني</p>
+          </div>
+          <div>
+            <p class="plan-price">50 ج<span>/شهر</span></p>
+            <div class="plan-sel on" id="sel-basic" style="background:var(--green);border-color:var(--green);color:white;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px">✓</div>
+          </div>
+        </div>
+        <div class="plan-features">
+          <span class="plan-feat"><span class="f-ico">✅</span>كل مميزات المجاني</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>شارة "موثّق" ✅</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>أولوية في نتائج البحث</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>إحصائيات الزوار</span>
+        </div>
+      </div>
+
+      <div class="plan-card" data-plan="pro" onclick="selectPlan(this)">
+        <div class="plan-top">
+          <div>
+            <p class="plan-name">🚀 برو</p>
+            <p class="plan-desc">للمحترفين — أعلى ظهور ممكن</p>
+          </div>
+          <div>
+            <p class="plan-price">120 ج<span>/شهر</span></p>
+            <div class="plan-sel" id="sel-pro"></div>
+          </div>
+        </div>
+        <div class="plan-features">
+          <span class="plan-feat"><span class="f-ico">✅</span>كل مميزات الأساسي</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>بانر في الصفحة الرئيسية</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>دبوس مميز على الخريطة</span>
+          <span class="plan-feat"><span class="f-ico">✅</span>إشعارات للعملاء القريبين</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="padding:0 16px 16px">
+    <button class="btn-next" onclick="startForm()" style="width:100%;justify-content:center" aria-label="ابدأ التسجيل">
+      ابدأ التسجيل الآن ←
+    </button>
+  </div>
+</div>
+
+<!-- ════════ MULTI-STEP FORM ════════ -->
+<div id="formSection" style="display:none">
+
+  <!-- Progress -->
+  <div class="prog-wrap">
+    <div class="prog-steps" id="progSteps" role="list" aria-label="خطوات التسجيل">
+      <div class="prog-step active" role="listitem"><div class="prog-num">1</div><div class="prog-lbl">البيانات</div></div>
+      <div class="prog-step todo"   role="listitem"><div class="prog-num">2</div><div class="prog-lbl">الخدمة</div></div>
+      <div class="prog-step todo"   role="listitem"><div class="prog-num">3</div><div class="prog-lbl">المواعيد</div></div>
+      <div class="prog-step todo"   role="listitem"><div class="prog-num">4</div><div class="prog-lbl">الصور</div></div>
+      <div class="prog-step todo"   role="listitem"><div class="prog-num">5</div><div class="prog-lbl">تأكيد</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:20%"></div></div>
+  </div>
+
+  <!-- STEP 1: بيانات أساسية -->
+  <div class="form-panel active" id="panel1">
+    <p class="fp-title">👤 بياناتك الشخصية</p>
+    <p class="fp-sub">هذه البيانات ستظهر للعملاء على ملفك</p>
+    <div class="field">
+      <label class="field-label" for="f-name">اسم النشاط <span class="req">*</span></label>
+      <input type="text" class="field-input" id="f-name" placeholder="مثال: أستاذ محمد الكهربائي" autocomplete="organization">
+      <span class="field-err">هذا الحقل مطلوب</span>
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-phone">رقم الهاتف <span class="req">*</span></label>
+      <input type="tel" class="field-input" id="f-phone" placeholder="01XXXXXXXXX" inputmode="tel" autocomplete="tel">
+      <span class="field-hint">سيظهر للعملاء للتواصل المباشر</span>
+      <span class="field-err">أدخل رقم صحيح (11 رقم)</span>
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-phone2">رقم واتساب (اختياري)</label>
+      <input type="tel" class="field-input" id="f-phone2" placeholder="01XXXXXXXXX (إذا مختلف)" inputmode="tel">
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-area">المنطقة <span class="req">*</span></label>
+      <select class="field-input" id="f-area">
+        <option value="">اختر منطقتك...</option>
+        <option>المنيا</option><option>ملوي</option><option>مغاغة</option>
+        <option>بني مزار</option><option>مطاي</option><option>سمالوط</option>
+        <option>أبو قرقاص</option><option>دير مواس</option><option>العدوة</option>
+        <option>مركز المنيا</option><option>قسم أول</option><option>قسم ثاني</option>
+        <option>المنيا الجديدة</option>
+      </select>
+      <span class="field-err">اختر منطقتك</span>
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-addr">العنوان التفصيلي <span class="req">*</span></label>
+      <input type="text" class="field-input" id="f-addr" placeholder="مثال: شارع جمال عبد الناصر، أمام مسجد النور" autocomplete="street-address">
+      <span class="field-err">أدخل عنوان واضح</span>
+    </div>
+  </div>
+
+  <!-- STEP 2: نوع الخدمة -->
+  <div class="form-panel" id="panel2">
+    <p class="fp-title">🔧 نوع نشاطك</p>
+    <p class="fp-sub">اختر القسم الأنسب — يمكنك اختيار قسم واحد فقط</p>
+    <div class="cat-picker" id="catPicker" role="group" aria-label="اختر نوع النشاط">
+      <button class="cat-pick-btn" data-cat="maintenance" onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🔧</span><span class="cat-pick-lbl">الصيانة</span></button>
+      <button class="cat-pick-btn" data-cat="food"        onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🍽️</span><span class="cat-pick-lbl">مطاعم</span></button>
+      <button class="cat-pick-btn" data-cat="health"      onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🏥</span><span class="cat-pick-lbl">الصحة</span></button>
+      <button class="cat-pick-btn" data-cat="education"   onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">📚</span><span class="cat-pick-lbl">التعليم</span></button>
+      <button class="cat-pick-btn" data-cat="delivery"    onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🛵</span><span class="cat-pick-lbl">التوصيل</span></button>
+      <button class="cat-pick-btn" data-cat="real-estate" onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🏠</span><span class="cat-pick-lbl">عقارات</span></button>
+      <button class="cat-pick-btn" data-cat="agriculture" onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🌾</span><span class="cat-pick-lbl">الزراعة</span></button>
+      <button class="cat-pick-btn" data-cat="market"      onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🛒</span><span class="cat-pick-lbl">السوق</span></button>
+      <button class="cat-pick-btn" data-cat="other"       onclick="pickCat(this)" aria-pressed="false"><span class="cat-pick-ico">🛠️</span><span class="cat-pick-lbl">أخرى</span></button>
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-desc">وصف نشاطك <span class="req">*</span></label>
+      <textarea class="field-input" id="f-desc" placeholder="اشرح ما تقدمه من خدمات... مثال: فني كهرباء معتمد بخبرة 15 سنة في كل أعمال الكهرباء المنزلية والتجارية"></textarea>
+      <p class="field-hint" id="descCount">0 / 300 حرف</p>
+      <span class="field-err">الوصف مطلوب (10 أحرف على الأقل)</span>
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-price">نطاق السعر</label>
+      <select class="field-input" id="f-price">
+        <option value="">اختر نطاق السعر...</option>
+        <option>أقل من 50 جنيه</option>
+        <option>50 – 150 جنيه</option>
+        <option>150 – 500 جنيه</option>
+        <option>أكثر من 500 جنيه</option>
+        <option>يتوقف على الطلب</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for="f-exp">سنوات الخبرة</label>
+      <select class="field-input" id="f-exp">
+        <option value="">اختر...</option>
+        <option>أقل من سنة</option><option>1 – 3 سنوات</option>
+        <option>3 – 7 سنوات</option><option>7 – 15 سنة</option><option>أكثر من 15 سنة</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STEP 3: مواعيد العمل -->
+  <div class="form-panel" id="panel3">
+    <p class="fp-title">🕐 مواعيد العمل</p>
+    <p class="fp-sub">حدد أيام ومواعيد عملك — العملاء سيرون حالتك "مفتوح" أو "مغلق" تلقائياً</p>
+    <div class="hours-builder" id="hoursBuilder" role="group" aria-label="مواعيد العمل"></div>
+    <div class="field" style="margin-bottom:0">
+      <label class="field-label">
+        <input type="checkbox" id="f-24h" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green)" onchange="toggle24h(this)">
+        &nbsp; متاح 24 ساعة / 7 أيام
+      </label>
+    </div>
+  </div>
+
+  <!-- STEP 4: الصور -->
+  <div class="form-panel" id="panel4">
+    <p class="fp-title">📸 صور نشاطك</p>
+    <p class="fp-sub">الصور تزيد ثقة العملاء وتضاعف الطلبات — أضف على الأقل صورة واحدة</p>
+    <div class="photo-upload-area" id="photoArea" onclick="document.getElementById('photoInput').click()" role="button" tabindex="0" aria-label="رفع صورة">
+      <div class="pu-icon" id="puIcon">📷</div>
+      <p class="pu-title" id="puTitle">اضغط لرفع صورة</p>
+      <p class="pu-sub">JPG, PNG — حتى 5 ميجا للصورة</p>
+      <input type="file" id="photoInput" accept="image/*" multiple hidden onchange="handlePhotos(this)">
+    </div>
+    <div class="photo-preview-row" id="photoPreview"></div>
+    <div class="field">
+      <label class="field-label" for="f-logo">صورة شعار (Logo) — اختياري</label>
+      <div class="photo-upload-area" style="padding:14px" onclick="showToast('📸 رفع الشعار قريباً!')" role="button" tabindex="0">
+        <div class="pu-icon" style="font-size:22px;margin-bottom:4px">🎨</div>
+        <p class="pu-title" style="font-size:12px">أضف شعار نشاطك</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: مراجعة وتأكيد -->
+  <div class="form-panel" id="panel5">
+    <p class="fp-title">✅ مراجعة البيانات</p>
+    <p class="fp-sub">راجع بياناتك قبل الإرسال — يمكنك العودة لتعديل أي خطوة</p>
+    <div id="reviewCard" style="background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);overflow:hidden;margin-bottom:14px"></div>
+    <div class="field">
+      <label class="field-label">
+        <input type="checkbox" id="f-terms" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green)">
+        &nbsp; أوافق على <a href="terms.html" style="color:var(--green);font-weight:700">شروط الاستخدام</a> و<a href="privacy.html" style="color:var(--green);font-weight:700">سياسة الخصوصية</a>
+      </label>
+    </div>
+    <div class="field">
+      <label class="field-label">
+        <input type="checkbox" id="f-accurate" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green)">
+        &nbsp; أقر بأن البيانات المدخلة صحيحة ودقيقة
+      </label>
+    </div>
+  </div>
+
+  <!-- Nav Buttons -->
+  <div class="form-nav">
+    <button class="btn-prev" id="btnPrev" onclick="prevStep()" disabled>← رجوع</button>
+    <button class="btn-next" id="btnNext" onclick="nextStep()">التالي ←</button>
+  </div>
+
+</div><!-- /formSection -->
+
+<!-- ════════ SUCCESS ════════ -->
+<div class="success-wrap" id="successWrap">
+  <div class="succ-icon">🎉</div>
+  <h2 class="succ-title">تم تقديم طلبك!</h2>
+  <p class="succ-sub">شكراً لانضمامك لخدماتي المنيا<br>سيتم مراجعة بياناتك وتفعيل حسابك قريباً</p>
+  <div class="succ-steps">
+    <div class="succ-step"><span class="succ-step-num">1</span><span class="succ-step-txt">مراجعة البيانات (24 ساعة)</span></div>
+    <div class="succ-step"><span class="succ-step-num">2</span><span class="succ-step-txt">تواصل فريقنا معك للتحقق</span></div>
+    <div class="succ-step"><span class="succ-step-num">3</span><span class="succ-step-txt">ظهور ملفك للعملاء فوراً</span></div>
+  </div>
+  <button class="succ-btn-home" onclick="window.location.href='index.html'">🏠 العودة للرئيسية</button>
+</div>
+
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+/* ── PLAN SELECTION ── */
+let selectedPlan = 'basic';
+function selectPlan(card) {
+  document.querySelectorAll('.plan-card').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.plan-sel').className = 'plan-sel';
+    c.querySelector('.plan-sel').textContent = '';
+    c.querySelector('.plan-sel').removeAttribute('style');
+  });
+  card.classList.add('selected');
+  const sel = card.querySelector('.plan-sel');
+  sel.classList.add('on');
+  sel.style.cssText = 'background:var(--green);border-color:var(--green);color:white;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px';
+  sel.textContent = '✓';
+  selectedPlan = card.dataset.plan;
+}
+
+function startForm() {
+  document.getElementById('plansSection').style.display = 'none';
+  document.getElementById('heroWrap').style.display     = 'none';
+  document.getElementById('formSection').style.display  = 'block';
+  buildHours();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ── STEPS ── */
+let currentStep = 1;
+const TOTAL = 5;
+let selectedCat = null;
+let uploadedPhotos = [];
+
+function updateProgress() {
+  const pct = (currentStep / TOTAL) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.querySelectorAll('#progSteps .prog-step').forEach((el,i) => {
+    const n = i + 1;
+    el.className = 'prog-step ' + (n < currentStep ? 'done' : n === currentStep ? 'active' : 'todo');
+  });
+  document.getElementById('btnPrev').disabled = currentStep === 1;
+  document.getElementById('btnNext').textContent = currentStep === TOTAL ? '✅ أرسل الطلب' : 'التالي ←';
+}
+
+function showPanel(n) {
+  document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel' + n).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function nextStep() {
+  if (!validateStep(currentStep)) return;
+  if (currentStep === TOTAL) { submitForm(); return; }
+  if (currentStep === TOTAL - 1) buildReview();
+  currentStep++;
+  updateProgress();
+  showPanel(currentStep);
+}
+
+function prevStep() {
+  if (currentStep === 1) return;
+  currentStep--;
+  updateProgress();
+  showPanel(currentStep);
+}
+
+/* ── VALIDATE ── */
+function validateStep(n) {
+  let ok = true;
+  if (n === 1) {
+    const name  = document.getElementById('f-name').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    const area  = document.getElementById('f-area').value;
+    const addr  = document.getElementById('f-addr').value.trim();
+    setErr('f-name',  !name);
+    setErr('f-phone', !phone || phone.length < 11);
+    setErr('f-area',  !area);
+    setErr('f-addr',  !addr);
+    ok = !!(name && phone.length >= 11 && area && addr);
+  }
+  if (n === 2) {
+    const desc = document.getElementById('f-desc').value.trim();
+    if (!selectedCat) { showToast('اختر نوع نشاطك', 'err'); ok = false; }
+    setErr('f-desc', desc.length < 10);
+    ok = ok && desc.length >= 10;
+  }
+  if (n === 5) {
+    const terms    = document.getElementById('f-terms').checked;
+    const accurate = document.getElementById('f-accurate').checked;
+    if (!terms || !accurate) { showToast('يرجى الموافقة على الشروط', 'err'); ok = false; }
+  }
+  if (!ok && n !== 5) showToast('أكمل الحقول المطلوبة', 'err');
+  return ok;
+}
+
+function setErr(id, hasErr) {
+  document.getElementById(id).classList.toggle('err', hasErr);
+}
+
+/* ── CAT PICKER ── */
+function pickCat(btn) {
+  document.querySelectorAll('.cat-pick-btn').forEach(b => { b.classList.remove('sel'); b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true');
+  selectedCat = btn.dataset.cat;
+}
+
+/* ── DESC COUNTER ── */
+document.getElementById('f-desc').addEventListener('input', function () {
+  document.getElementById('descCount').textContent = this.value.length + ' / 300 حرف';
+  if (this.value.length > 300) this.value = this.value.slice(0,300);
+});
+
+/* ── HOURS BUILDER ── */
+const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+let hoursState = DAYS.reduce((acc,d) => { acc[d] = {on:d!=='الجمعة',from:'08:00',to:'22:00'}; return acc; }, {});
+
+function buildHours() {
+  const el = document.getElementById('hoursBuilder');
+  el.innerHTML = DAYS.map(day => `
+    <div class="hour-row">
+      <span class="hour-day-lbl">${day}</span>
+      <button class="hour-toggle ${hoursState[day].on?'on':''}" onclick="toggleDay('${day}',this)" aria-label="تفعيل ${day}" aria-checked="${hoursState[day].on}"></button>
+      <div class="hour-inputs ${hoursState[day].on?'active':''}">
+        <input type="time" class="hour-time" value="${hoursState[day].from}" onchange="setHour('${day}','from',this.value)" aria-label="من">
+        <span class="hour-sep">–</span>
+        <input type="time" class="hour-time" value="${hoursState[day].to}"   onchange="setHour('${day}','to',this.value)"   aria-label="إلى">
+      </div>
+    </div>`).join('');
+}
+
+function toggleDay(day, btn) {
+  hoursState[day].on = !hoursState[day].on;
+  btn.classList.toggle('on', hoursState[day].on);
+  btn.setAttribute('aria-checked', hoursState[day].on);
+  const inputs = btn.nextElementSibling;
+  inputs.classList.toggle('active', hoursState[day].on);
+}
+function setHour(day, key, val) { hoursState[day][key] = val; }
+function toggle24h(cb) {
+  DAYS.forEach(d => hoursState[d].on = cb.checked);
+  buildHours();
+}
+
+/* ── PHOTOS ── */
+function handlePhotos(input) {
+  const files = Array.from(input.files).slice(0,5);
+  if (!files.length) return;
+  files.forEach(file => {
+    if (uploadedPhotos.length >= 5) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      uploadedPhotos.push(e.target.result);
+      renderPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('puTitle').textContent = uploadedPhotos.length + ' صورة تم رفعها';
+  document.getElementById('photoArea').classList.add('has-file');
+}
+
+function renderPreviews() {
+  document.getElementById('photoPreview').innerHTML = uploadedPhotos.map((src,i) => `
+    <div class="photo-prev-item">
+      <img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" alt="صورة ${i+1}">
+      <button class="photo-prev-del" onclick="removePhoto(${i})" aria-label="حذف الصورة">✕</button>
+    </div>`).join('');
+}
+function removePhoto(i) { uploadedPhotos.splice(i,1); renderPreviews(); }
+
+/* ── REVIEW ── */
+function buildReview() {
+  const name  = document.getElementById('f-name').value;
+  const phone = document.getElementById('f-phone').value;
+  const area  = document.getElementById('f-area').value;
+  const addr  = document.getElementById('f-addr').value;
+  const desc  = document.getElementById('f-desc').value;
+  const price = document.getElementById('f-price').value || '—';
+  const exp   = document.getElementById('f-exp').value   || '—';
+  const planLabels = { free:'مجاني', basic:'أساسي — 50 ج/شهر', pro:'برو — 120 ج/شهر' };
+  const catLabels  = { maintenance:'🔧 صيانة', food:'🍽️ مطاعم', health:'🏥 صحة', education:'📚 تعليم', delivery:'🛵 توصيل', 'real-estate':'🏠 عقارات', agriculture:'🌾 زراعة', market:'🛒 سوق', other:'🛠️ أخرى' };
+  document.getElementById('reviewCard').innerHTML = [
+    ['🏪 اسم النشاط', name],
+    ['📞 الهاتف', phone],
+    ['📍 المنطقة', area],
+    ['🏠 العنوان', addr],
+    ['🔧 القسم', catLabels[selectedCat] || '—'],
+    ['💰 نطاق السعر', price],
+    ['⏳ الخبرة', exp],
+    ['📦 الباقة', planLabels[selectedPlan]],
+    ['📸 الصور', uploadedPhotos.length + ' صورة'],
+  ].map(([l,v]) => `
+    <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border)">
+      <span style="font-size:12px;color:var(--text-muted);font-weight:600">${l}</span>
+      <span style="font-size:12.5px;font-weight:800;color:var(--text-main);text-align:left;max-width:60%;word-break:break-word">${v}</span>
+    </div>`).join('');
+}
+
+/* ── SUBMIT ── */
+function submitForm() {
+  if (!validateStep(5)) return;
+  const btn = document.getElementById('btnNext');
+  btn.disabled = true; btn.innerHTML = '⏳ جاري الإرسال...';
+  setTimeout(() => {
+    document.getElementById('formSection').style.display = 'none';
+    const sw = document.getElementById('successWrap');
+    sw.style.display = 'block';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }, 1500);
+}
+
+function showToast(msg, type='ok') {
+  const c=document.getElementById('toasts'); const t=document.createElement('div');
+  t.className='toast '+type; t.textContent=msg; c.appendChild(t); setTimeout(()=>t.remove(),2800);
+}
+
+updateProgress();
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

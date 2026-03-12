@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<meta name="description" content="خدماتي المنيا — كل حاجة في مكان واحد. منصة الخدمات المحلية الشاملة لمحافظة المنيا">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta property="og:title" content="خدماتي المنيا">
+<meta property="og:description" content="كل حاجة في مكان واحد — +1400 مزود خدمة">
+<meta property="og:type" content="website">
+<title>خدماتي المنيا — كل حاجة في مكان واحد</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     HEADER
+════════════════════════════════════════ -->
+<header class="header" id="mainHeader">
+  <div class="header-top">
+    <div class="logo-wrap">
+      <div class="logo-icon" aria-hidden="true">خ</div>
+      <div class="logo-text">
+        <strong>خدماتي المنيا</strong>
+        <span>كل حاجة في مكان واحد</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="hbtn" onclick="goTo('notifications.html')" aria-label="الإشعارات">
+        🔔<span class="bdg" id="notifBadge">3</span>
+      </button>
+      <button class="hbtn" onclick="goTo('favorites.html')" aria-label="المفضلة">❤️</button>
+      <button class="hbtn" onclick="goTo('login.html')" aria-label="حسابي">👤</button>
+    </div>
+  </div>
+  <div class="header-search">
+    <div class="sbox" role="search">
+      <span class="si" aria-hidden="true">🔍</span>
+      <input
+        type="search"
+        placeholder="ابحث عن خدمة أو محل..."
+        autocomplete="off"
+        id="mainSearch"
+        aria-label="بحث"
+        inputmode="search"
+      >
+      <button class="mic" onclick="startVoiceSearch()" aria-label="بحث صوتي" id="micBtn">🎙️</button>
+    </div>
+    <!-- Search suggestions dropdown -->
+    <div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="اقتراحات البحث"></div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════
+     OFFLINE BANNER
+════════════════════════════════════════ -->
+<div class="offline-bar" id="offlineBar" hidden>
+  <span>📡 أنت غير متصل — يعمل بالبيانات المحفوظة</span>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE BODY
+════════════════════════════════════════ -->
+<main class="page-body" id="pageBody">
+
+  <!-- ── HERO ── -->
+  <section class="hero" aria-label="الترحيب">
+    <div class="hero-bg-shapes" aria-hidden="true"></div>
+    <div class="hero-content" style="position:relative;z-index:2">
+      <p class="hero-tag"><span class="wave" aria-hidden="true">👋</span> أهلاً بيك في المنيا</p>
+      <h1 class="hero-title">اللي محتاجه<br><span class="hl">هنا جنبك</span> <span aria-hidden="true">✨</span></h1>
+      <p class="hero-sub">+1400 مزود خدمة من كل مراكز المحافظة<br>متاحين دلوقتي لخدمتك</p>
+      <div class="hero-stats" aria-label="إحصائيات">
+        <div class="stat-pill">
+          <span class="sn" data-count="1412" id="statVendors">1,412</span>
+          <span>مزود خدمة</span>
+        </div>
+        <div class="stat-pill">
+          <span class="sn" data-count="24">24</span>
+          <span aria-hidden="true">⏰</span>
+          <span>ساعة</span>
+        </div>
+        <div class="stat-pill">
+          <span class="sn" data-count="13">13</span>
+          <span>مركز</span>
+        </div>
+      </div>
+      <!-- Emergency CTA -->
+      <a href="emergency.html" class="em-cta" aria-label="طلب عاجل — مزود يوصلك في 15 دقيقة">
+        <div class="em-icon" aria-hidden="true">🚨</div>
+        <div class="em-text">
+          <strong>محتاج حد دلوقتي؟</strong>
+          <span>طلب عاجل — مزود يوصلك في 15 دقيقة</span>
+        </div>
+        <span class="em-arr" aria-hidden="true">←</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── BANNERS ── -->
+  <section class="banners" aria-label="عروض وإعلانات">
+    <div class="banners-wrap" id="bannersWrap" role="region" aria-label="شرائح الإعلانات">
+      <div class="bslide b1" onclick="goTo('offers.html')" role="button" tabindex="0" aria-label="عرض صيانة منزلية 50%">
+        <div class="bbg" aria-hidden="true">🔧</div>
+        <div class="bcon">
+          <p class="btag">🔥 عرض خاص</p>
+          <p class="btitle">صيانة منزلية بـ 50%</p>
+          <p class="bsub">صلح أي حاجة بنص التمن هالأسبوع</p>
+        </div>
+      </div>
+      <div class="bslide b2" onclick="goTo('agriculture.html')" role="button" tabindex="0" aria-label="قسم الخدمات الزراعية">
+        <div class="bbg" aria-hidden="true">🌾</div>
+        <div class="bcon">
+          <p class="btag">🌿 قسم جديد</p>
+          <p class="btitle">الخدمات الزراعية</p>
+          <p class="bsub">متخصص لمحافظة المنيا الزراعية</p>
+        </div>
+      </div>
+      <div class="bslide b3" onclick="goTo('map.html')" role="button" tabindex="0" aria-label="الخريطة الذكية التفاعلية">
+        <div class="bbg" aria-hidden="true">🗺️</div>
+        <div class="bcon">
+          <p class="btag">✨ جديد</p>
+          <p class="btitle">الخريطة الذكية</p>
+          <p class="bsub">كل المحلات على خريطة تفاعلية حية</p>
+        </div>
+      </div>
+    </div>
+    <div class="sdots" role="tablist" aria-label="مؤشرات الشرائح">
+      <div class="sdot a" role="tab" aria-selected="true"  aria-label="شريحة 1"></div>
+      <div class="sdot"   role="tab" aria-selected="false" aria-label="شريحة 2"></div>
+      <div class="sdot"   role="tab" aria-selected="false" aria-label="شريحة 3"></div>
+    </div>
+  </section>
+
+  <!-- ── QUICK FILTERS ── -->
+  <div class="qfilters" id="quickFilters" role="group" aria-label="تصفية سريعة">
+    <button class="qbtn active" data-cat="all"    aria-pressed="true" ><span class="qi" aria-hidden="true">🏠</span> الكل</button>
+    <button class="qbtn" data-cat="open"   aria-pressed="false"><span class="qi" aria-hidden="true">🟢</span> مفتوح الآن</button>
+    <button class="qbtn" data-cat="top"    aria-pressed="false"><span class="qi" aria-hidden="true">⭐</span> الأعلى تقييماً</button>
+    <button class="qbtn" data-cat="near"   aria-pressed="false"><span class="qi" aria-hidden="true">📍</span> الأقرب إليّ</button>
+    <button class="qbtn" data-cat="offers" aria-pressed="false"><span class="qi" aria-hidden="true">🔥</span> عروض اليوم</button>
+    <button class="qbtn" data-cat="new"    aria-pressed="false"><span class="qi" aria-hidden="true">✨</span> جديد</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── CATEGORIES ── -->
+  <section class="section" aria-label="الأقسام">
+    <div class="sec-head">
+      <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> الأقسام</h2>
+      <a href="sitemap.html" class="sec-link">كل الأقسام ←</a>
+    </div>
+    <div class="cats-grid">
+      <a href="maintenance.html" class="cat-card c-maint">
+        <div class="ci" aria-hidden="true">🔧</div>
+        <span class="cn">الصيانة</span>
+        <span class="cc">152 مزود</span>
+      </a>
+      <a href="food.html" class="cat-card c-food">
+        <div class="ci" aria-hidden="true">🍽️</div>
+        <span class="cn">مطاعم</span>
+        <span class="cc">89 مطعم</span>
+      </a>
+      <a href="health.html" class="cat-card c-hlth">
+        <div class="ci" aria-hidden="true">🏥</div>
+        <span class="cn">الصحة</span>
+        <span class="cc">74 طبيب</span>
+      </a>
+      <a href="delivery.html" class="cat-card c-dlv">
+        <div class="ci" aria-hidden="true">🛵</div>
+        <span class="cn">التوصيل</span>
+        <span class="cc">45 مزود</span>
+      </a>
+      <a href="education.html" class="cat-card c-edu">
+        <div class="ci" aria-hidden="true">📚</div>
+        <span class="cn">التعليم</span>
+        <span class="cc">120 مدرس</span>
+        <span class="bnew" aria-label="جديد">جديد</span>
+      </a>
+      <a href="real-estate.html" class="cat-card c-re">
+        <div class="ci" aria-hidden="true">🏠</div>
+        <span class="cn">عقارات</span>
+        <span class="cc">98 إعلان</span>
+      </a>
+      <a href="agriculture.html" class="cat-card c-agr">
+        <div class="ci" aria-hidden="true">🌾</div>
+        <span class="cn">الزراعة</span>
+        <span class="cc">67 مزود</span>
+        <span class="bnew" aria-label="مميز">⭐</span>
+      </a>
+      <a href="market.html" class="cat-card c-mkt">
+        <div class="ci" aria-hidden="true">🛒</div>
+        <span class="cn">السوق</span>
+        <span class="cc">203 بائع</span>
+      </a>
+      <a href="jobs.html" class="cat-card c-jobs">
+        <div class="ci" aria-hidden="true">💼</div>
+        <span class="cn">الوظائف</span>
+        <span class="cc">34 وظيفة</span>
+      </a>
+      <a href="government.html" class="cat-card c-govt">
+        <div class="ci" aria-hidden="true">🏛️</div>
+        <span class="cn">حكومية</span>
+        <span class="cc">12 مكتب</span>
+      </a>
+      <a href="events.html" class="cat-card c-evnt">
+        <div class="ci" aria-hidden="true">🎉</div>
+        <span class="cn">فعاليات</span>
+        <span class="cc">8 فعاليات</span>
+      </a>
+      <a href="transport.html" class="cat-card c-trsp">
+        <div class="ci" aria-hidden="true">🚌</div>
+        <span class="cn">مواصلات</span>
+        <span class="cc">كل الخطوط</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── OFFERS ── -->
+  <section class="section" aria-label="عروض اليوم">
+    <div class="sec-head">
+      <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> 🔥 عروض اليوم</h2>
+      <a href="offers.html" class="sec-link">كل العروض ←</a>
+    </div>
+    <div class="offers-scrl" role="list">
+      <div class="ocard og" onclick="goTo('offers.html')" role="listitem" tabindex="0" aria-label="عرض صيانة كهرباء">
+        <span class="obadge">🔥 عرض محدود</span>
+        <p class="otitle">صيانة كهرباء</p>
+        <p class="odesc">فني معتمد لكل أعمال الكهرباء</p>
+        <div class="oprice">
+          <span class="opnew">80 جنيه</span>
+          <span class="opold">150 جنيه</span>
+        </div>
+        <div class="otimer" aria-live="polite">⏱️ ينتهي بعد <span class="tclock" data-end="4h">4 ساعات</span></div>
+      </div>
+      <div class="ocard og2" onclick="goTo('food.html')" role="listitem" tabindex="0" aria-label="عرض وجبة عيلة">
+        <span class="obadge">🍕 طلبات</span>
+        <p class="otitle">وجبة عيلة</p>
+        <p class="odesc">مطعم البيت الكبير — توصيل مجاني</p>
+        <div class="oprice">
+          <span class="opnew">120 جنيه</span>
+          <span class="opold">180 جنيه</span>
+        </div>
+        <div class="otimer">⏱️ ينتهي بعد <span class="tclock">2 ساعات</span></div>
+      </div>
+      <div class="ocard og3" onclick="goTo('education.html')" role="listitem" tabindex="0" aria-label="عرض دروس خصوصية">
+        <span class="obadge">📚 تعليم</span>
+        <p class="otitle">دروس خصوصية</p>
+        <p class="odesc">مدرس متخصص — أول حصة مجاناً</p>
+        <div class="oprice">
+          <span class="opnew">50 جنيه</span>
+          <span class="opold">80 جنيه</span>
+        </div>
+        <div class="otimer">⏱️ ينتهي بعد <span class="tclock">6 ساعات</span></div>
+      </div>
+      <div class="ocard og4" onclick="goTo('health.html')" role="listitem" tabindex="0" aria-label="عرض كشف طبي">
+        <span class="obadge">🏥 صحة</span>
+        <p class="otitle">كشف طبي عام</p>
+        <p class="odesc">عيادة الحياة — حجز فوري</p>
+        <div class="oprice">
+          <span class="opnew">40 جنيه</span>
+          <span class="opold">100 جنيه</span>
+        </div>
+        <div class="otimer">⏱️ ينتهي بعد <span class="tclock">8 ساعات</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── FEATURED VENDORS ── -->
+  <section class="section" aria-label="مزودو الخدمة المميزون">
+    <div class="sec-head">
+      <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> ⭐ الأكثر طلباً</h2>
+      <a href="vendors.html" class="sec-link">كل المزودين ←</a>
+    </div>
+    <div class="vendors-grid" id="vendorsGrid" role="list">
+      <!-- Skeleton loaders -->
+      <div class="vcard skel-card" aria-hidden="true">
+        <div class="vcimg skel"></div>
+        <div class="vcbody"><div class="skel" style="height:14px;border-radius:6px;margin-bottom:8px"></div><div class="skel" style="height:10px;border-radius:6px;width:70%"></div></div>
+      </div>
+      <div class="vcard skel-card" aria-hidden="true">
+        <div class="vcimg skel"></div>
+        <div class="vcbody"><div class="skel" style="height:14px;border-radius:6px;margin-bottom:8px"></div><div class="skel" style="height:10px;border-radius:6px;width:60%"></div></div>
+      </div>
+      <div class="vcard skel-card" aria-hidden="true">
+        <div class="vcimg skel"></div>
+        <div class="vcbody"><div class="skel" style="height:14px;border-radius:6px;margin-bottom:8px"></div><div class="skel" style="height:10px;border-radius:6px;width:75%"></div></div>
+      </div>
+      <div class="vcard skel-card" aria-hidden="true">
+        <div class="vcimg skel"></div>
+        <div class="vcbody"><div class="skel" style="height:14px;border-radius:6px;margin-bottom:8px"></div><div class="skel" style="height:10px;border-radius:6px;width:65%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── BOURSE (أسعار البورصة) ── -->
+  <section class="section" aria-label="بورصة الخضار والفاكهة">
+    <div class="sec-head">
+      <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> 📊 بورصة الأسعار</h2>
+      <a href="bourse.html" class="sec-link">كل الأسعار ←</a>
+    </div>
+    <div class="bourse">
+      <div class="bourse-hd">
+        <span class="bourse-t">🥦 خضروات المنيا</span>
+        <span class="live-bdg"><span class="ldot" aria-hidden="true"></span> مباشر</span>
+      </div>
+      <div class="bourse-grid" role="list" aria-label="أسعار الخضروات">
+        <div class="bitem dn" role="listitem"><div class="vi" aria-hidden="true">🍅</div><div class="vn">طماطم</div><div class="vp">8 ج</div><div class="vu">للكيلو</div><div class="vch">↓2</div></div>
+        <div class="bitem up" role="listitem"><div class="vi" aria-hidden="true">🧅</div><div class="vn">بصل</div><div class="vp">12 ج</div><div class="vu">للكيلو</div><div class="vch">↑1</div></div>
+        <div class="bitem dn" role="listitem"><div class="vi" aria-hidden="true">🥔</div><div class="vn">بطاطس</div><div class="vp">7 ج</div><div class="vu">للكيلو</div><div class="vch">↓3</div></div>
+        <div class="bitem up" role="listitem"><div class="vi" aria-hidden="true">🧄</div><div class="vn">ثوم</div><div class="vp">45 ج</div><div class="vu">للكيلو</div><div class="vch">↑5</div></div>
+        <div class="bitem dn" role="listitem"><div class="vi" aria-hidden="true">🥦</div><div class="vn">كوسة</div><div class="vp">6 ج</div><div class="vu">للكيلو</div><div class="vch">↓1</div></div>
+        <div class="bitem up" role="listitem"><div class="vi" aria-hidden="true">🌽</div><div class="vn">ذرة</div><div class="vp">4 ج</div><div class="vu">للكيلو</div><div class="vch">↑1</div></div>
+        <div class="bitem dn" role="listitem"><div class="vi" aria-hidden="true">🥕</div><div class="vn">جزر</div><div class="vp">9 ج</div><div class="vu">للكيلو</div><div class="vch">↓2</div></div>
+        <div class="bitem up" role="listitem"><div class="vi" aria-hidden="true">🍆</div><div class="vn">باذنجان</div><div class="vp">5 ج</div><div class="vu">للكيلو</div><div class="vch">↑0</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── SOCIAL FEATURES ── -->
+  <section class="section" aria-label="خدمات المجتمع">
+    <div class="sec-head">
+      <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> 🤝 خدمات المجتمع</h2>
+    </div>
+    <div class="social-grid">
+      <a href="market.html#khair" class="scrd skh">
+        <div class="sico" aria-hidden="true">🎁</div>
+        <div>
+          <p class="sct">كرتونة الخير</p>
+          <p class="scd">محلات تقدم مساعدات للمحتاجين</p>
+        </div>
+      </a>
+      <a href="market.html#lost" class="scrd slf">
+        <div class="sico" aria-hidden="true">🔍</div>
+        <div>
+          <p class="sct">المفقودات</p>
+          <p class="scd">أبلغ عن أمانات أو ضائعات</p>
+        </div>
+      </a>
+      <a href="jobs.html" class="scrd sjb">
+        <div class="sico" aria-hidden="true">💼</div>
+        <div>
+          <p class="sct">توظيف محلي</p>
+          <p class="scd">فرص عمل من حيّك مباشرة</p>
+        </div>
+      </a>
+      <a href="market.html#aqdam" class="scrd saq">
+        <div class="sico" aria-hidden="true">🏛️</div>
+        <div>
+          <p class="sct">أقدم محل</p>
+          <p class="scd">توثيق تاريخي لمحلات المنيا</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── MAP CTA ── -->
+  <section class="section" aria-label="الخريطة الذكية">
+    <a href="map.html" class="map-cta" aria-label="افتح الخريطة الذكية لمحافظة المنيا">
+      <div class="map-cta-bg" aria-hidden="true">🗺️</div>
+      <p class="map-cta-tag">🗺️ الخريطة الذكية</p>
+      <p class="map-cta-title">اكتشف المنيا كلها<br>على خريطة واحدة</p>
+      <p class="map-cta-sub">طبقات حية • تتبع فوري • باركود جغرافي • أوفلاين</p>
+      <span class="map-cta-btn">افتح الخريطة ←</span>
+    </a>
+  </section>
+
+  <!-- ── VENDOR REGISTER CTA ── -->
+  <section class="section" aria-label="سجّل نشاطك التجاري">
+    <a href="vendor-register.html" class="reg-cta" aria-label="سجّل نشاطك التجاري الآن">
+      <span class="reg-icon" aria-hidden="true">🏪</span>
+      <p class="reg-title">سجّل نشاطك التجاري</p>
+      <p class="reg-sub">ابدأ من 50 جنيه/شهر — اوصل لـ آلاف العملاء في المنيا</p>
+      <span class="reg-btn">سجّل الآن مجاناً ✨</span>
+    </a>
+  </section>
+
+  <!-- فراغ أسفل الصفحة -->
+  <div style="height:12px"></div>
+
+</main>
+
+<!-- ════════════════════════════════════════
+     FLOATING BUTTONS
+════════════════════════════════════════ -->
+<a href="emergency.html" class="f-em" title="طوارئ" aria-label="طلب طارئ">🚨</a>
+<a href="https://wa.me/201000000000" class="f-wa" target="_blank" rel="noopener" title="واتساب" aria-label="تواصل عبر واتساب">💬</a>
+
+<!-- ════════════════════════════════════════
+     BOTTOM NAV
+════════════════════════════════════════ -->
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html" class="nitem active" aria-current="page">
+    <span class="nic" aria-hidden="true">🏠</span>
+    <span class="nlb">الرئيسية</span>
+  </a>
+  <a href="map.html" class="nitem">
+    <span class="nic" aria-hidden="true">🗺️</span>
+    <span class="nlb">الخريطة</span>
+  </a>
+  <div class="nctr">
+    <a href="emergency.html" class="nctr-btn" aria-label="طلب طارئ">🚨</a>
+  </div>
+  <a href="search.html" class="nitem">
+    <span class="nic" aria-hidden="true">🔍</span>
+    <span class="nlb">بحث</span>
+  </a>
+  <a href="profile.html" class="nitem">
+    <span class="nic" aria-hidden="true">👤</span>
+    <span class="nlb">حسابي</span>
+  </a>
+</nav>
+
+<!-- ════════════════════════════════════════
+     TOAST CONTAINER
+════════════════════════════════════════ -->
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ──────────────────────────────────────────
+   UTILITIES
+────────────────────────────────────────── */
+function goTo(url) { window.location.href = url; }
+
+function showToast(msg, type = 'ok', ms = 2800) {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), ms);
+}
+
+/* ──────────────────────────────────────────
+   OFFLINE DETECTION
+────────────────────────────────────────── */
+const offlineBar = document.getElementById('offlineBar');
+function updateOnlineStatus() {
+  offlineBar.hidden = navigator.onLine;
+  if (!navigator.onLine) showToast('📡 لا يوجد اتصال — يعمل بوضع أوفلاين', 'err', 4000);
+}
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+/* ──────────────────────────────────────────
+   QUICK FILTER BUTTONS
+────────────────────────────────────────── */
+document.querySelectorAll('.qbtn').forEach(btn => {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.qbtn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    this.classList.add('active');
+    this.setAttribute('aria-pressed', 'true');
+    const cat = this.dataset.cat;
+    if (cat === 'near') requestUserLocation();
+    // TODO: filter vendors
+  });
+});
+
+/* ──────────────────────────────────────────
+   GEOLOCATION (لفلتر الأقرب)
+────────────────────────────────────────── */
+function requestUserLocation() {
+  if (!navigator.geolocation) {
+    showToast('المتصفح لا يدعم تحديد الموقع', 'err'); return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => showToast(`📍 تم تحديد موقعك`),
+    ()  => showToast('تعذّر تحديد الموقع — تحقق من الأذونات', 'err')
+  );
+}
+
+/* ──────────────────────────────────────────
+   VOICE SEARCH
+────────────────────────────────────────── */
+function startVoiceSearch() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('البحث الصوتي متاح على Chrome', 'err'); return; }
+  const rec = new SR();
+  rec.lang = 'ar-EG';
+  rec.interimResults = false;
+  const btn = document.getElementById('micBtn');
+  btn.textContent = '🔴';
+  rec.start();
+  rec.onresult = e => {
+    document.getElementById('mainSearch').value = e.results[0][0].transcript;
+    btn.textContent = '🎙️';
+    showToast('🎙️ تم التعرف على صوتك');
+  };
+  rec.onerror = () => { btn.textContent = '🎙️'; showToast('تعذّر البحث الصوتي', 'err'); };
+  rec.onend   = () => { btn.textContent = '🎙️'; };
+}
+
+/* ──────────────────────────────────────────
+   SEARCH SUGGESTIONS (stub)
+────────────────────────────────────────── */
+const SUGGESTIONS = ['كهربائي', 'سباك', 'نجار', 'مطعم', 'دكتور', 'مدرس', 'توصيل', 'عقارات'];
+const searchInput = document.getElementById('mainSearch');
+const sugBox      = document.getElementById('searchSuggestions');
+
+searchInput.addEventListener('input', function () {
+  const q = this.value.trim();
+  if (!q) { sugBox.hidden = true; sugBox.innerHTML = ''; return; }
+  const matches = SUGGESTIONS.filter(s => s.includes(q)).slice(0, 5);
+  if (!matches.length) { sugBox.hidden = true; return; }
+  sugBox.innerHTML = matches.map(m =>
+    `<div class="sug-item" role="option" tabindex="0" onclick="selectSug('${m}')">${m}</div>`
+  ).join('');
+  sugBox.hidden = false;
+});
+
+searchInput.addEventListener('blur', () => setTimeout(() => { sugBox.hidden = true; }, 200));
+
+function selectSug(val) {
+  searchInput.value = val;
+  sugBox.hidden = true;
+  goTo('search.html?q=' + encodeURIComponent(val));
+}
+
+/* ──────────────────────────────────────────
+   BANNER SLIDER DOTS
+────────────────────────────────────────── */
+const bannersWrap = document.getElementById('bannersWrap');
+const dots = document.querySelectorAll('.sdot');
+if (bannersWrap) {
+  bannersWrap.addEventListener('scroll', () => {
+    const idx = Math.round(bannersWrap.scrollLeft / bannersWrap.offsetWidth);
+    dots.forEach((d, i) => {
+      d.classList.toggle('a', i === idx);
+      d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+  }, { passive: true });
+}
+
+/* ──────────────────────────────────────────
+   LAZY-LOAD VENDORS (Intersection Observer)
+────────────────────────────────────────── */
+const VENDORS_DATA = [
+  { name: 'أستاذ محمد — كهربائي', icon: '⚡', rating: 4.9, reviews: 312, open: true,  phone: '01012345678', cat: 'maintenance' },
+  { name: 'مطعم البيت الكبير',     icon: '🍽️', rating: 4.7, reviews: 189, open: true,  phone: '01098765432', cat: 'food' },
+  { name: 'دكتور أحمد — عام',      icon: '🏥', rating: 4.8, reviews: 245, open: false, phone: '01156789012', cat: 'health' },
+  { name: 'سريع للتوصيل',          icon: '🛵', rating: 4.6, reviews: 98,  open: true,  phone: '01234567890', cat: 'delivery' },
+];
+
+function renderVendors(data) {
+  const grid = document.getElementById('vendorsGrid');
+  grid.innerHTML = data.map(v => `
+    <div class="vcard" role="listitem" onclick="goTo('vendor.html?id=${v.phone}')" tabindex="0" aria-label="${v.name}">
+      <div class="vcimg" aria-hidden="true" style="font-size:38px;display:flex;align-items:center;justify-content:center;height:88px;background:var(--surface2)">${v.icon}</div>
+      <div class="vcbody">
+        <p class="vcname">${v.name}</p>
+        <div class="vcmeta">
+          <span class="vrating"><span class="st">★</span>${v.rating}<span class="vrc">(${v.reviews})</span></span>
+          <span class="vstatus ${v.open ? 'open' : 'closed'}">
+            <span class="vdot"></span>${v.open ? 'مفتوح' : 'مغلق'}
+          </span>
+        </div>
+      </div>
+      <div class="vcactions">
+        <a href="tel:${v.phone}" class="vcbtn phn" onclick="event.stopPropagation()" aria-label="اتصل بـ${v.name}">📞 اتصال</a>
+        <a href="https://wa.me/2${v.phone}" class="vcbtn wa" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="واتساب ${v.name}">💬 واتساب</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+// تأخير تحميل الـ vendors حتى يظهر القسم في الشاشة
+const vendorsSection = document.getElementById('vendorsGrid');
+let vendorsLoaded = false;
+const vendorObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting && !vendorsLoaded) {
+    vendorsLoaded = true;
+    vendorObserver.disconnect();
+    // محاكاة Network request
+    setTimeout(() => renderVendors(VENDORS_DATA), 400);
+  }
+}, { rootMargin: '200px' });
+vendorObserver.observe(vendorsSection);
+
+/* ──────────────────────────────────────────
+   LAZY IMAGES
+────────────────────────────────────────── */
+const lazyImgs = document.querySelectorAll('img[data-src]');
+if (lazyImgs.length) {
+  const imgObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.src = e.target.dataset.src;
+        imgObserver.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '150px' });
+  lazyImgs.forEach(img => imgObserver.observe(img));
+}
+
+/* ──────────────────────────────────────────
+   HEADER SHRINK ON SCROLL
+────────────────────────────────────────── */
+let lastScroll = 0;
+const header = document.getElementById('mainHeader');
+window.addEventListener('scroll', () => {
+  const curr = window.scrollY;
+  if (curr > lastScroll && curr > 60) {
+    header.classList.add('h-shrink');
+  } else {
+    header.classList.remove('h-shrink');
+  }
+  lastScroll = curr;
+}, { passive: true });
+
+/* ──────────────────────────────────────────
+   SERVICE WORKER REGISTRATION
+────────────────────────────────────────── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => {
+        reg.addEventListener('updatefound', () => {
+          showToast('🔄 تحديث جديد متاح — أعد تحميل الصفحة');
+        });
+      })
+      .catch(() => {}); // silent fail
+  });
+}
+
+/* ──────────────────────────────────────────
+   PWA INSTALL PROMPT
+────────────────────────────────────────── */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // يمكن إظهار زر تثبيت هنا لاحقاً
+});
+</script>
+
+<script src="js/effects.js"></script>
+</body>
+</html>

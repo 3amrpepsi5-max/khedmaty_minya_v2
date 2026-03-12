@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<title>تفاصيل الطلب — خدماتي المنيا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+.order-header{background:linear-gradient(135deg,#1B4332,#2D6A4F);padding:54px 16px 20px;position:relative;overflow:hidden}
+.status-track{display:flex;align-items:center;justify-content:space-between;padding:20px 16px;background:var(--surface);border-bottom:1.5px solid var(--border)}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.step-dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:900;transition:.3s}
+.step-dot.done{background:var(--green);color:white}
+.step-dot.active{background:var(--gold);color:var(--green-dark);animation:pulseRing 2s infinite}
+.step-dot.pending{background:var(--surface2);color:var(--text-muted);border:2px solid var(--border)}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 -4px;position:relative;top:-12px;z-index:0}
+.step-line.done{background:var(--green)}
+.step-label{font-size:10px;font-weight:700;color:var(--text-muted);text-align:center}
+.detail-card{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);margin:12px 16px;padding:14px}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--border)}
+.detail-row:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="order-header">
+  <button onclick="history.back()" style="width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;border:none;color:white;font-size:20px;cursor:pointer;margin-bottom:12px;display:grid;place-items:center">←</button>
+  <h1 style="color:white;font-size:19px;font-weight:900;margin:0 0 3px">📦 تفاصيل الطلب</h1>
+  <p style="color:rgba(255,255,255,.75);font-size:12px;margin:0" id="orderId">رقم الطلب: —</p>
+</div>
+
+<div class="status-track">
+  <div class="step"><div class="step-dot done">✓</div><span class="step-label">تم الطلب</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-dot done">✓</div><span class="step-label">قُبل</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-dot active">🔧</div><span class="step-label">قيد التنفيذ</span></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-dot pending">⭐</div><span class="step-label">مكتمل</span></div>
+</div>
+
+<main class="page-body">
+  <div class="detail-card">
+    <p style="font-size:14px;font-weight:900;margin-bottom:12px;color:var(--green)">🔧 تفاصيل الخدمة</p>
+    <div class="detail-row"><span style="font-size:13px;color:var(--text-muted)">المزود</span><span style="font-size:13px;font-weight:800">أستاذ محمد الكهربائي</span></div>
+    <div class="detail-row"><span style="font-size:13px;color:var(--text-muted)">الخدمة</span><span style="font-size:13px;font-weight:800">صيانة كهرباء</span></div>
+    <div class="detail-row"><span style="font-size:13px;color:var(--text-muted)">التاريخ</span><span style="font-size:13px;font-weight:800">12 يناير 2025</span></div>
+    <div class="detail-row"><span style="font-size:13px;color:var(--text-muted)">الوقت</span><span style="font-size:13px;font-weight:800">3:00 م</span></div>
+    <div class="detail-row"><span style="font-size:13px;color:var(--text-muted)">السعر</span><span style="font-size:16px;font-weight:900;color:var(--green)">150 ج</span></div>
+  </div>
+
+  <div class="detail-card">
+    <p style="font-size:14px;font-weight:900;margin-bottom:12px;color:var(--green)">📍 عنوان الخدمة</p>
+    <p style="font-size:13px;color:var(--text-muted)">حي الزهور — شارع الجمهورية — المنيا</p>
+  </div>
+
+  <div style="display:flex;gap:10px;padding:0 16px;margin-top:4px">
+    <button onclick="window.location='tel:+20100000000'" style="flex:1;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:900;cursor:pointer;font-family:var(--font)">📞 اتصال بالمزود</button>
+    <button onclick="showToast('⭐ شكراً على تقييمك!')" style="flex:1;padding:13px;background:var(--gold);color:var(--green-dark);border:none;border-radius:var(--radius-md);font-size:14px;font-weight:900;cursor:pointer;font-family:var(--font)">⭐ قيّم الخدمة</button>
+  </div>
+  <div style="height:90px"></div>
+</main>
+
+<nav class="bnav">
+  <a href="index.html" class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html" class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn">🚨</a></div>
+  <a href="search.html" class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem active"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script>
+function showToast(m,t,ms){t=t||'ok';ms=ms||2500;var c=document.getElementById('toasts');var el=document.createElement('div');el.className='toast '+t;el.textContent=m;c.appendChild(el);setTimeout(function(){el.remove()},ms)}
+// Load order ID from URL
+var params = new URLSearchParams(window.location.search);
+var id = params.get('id') || '1';
+document.getElementById('orderId').textContent = 'رقم الطلب: #ORD-2025-00' + id;
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

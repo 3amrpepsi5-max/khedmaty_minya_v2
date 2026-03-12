@@ -1,0 +1,77 @@
+{
+  "name": "خدماتي المنيا",
+  "short_name": "خدماتي",
+  "description": "كل حاجة في مكان واحد — منصة الخدمات المحلية لمحافظة المنيا",
+  "start_url": "/index.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2D6A4F",
+  "background_color": "#F8F9F3",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "khedmaty-minya-pwa",
+  "icons": [
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "طلب طارئ",
+      "short_name": "طارئ",
+      "url": "/emergency.html",
+      "description": "اطلب خدمة طارئة الآن",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "بورصة الأسعار",
+      "short_name": "الأسعار",
+      "url": "/bourse.html",
+      "description": "أسعار السوق اليوم",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "الخريطة الذكية",
+      "short_name": "الخريطة",
+      "url": "/map.html",
+      "description": "خريطة المنيا والمزودين",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "البحث",
+      "short_name": "بحث",
+      "url": "/search.html",
+      "description": "ابحث عن أي خدمة",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screen-home.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "الصفحة الرئيسية"
+    },
+    {
+      "src": "screenshots/screen-search.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "البحث والاكتشاف"
+    }
+  ],
+  "categories": ["lifestyle", "utilities", "business", "shopping"],
+  "prefer_related_applications": false,
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<meta name="description" content="عروض اليوم — خصومات وتخفيضات حصرية في محافظة المنيا">
+<title>عروض اليوم — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── HEADER ── */
+.off-header{position:sticky;top:0;z-index:100;background:var(--green);padding:10px 16px 12px;box-shadow:0 2px 16px rgba(27,67,50,.3)}
+.off-hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.off-back{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.off-back:active{transform:scale(.9)}
+.off-title{font-size:16px;font-weight:900;color:white;flex:1}
+.off-share{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:18px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.off-share:active{background:rgba(255,255,255,.25)}
+
+/* ── COUNTDOWN HERO ── */
+.offer-hero{background:linear-gradient(135deg,#E74C3C,#C0392B);padding:18px 16px;position:relative;overflow:hidden}
+.offer-hero-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding:10px;font-size:100px;opacity:.1;pointer-events:none;user-select:none}
+.offer-hero-tag{font-size:11px;color:rgba(255,255,255,.8);font-weight:700;letter-spacing:.5px;margin-bottom:6px}
+.offer-hero-title{font-size:19px;font-weight:900;color:white;margin-bottom:14px;line-height:1.25}
+.countdown-row{display:flex;gap:10px}
+.cdown-box{flex:1;background:rgba(255,255,255,.18);border-radius:10px;padding:10px 6px;text-align:center;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px)}
+.cdown-num{font-size:24px;font-weight:900;color:white;line-height:1;font-family:'Tajawal',sans-serif}
+.cdown-label{font-size:10px;color:rgba(255,255,255,.75);font-weight:600;margin-top:3px}
+
+/* ── STATS ROW ── */
+.off-stats{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:12px 16px 0}
+.off-stats::-webkit-scrollbar{display:none}
+.off-stat{flex-shrink:0;display:flex;flex-direction:column;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:12px 14px;min-width:90px;box-shadow:var(--shadow-sm)}
+.off-stat-num{font-size:22px;font-weight:900;color:var(--green);line-height:1}
+.off-stat-lbl{font-size:10px;color:var(--text-muted);font-weight:600;margin-top:3px;text-align:center}
+
+/* ── FILTER TABS ── */
+.off-tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:84px;z-index:90}
+.off-tabs::-webkit-scrollbar{display:none}
+.off-tab{flex-shrink:0;padding:11px 16px;font-size:13px;font-weight:700;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t);white-space:nowrap}
+.off-tab.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* ── FEATURED OFFER ── */
+.featured-offer{margin:14px 16px;background:linear-gradient(135deg,#E76F51,#F4A261);border-radius:var(--radius-lg);padding:18px;position:relative;overflow:hidden;cursor:pointer;transition:var(--t)}
+.featured-offer:active{transform:scale(.98)}
+.fo-bg{position:absolute;top:-10px;left:-10px;font-size:90px;opacity:.15;pointer-events:none}
+.fo-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.25);border-radius:50px;padding:4px 11px;font-size:11px;font-weight:800;color:white;margin-bottom:8px}
+.fo-title{font-size:20px;font-weight:900;color:white;margin-bottom:4px}
+.fo-sub{font-size:12px;color:rgba(255,255,255,.82);margin-bottom:14px}
+.fo-row{display:flex;align-items:center;gap:12px}
+.fo-price-new{font-size:28px;font-weight:900;color:white}
+.fo-price-old{font-size:14px;color:rgba(255,255,255,.6);text-decoration:line-through}
+.fo-pct{background:rgba(255,255,255,.25);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:900;color:white}
+.fo-cta{margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:white;color:#E76F51;padding:9px 18px;border-radius:50px;font-size:13px;font-weight:800}
+
+/* ── OFFER CARD ── */
+.offers-list{padding:0 16px;display:flex;flex-direction:column;gap:12px}
+.offer-card{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer;transition:var(--t)}
+.offer-card:active{transform:scale(.98)}
+.oc-top{display:flex;align-items:stretch;min-height:100px}
+.oc-icon{width:90px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:40px}
+.oc-body{flex:1;padding:12px 12px 10px}
+.oc-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.oc-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px}
+.oc-badge.hot   {background:#FDECEA;color:#C0392B}
+.oc-badge.new   {background:var(--green-pale);color:var(--green)}
+.oc-badge.lim   {background:#FFF8E1;color:#B7950B}
+.oc-badge.excl  {background:#F3E5F5;color:#6A1B9A}
+.oc-name{font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:3px}
+.oc-vendor{font-size:11px;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.oc-price-row{display:flex;align-items:center;gap:8px}
+.oc-price-new{font-size:20px;font-weight:900;color:var(--green-dark)}
+.oc-price-old{font-size:12px;color:var(--text-muted);text-decoration:line-through}
+.oc-pct{background:var(--gold-pale);border:1px solid var(--gold);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:900;color:var(--gold-dark)}
+.oc-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border-top:1px solid var(--border)}
+.oc-timer{font-size:11px;color:var(--gold-dark);font-weight:700;display:flex;align-items:center;gap:4px}
+.oc-timer.expired{color:#E74C3C}
+.oc-btn{display:flex;align-items:center;gap:5px;background:var(--green);color:white;padding:6px 14px;border-radius:50px;font-size:12px;font-weight:800;border:none;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.oc-btn:active{opacity:.85}
+.oc-icon-bg{position:relative}
+.oc-pct-badge{position:absolute;top:6px;right:6px;background:var(--gold-dark);color:white;font-size:10px;font-weight:900;padding:2px 6px;border-radius:6px}
+
+/* ── CLAIMED STATE ── */
+.offer-card.claimed .oc-btn{background:var(--green-light);pointer-events:none}
+.offer-card.claimed .oc-footer{background:#D8F3DC}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{text-align:center;padding:16px 16px 24px}
+.load-more-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--green);color:var(--green);padding:10px 28px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.load-more-btn:active{background:var(--green-pale)}
+.load-more-btn.loading{opacity:.6;pointer-events:none}
+
+/* ── COUPON SHEET ── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;opacity:0;pointer-events:none;transition:.3s}
+.sheet-overlay.show{opacity:1;pointer-events:all}
+.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;z-index:501;transform:translateY(100%);transition:.35s cubic-bezier(.4,0,.2,1);padding-bottom:env(safe-area-inset-bottom,0)}
+.sheet.show{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.coupon-body{padding:20px}
+.coupon-vendor-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.coupon-vendor-icon{font-size:36px;width:56px;height:56px;background:var(--surface2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.coupon-vendor-name{font-size:15px;font-weight:900;color:var(--text-main)}
+.coupon-vendor-sub{font-size:12px;color:var(--text-muted)}
+.coupon-code-box{background:linear-gradient(135deg,var(--green-pale),#D8F3DC);border:2px dashed var(--green);border-radius:var(--radius-md);padding:16px;text-align:center;margin-bottom:16px;position:relative}
+.coupon-code-label{font-size:11px;color:var(--text-muted);font-weight:700;margin-bottom:6px}
+.coupon-code{font-size:28px;font-weight:900;color:var(--green-dark);letter-spacing:4px;font-family:'Tajawal',sans-serif}
+.coupon-copy-btn{position:absolute;top:8px;left:8px;background:var(--green);color:white;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.coupon-copy-btn:active{opacity:.8}
+.coupon-details{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px}
+.coupon-detail-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--border)}
+.coupon-detail-row:last-child{border-bottom:none}
+.cdl{color:var(--text-muted);font-weight:600}
+.cdr{font-weight:800;color:var(--text-main)}
+.coupon-use-btn{width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:900;font-family:var(--font);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:8px;transition:var(--t)}
+.coupon-use-btn:active{opacity:.88}
+.coupon-share-btn{width:100%;padding:11px;background:var(--surface2);color:var(--text-main);border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:var(--t)}
+.coupon-share-btn:active{background:var(--surface)}
+</style>
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<header class="off-header">
+  <div class="off-hdr-top">
+    <button class="off-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <span class="off-title">🔥 عروض اليوم</span>
+    <button class="off-share" onclick="shareOffers()" aria-label="مشاركة العروض">📤</button>
+  </div>
+  <!-- Search -->
+  <div class="sbox" role="search">
+    <span class="si" aria-hidden="true">🔍</span>
+    <input type="search" id="offerSearch" placeholder="ابحث في العروض..." autocomplete="off" inputmode="search" aria-label="بحث في العروض">
+    <button class="mic" onclick="voiceSearch()" aria-label="بحث صوتي">🎙️</button>
+  </div>
+</header>
+
+<!-- ════════════ COUNTDOWN HERO ════════════ -->
+<div class="offer-hero" aria-label="العد التنازلي لانتهاء العروض">
+  <div class="offer-hero-bg" aria-hidden="true">🔥</div>
+  <p class="offer-hero-tag">⚡ العروض تنتهي بعد</p>
+  <h1 class="offer-hero-title">لا تفوّت خصومات حتى<br><span style="color:var(--gold)">70%</span> اليوم فقط!</h1>
+  <div class="countdown-row" role="timer" aria-label="وقت انتهاء العروض">
+    <div class="cdown-box"><div class="cdown-num" id="cdH">--</div><div class="cdown-label">ساعة</div></div>
+    <div class="cdown-box"><div class="cdown-num" id="cdM">--</div><div class="cdown-label">دقيقة</div></div>
+    <div class="cdown-box"><div class="cdown-num" id="cdS">--</div><div class="cdown-label">ثانية</div></div>
+  </div>
+</div>
+
+<!-- ════════════ STATS ════════════ -->
+<div class="off-stats" role="group" aria-label="إحصائيات العروض">
+  <div class="off-stat"><div class="off-stat-num">24</div><div class="off-stat-lbl">عرض نشط</div></div>
+  <div class="off-stat"><div class="off-stat-num">70%</div><div class="off-stat-lbl">أعلى خصم</div></div>
+  <div class="off-stat"><div class="off-stat-num" id="claimedStat">0</div><div class="off-stat-lbl">تم حجزها</div></div>
+  <div class="off-stat"><div class="off-stat-num">13</div><div class="off-stat-lbl">مركز</div></div>
+</div>
+
+<!-- ════════════ FILTER TABS ════════════ -->
+<div class="off-tabs" role="tablist" aria-label="تصفية العروض">
+  <button class="off-tab active" data-cat="all"         role="tab" aria-selected="true">🏠 الكل</button>
+  <button class="off-tab" data-cat="maintenance"        role="tab" aria-selected="false">🔧 صيانة</button>
+  <button class="off-tab" data-cat="food"               role="tab" aria-selected="false">🍽️ مطاعم</button>
+  <button class="off-tab" data-cat="health"             role="tab" aria-selected="false">🏥 صحة</button>
+  <button class="off-tab" data-cat="education"          role="tab" aria-selected="false">📚 تعليم</button>
+  <button class="off-tab" data-cat="delivery"           role="tab" aria-selected="false">🛵 توصيل</button>
+  <button class="off-tab" data-cat="market"             role="tab" aria-selected="false">🛒 سوق</button>
+</div>
+
+<!-- ════════════ MAIN ════════════ -->
+<main class="page-body" style="padding-top:0">
+
+  <!-- Featured offer -->
+  <div class="featured-offer" id="featuredOffer" onclick="claimOffer('o001')" role="button" tabindex="0" aria-label="عرض مميز — صيانة كهرباء">
+    <div class="fo-bg" aria-hidden="true">⚡</div>
+    <div class="fo-badge">🔥 عرض مميز اليوم</div>
+    <p class="fo-title">صيانة كهرباء شاملة</p>
+    <p class="fo-sub">أستاذ محمد — فني معتمد لكل أعمال الكهرباء المنزلية</p>
+    <div class="fo-row">
+      <span class="fo-price-new">80 ج</span>
+      <span class="fo-price-old">150 ج</span>
+      <span class="fo-pct">خصم 47%</span>
+    </div>
+    <div class="fo-cta">احجز الآن ←</div>
+  </div>
+
+  <!-- Offers List -->
+  <div class="offers-list" id="offersList" role="list"></div>
+
+  <div class="load-more-wrap" id="lmWrap" hidden>
+    <button class="load-more-btn" id="lmBtn" onclick="loadMoreOffers()">تحميل المزيد ↓</button>
+  </div>
+
+</main>
+
+<!-- ════════════ BOTTOM NAV ════════════ -->
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn" aria-label="طلب طارئ">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<!-- ════════════ COUPON SHEET ════════════ -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+<div class="sheet" id="couponSheet" role="dialog" aria-modal="true" aria-label="كود الخصم">
+  <div class="sheet-handle"></div>
+  <div class="coupon-body" id="couponBody"></div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ════════════ SCRIPT ════════════ -->
+<script>
+'use strict';
+
+/* ── OFFERS DATA ── */
+const OFFERS = [
+  {id:'o001',cat:'maintenance',icon:'⚡',iconBg:'#FFF8E1',title:'صيانة كهرباء شاملة',vendor:'أستاذ محمد الكهربائي',vendorId:'v001',priceNew:80,priceOld:150,pct:47,tags:['hot'],endsIn:4*3600,code:'ELEC47',area:'المنيا',featured:true},
+  {id:'o002',cat:'food',       icon:'🍽️',iconBg:'#E8F5E9',title:'وجبة عيلة كاملة',  vendor:'مطعم البيت الكبير',vendorId:'v002',priceNew:120,priceOld:180,pct:33,tags:['lim'],endsIn:2*3600,code:'BAYT33',area:'ملوي',featured:false},
+  {id:'o003',cat:'education',  icon:'📚',iconBg:'#EDE7F6',title:'أول حصة مجاناً',   vendor:'أستاذ عمر — فيزياء',vendorId:'v005',priceNew:0,  priceOld:80, pct:100,tags:['new'],endsIn:6*3600,code:'FREE1',area:'مغاغة',featured:false},
+  {id:'o004',cat:'health',     icon:'🏥',iconBg:'#FDECEA',title:'كشف طبي عام',      vendor:'عيادة الحياة',      vendorId:'v009',priceNew:40, priceOld:100,pct:60, tags:['hot','lim'],endsIn:3*3600,code:'DOC60',area:'المنيا',featured:false},
+  {id:'o005',cat:'maintenance',icon:'❄️',iconBg:'#E3F2FD',title:'صيانة تكييف شاملة',vendor:'تكييفات الراحة',    vendorId:'v010',priceNew:150,priceOld:300,pct:50,tags:['excl'],endsIn:8*3600,code:'COOL50',area:'ملوي',featured:false},
+  {id:'o006',cat:'delivery',   icon:'🛵',iconBg:'#E8F5E9',title:'توصيل مجاني',      vendor:'سريع للتوصيل',     vendorId:'v004',priceNew:0,  priceOld:20, pct:100,tags:['lim'],endsIn:1.5*3600,code:'FREE2',area:'المنيا',featured:false},
+  {id:'o007',cat:'food',       icon:'🥙',iconBg:'#FFF3E0',title:'ساندوتشات شاورما', vendor:'مطعم الشاورما',    vendorId:'v011',priceNew:25, priceOld:40, pct:37, tags:['hot'],endsIn:5*3600,code:'SHAWRMA',area:'مغاغة',featured:false},
+  {id:'o008',cat:'market',     icon:'🛒',iconBg:'#E8F5E9',title:'خضار طازجة جملة',  vendor:'سوق الجملة',       vendorId:'v006',priceNew:50, priceOld:80, pct:37, tags:['new'],endsIn:10*3600,code:'VEG37',area:'المنيا',featured:false},
+  {id:'o009',cat:'health',     icon:'💊',iconBg:'#FCE4EC',title:'تحاليل طبية شاملة',vendor:'مختبر الدقة',      vendorId:'v009',priceNew:90, priceOld:200,pct:55, tags:['excl','lim'],endsIn:7*3600,code:'LAB55',area:'بني مزار',featured:false},
+  {id:'o010',cat:'maintenance',icon:'🔧',iconBg:'#E8F5E9',title:'إصلاح سباكة عاجل', vendor:'مهندس سباكة معتمد',vendorId:'v007',priceNew:60, priceOld:120,pct:50, tags:['hot'],endsIn:2.5*3600,code:'PLUMB50',area:'مطاي',featured:false},
+];
+
+const TAG_LABELS = { hot:'🔥 الأكثر طلباً', new:'✨ جديد', lim:'⏰ محدود', excl:'💎 حصري' };
+
+/* ── STATE ── */
+let activeCat   = 'all';
+let searchQ     = '';
+let claimedOffers = JSON.parse(localStorage.getItem('kh_claimed') || '[]');
+let visibleCount  = 6;
+let filtered      = [];
+
+/* ── RENDER ── */
+function getFiltered() {
+  return OFFERS.filter(o => {
+    if (o.featured) return false;
+    if (activeCat !== 'all' && o.cat !== activeCat) return false;
+    if (searchQ && !o.title.includes(searchQ) && !o.vendor.includes(searchQ)) return false;
+    return true;
+  });
+}
+
+function renderOffers() {
+  filtered = getFiltered();
+  const list = document.getElementById('offersList');
+  const slice = filtered.slice(0, visibleCount);
+  list.innerHTML = slice.map(o => renderCard(o)).join('');
+  document.getElementById('lmWrap').hidden = filtered.length <= visibleCount;
+}
+
+function renderCard(o) {
+  const isClaimed = claimedOffers.includes(o.id);
+  const tagHtml = o.tags.map(t => `<span class="oc-badge ${t}">${TAG_LABELS[t]}</span>`).join('');
+  return `
+  <div class="offer-card ${isClaimed?'claimed':''}" id="oc-${o.id}" role="listitem">
+    <div class="oc-top">
+      <div class="oc-icon oc-icon-bg" style="background:${o.iconBg}" aria-hidden="true">
+        ${o.icon}
+        <span class="oc-pct-badge">-${o.pct}%</span>
+      </div>
+      <div class="oc-body">
+        <div class="oc-badges">${tagHtml}</div>
+        <p class="oc-name">${o.title}</p>
+        <p class="oc-vendor">🏪 ${o.vendor} • 📍 ${o.area}</p>
+        <div class="oc-price-row">
+          ${o.priceNew === 0
+            ? '<span class="oc-price-new" style="color:var(--green)">مجاناً!</span>'
+            : `<span class="oc-price-new">${o.priceNew} ج</span>`}
+          <span class="oc-price-old">${o.priceOld} ج</span>
+          <span class="oc-pct">وفّر ${o.pct}%</span>
+        </div>
+      </div>
+    </div>
+    <div class="oc-footer">
+      <span class="oc-timer ${o.endsIn < 3600 ? 'expired' : ''}" data-ends="${o.endsIn}" id="timer-${o.id}">⏱️ جاري التحميل...</span>
+      <button class="oc-btn" onclick="claimOffer('${o.id}')" ${isClaimed?'disabled':''} aria-label="${isClaimed?'تم الحجز':'احجز العرض'}">
+        ${isClaimed ? '✅ تم الحجز' : 'احجز الآن ←'}
+      </button>
+    </div>
+  </div>`;
+}
+
+/* ── TIMERS ── */
+function updateTimers() {
+  document.querySelectorAll('[data-ends]').forEach(el => {
+    let secs = parseInt(el.dataset.ends);
+    if (isNaN(secs) || secs <= 0) { el.textContent = '⏱️ انتهى العرض'; el.classList.add('expired'); return; }
+    secs = Math.max(0, secs - 1);
+    el.dataset.ends = secs;
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    el.textContent = h > 0
+      ? `⏱️ ${h} س ${pad(m)} د`
+      : `⏱️ ${pad(m)}:${pad(s)}`;
+    if (secs < 3600) el.classList.add('expired');
+  });
+}
+setInterval(updateTimers, 1000);
+updateTimers();
+
+/* ── COUNTDOWN HERO ── */
+function updateHeroCountdown() {
+  const midnight = new Date(); midnight.setHours(23,59,59,999);
+  const diff = Math.floor((midnight - new Date()) / 1000);
+  const h = Math.floor(diff / 3600);
+  const m = Math.floor((diff % 3600) / 60);
+  const s = diff % 60;
+  document.getElementById('cdH').textContent = pad(h);
+  document.getElementById('cdM').textContent = pad(m);
+  document.getElementById('cdS').textContent = pad(s);
+}
+setInterval(updateHeroCountdown, 1000);
+updateHeroCountdown();
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+/* ── CLAIM ── */
+function claimOffer(id) {
+  if (claimedOffers.includes(id)) { openCoupon(id); return; }
+  claimedOffers.push(id);
+  localStorage.setItem('kh_claimed', JSON.stringify(claimedOffers));
+  document.getElementById('claimedStat').textContent = claimedOffers.length;
+  // update card
+  const card = document.getElementById('oc-' + id);
+  if (card) {
+    card.classList.add('claimed');
+    const btn = card.querySelector('.oc-btn');
+    if (btn) { btn.textContent = '✅ تم الحجز'; btn.disabled = true; }
+    card.querySelector('.oc-footer').style.background = '#D8F3DC';
+  }
+  showToast('✅ تم حجز العرض — اضغط مرة أخرى لعرض الكوبون');
+  setTimeout(() => openCoupon(id), 500);
+}
+
+/* ── COUPON SHEET ── */
+function openCoupon(id) {
+  const o = OFFERS.find(x => x.id === id);
+  if (!o) return;
+  document.getElementById('couponBody').innerHTML = `
+    <div class="coupon-vendor-row">
+      <div class="coupon-vendor-icon" aria-hidden="true">${o.icon}</div>
+      <div>
+        <p class="coupon-vendor-name">${o.title}</p>
+        <p class="coupon-vendor-sub">📍 ${o.vendor} — ${o.area}</p>
+      </div>
+    </div>
+    <div class="coupon-code-box">
+      <p class="coupon-code-label">كود الخصم</p>
+      <p class="coupon-code" id="couponCode">${o.code}</p>
+      <button class="coupon-copy-btn" onclick="copyCode('${o.code}')" aria-label="نسخ الكود">📋 نسخ</button>
+    </div>
+    <div class="coupon-details">
+      <div class="coupon-detail-row"><span class="cdl">السعر الأصلي</span><span class="cdr">${o.priceOld} جنيه</span></div>
+      <div class="coupon-detail-row"><span class="cdl">السعر بعد الخصم</span><span class="cdr" style="color:var(--green)">${o.priceNew === 0 ? 'مجاناً' : o.priceNew + ' جنيه'}</span></div>
+      <div class="coupon-detail-row"><span class="cdl">نسبة الخصم</span><span class="cdr" style="color:var(--gold-dark)">${o.pct}%</span></div>
+      <div class="coupon-detail-row"><span class="cdl">المنطقة</span><span class="cdr">${o.area}</span></div>
+    </div>
+    <button class="coupon-use-btn" onclick="goTo('vendor.html?id=${o.vendorId}')">📞 تواصل مع المزود ←</button>
+    <button class="coupon-share-btn" onclick="shareCode('${o.code}','${o.title}')">📤 شارك الكوبون مع صديق</button>
+  `;
+  document.getElementById('sheetOverlay').classList.add('show');
+  document.getElementById('couponSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  document.getElementById('sheetOverlay').classList.remove('show');
+  document.getElementById('couponSheet').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+async function copyCode(code) {
+  try {
+    await navigator.clipboard.writeText(code);
+    showToast('📋 تم نسخ الكود: ' + code);
+  } catch (_) { showToast('الكود: ' + code); }
+}
+
+async function shareCode(code, title) {
+  const txt = `🎉 استخدم كود "${code}" للحصول على خصم في ${title} عبر تطبيق خدماتي المنيا!`;
+  if (navigator.share) {
+    try { await navigator.share({ title:'كوبون خدماتي المنيا', text:txt }); }
+    catch (_) {}
+  } else {
+    await navigator.clipboard.writeText(txt).catch(()=>{});
+    showToast('📋 تم نسخ الكوبون');
+  }
+}
+
+/* ── FILTER TABS ── */
+document.querySelectorAll('.off-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.off-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    this.classList.add('active'); this.setAttribute('aria-selected','true');
+    activeCat = this.dataset.cat;
+    visibleCount = 6;
+    renderOffers();
+  });
+});
+
+/* ── SEARCH ── */
+document.getElementById('offerSearch').addEventListener('input', function () {
+  searchQ = this.value.trim();
+  visibleCount = 6;
+  renderOffers();
+});
+
+/* ── LOAD MORE ── */
+function loadMoreOffers() {
+  const btn = document.getElementById('lmBtn');
+  btn.classList.add('loading'); btn.textContent = '⏳ جار التحميل...';
+  setTimeout(() => {
+    visibleCount += 6;
+    renderOffers();
+    updateTimers();
+    btn.classList.remove('loading'); btn.textContent = 'تحميل المزيد ↓';
+  }, 600);
+}
+
+/* ── SHARE ── */
+async function shareOffers() {
+  if (navigator.share) {
+    try { await navigator.share({ title:'عروض اليوم', text:'شوف أحسن العروض في المنيا دلوقتي!', url: location.href }); }
+    catch (_) {}
+  } else showToast('📤 ميزة المشاركة غير متاحة على متصفحك');
+}
+
+function voiceSearch() { showToast('🎙️ البحث الصوتي متاح على Chrome'); }
+
+/* ── HELPERS ── */
+function goTo(url) { window.location.href = url; }
+
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+/* ── INIT ── */
+document.getElementById('claimedStat').textContent = claimedOffers.length;
+renderOffers();
+updateTimers();
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

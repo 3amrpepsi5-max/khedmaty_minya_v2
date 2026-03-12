@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<title>الإشعارات — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── HEADER ── */
+.notif-header{position:sticky;top:0;z-index:100;background:var(--green);padding:12px 16px;box-shadow:0 2px 16px rgba(27,67,50,.3)}
+.notif-hdr-row{display:flex;align-items:center;gap:10px}
+.n-back{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t);flex-shrink:0}
+.n-back:active{transform:scale(.9)}
+.n-title{font-size:16px;font-weight:900;color:white;flex:1}
+.n-action{font-size:12px;font-weight:700;color:var(--gold);background:none;border:none;cursor:pointer;font-family:var(--font);white-space:nowrap}
+
+/* ── FILTER TABS ── */
+.n-tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border)}
+.n-tab{flex:1;padding:11px 8px;font-size:13px;font-weight:700;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t);display:flex;align-items:center;justify-content:center;gap:5px}
+.n-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.n-tab-badge{background:var(--gold);color:var(--green-dark);font-size:10px;font-weight:900;padding:1px 6px;border-radius:50px;min-width:16px;text-align:center}
+
+/* ── DATE GROUP ── */
+.n-group{padding:0 16px}
+.n-group-label{font-size:11px;font-weight:700;color:var(--text-muted);padding:14px 0 6px;letter-spacing:.4px;display:flex;align-items:center;gap:7px}
+.n-group-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── NOTIFICATION ITEM ── */
+.n-item{display:flex;align-items:flex-start;gap:11px;padding:13px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--t);position:relative}
+.n-item:last-child{border-bottom:none}
+.n-item:active{background:transparent;opacity:.8}
+.n-item.unread .n-body-title{color:var(--green-dark)}
+.n-unread-dot{position:absolute;top:16px;left:0;width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
+.n-ico-wrap{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.n-ico-wrap.offer    {background:#FFF0E0}
+.n-ico-wrap.order    {background:#E8F5E9}
+.n-ico-wrap.alert    {background:#FDECEA}
+.n-ico-wrap.info     {background:#E3F2FD}
+.n-ico-wrap.community{background:#F3E5F5}
+.n-ico-wrap.promo    {background:#FFF8E1}
+.n-body{flex:1;min-width:0}
+.n-body-title{font-size:13.5px;font-weight:800;color:var(--text-main);margin-bottom:3px;line-height:1.35}
+.n-body-sub{font-size:12px;color:var(--text-muted);line-height:1.45;margin-bottom:5px}
+.n-body-time{font-size:10.5px;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+.n-body-cta{display:inline-flex;align-items:center;gap:5px;background:var(--green-pale);color:var(--green);padding:4px 11px;border-radius:50px;font-size:11px;font-weight:800;margin-top:5px}
+.n-delete{width:30px;height:30px;border-radius:50%;background:none;border:none;cursor:pointer;font-size:15px;color:var(--text-muted);display:grid;place-items:center;flex-shrink:0;transition:var(--t);font-family:var(--font)}
+.n-delete:active{background:var(--surface2);color:var(--gold-dark)}
+
+/* ── SWIPE DELETE (visual hint) ── */
+.n-item-wrap{position:relative;overflow:hidden}
+.n-item-del-bg{position:absolute;top:0;bottom:0;left:0;width:70px;background:#E74C3C;display:flex;align-items:center;justify-content:center;font-size:20px;color:white;z-index:0;border-radius:var(--radius-sm)}
+.n-item-inner{position:relative;z-index:1;background:var(--surface);transition:transform .3s ease}
+
+/* ── EMPTY STATE ── */
+.n-empty{text-align:center;padding:70px 20px}
+.n-empty-icon{font-size:58px;margin-bottom:12px}
+.n-empty-title{font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:6px}
+.n-empty-sub{font-size:13px;color:var(--text-muted);line-height:1.5}
+
+/* ── PERMISSION BANNER ── */
+.perm-banner{margin:14px 16px;background:linear-gradient(135deg,var(--green-dark),var(--green));border-radius:var(--radius-md);padding:14px;display:flex;align-items:center;gap:12px}
+.perm-icon{font-size:28px;flex-shrink:0}
+.perm-text{flex:1}
+.perm-title{font-size:13px;font-weight:900;color:white;margin-bottom:2px}
+.perm-sub{font-size:11px;color:rgba(255,255,255,.78)}
+.perm-btn{background:var(--gold);color:var(--green-dark);border:none;border-radius:50px;padding:7px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--font);white-space:nowrap;flex-shrink:0;transition:var(--t)}
+.perm-btn:active{opacity:.85}
+</style>
+</head>
+<body>
+
+<header class="notif-header">
+  <div class="notif-hdr-row">
+    <button class="n-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <span class="n-title">🔔 الإشعارات</span>
+    <button class="n-action" onclick="markAllRead()" id="markAllBtn">تعليم الكل مقروء</button>
+  </div>
+</header>
+
+<!-- FILTER TABS -->
+<div class="n-tabs" role="tablist">
+  <button class="n-tab active" data-tab="all"       role="tab" aria-selected="true">الكل <span class="n-tab-badge" id="badge-all">3</span></button>
+  <button class="n-tab" data-tab="offers"           role="tab" aria-selected="false">عروض</button>
+  <button class="n-tab" data-tab="orders"           role="tab" aria-selected="false">طلبات</button>
+  <button class="n-tab" data-tab="community"        role="tab" aria-selected="false">مجتمع</button>
+</div>
+
+<main class="page-body" style="padding-top:0;padding-bottom:90px" id="mainContent">
+
+  <!-- PERMISSION BANNER -->
+  <div class="perm-banner" id="permBanner">
+    <span class="perm-icon">🔔</span>
+    <div class="perm-text">
+      <p class="perm-title">فعّل الإشعارات</p>
+      <p class="perm-sub">عشان توصلك العروض والأخبار فوراً</p>
+    </div>
+    <button class="perm-btn" onclick="requestPermission()" id="permBtn">فعّل</button>
+  </div>
+
+  <div id="notifList"></div>
+
+</main>
+
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+const NOTIFS_KEY = 'kh_notifs_read';
+let readIds = JSON.parse(localStorage.getItem(NOTIFS_KEY) || '[]');
+let activeTab = 'all';
+
+const NOTIFS = [
+  {id:'n1', tab:'offers',    type:'offer',     icon:'🔥', title:'عرض ينتهي بعد ساعة!', body:'صيانة كهرباء بخصم 47% — أستاذ محمد. الكود: ELEC47', time:'منذ 10 دقائق', cta:'احجز الآن', ctaUrl:'offers.html', priority:true},
+  {id:'n2', tab:'orders',    type:'order',     icon:'✅', title:'تم إتمام طلبك بنجاح', body:'طلب صيانة كهرباء مع أستاذ محمد — تقييمك يهمنا', time:'منذ ساعة', cta:'قيّم الآن', ctaUrl:'my-reviews.html', priority:true},
+  {id:'n3', tab:'community', type:'community', icon:'🎁', title:'كرتونة خير جديدة في حيّك', body:'محل الأمانة يوفر كراتين للمحتاجين — الكميات محدودة', time:'منذ 3 ساعات', cta:'اعرف أكثر', ctaUrl:'market.html#khair', priority:true},
+  {id:'n4', tab:'offers',    type:'promo',     icon:'🎉', title:'عرض جديد — مطعم البيت الكبير', body:'وجبة عيلة بخصم 33% مع توصيل مجاني داخل ملوي', time:'منذ 5 ساعات', cta:'اطلب دلوقتي', ctaUrl:'offers.html'},
+  {id:'n5', tab:'orders',    type:'alert',     icon:'🚨', title:'تم استلام طلبك الطارئ', body:'المزود في الطريق — الوصول المتوقع 15 دقيقة', time:'أمس 9 م', cta:'تتبع الطلب', ctaUrl:'emergency.html'},
+  {id:'n6', tab:'community', type:'info',      icon:'📊', title:'تحديث أسعار البورصة', body:'الطماطم 8 ج/كيلو ↓ — البصل 12 ج/كيلو ↑ — دلوقتي في بورصة الأسعار', time:'أمس 7 م', cta:'بورصة الأسعار', ctaUrl:'bourse.html'},
+  {id:'n7', tab:'offers',    type:'promo',     icon:'💊', title:'عرض تحاليل طبية شاملة', body:'مختبر الدقة — خصم 55% — الكود: LAB55 صالح اليوم فقط', time:'أمس 6 م', cta:'احجز', ctaUrl:'offers.html'},
+  {id:'n8', tab:'community', type:'info',      icon:'ℹ️', title:'مزود خدمة جديد انضم', body:'تكييفات الراحة — صيانة وتركيب بملوي. تقييم 4.8 ⭐', time:'منذ يومين', cta:'شوف الملف', ctaUrl:'vendor.html?id=v010'},
+  {id:'n9', tab:'orders',    type:'order',     icon:'⭐', title:'قيّم أستاذ محمد', body:'آخر تقييمك له كان 5 نجوم — تعاملت معاه تاني؟', time:'منذ 3 أيام', cta:'قيّم الآن', ctaUrl:'my-reviews.html'},
+];
+
+/* ── RENDER ── */
+function getVisible() {
+  return NOTIFS.filter(n => activeTab === 'all' || n.tab === activeTab);
+}
+
+function countUnread() {
+  return NOTIFS.filter(n => !readIds.includes(n.id)).length;
+}
+
+function render() {
+  const visible = getVisible();
+  const list = document.getElementById('notifList');
+
+  if (!visible.length) {
+    list.innerHTML = `<div class="n-empty"><div class="n-empty-icon">🔔</div><p class="n-empty-title">لا توجد إشعارات</p><p class="n-empty-sub">مفيش إشعارات في هذا القسم</p></div>`;
+    return;
+  }
+
+  // تجميع حسب التاريخ
+  const groups = { 'اليوم': [], 'أمس': [], 'قديم': [] };
+  visible.forEach(n => {
+    if (n.time.includes('دقيقة') || n.time.includes('ساعة')) groups['اليوم'].push(n);
+    else if (n.time.includes('أمس')) groups['أمس'].push(n);
+    else groups['قديم'].push(n);
+  });
+
+  list.innerHTML = Object.entries(groups).filter(([,items]) => items.length).map(([label, items]) => `
+    <div class="n-group">
+      <div class="n-group-label">${label}</div>
+      ${items.map(n => renderItem(n)).join('')}
+    </div>`).join('');
+
+  updateBadges();
+}
+
+function renderItem(n) {
+  const isUnread = !readIds.includes(n.id);
+  return `
+  <div class="n-item-wrap" id="wrap-${n.id}">
+    <div class="n-item-del-bg" aria-hidden="true">🗑️</div>
+    <div class="n-item-inner">
+      <div class="n-item ${isUnread ? 'unread' : ''}" onclick="openNotif('${n.id}')" role="button" tabindex="0" aria-label="${n.title}">
+        ${isUnread ? '<span class="n-unread-dot" aria-label="غير مقروء"></span>' : ''}
+        <div class="n-ico-wrap ${n.type}" aria-hidden="true">${n.icon}</div>
+        <div class="n-body">
+          <p class="n-body-title">${n.title}</p>
+          <p class="n-body-sub">${n.body}</p>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span class="n-body-time">🕐 ${n.time}</span>
+            ${n.cta ? `<span class="n-body-cta">${n.cta} ←</span>` : ''}
+          </div>
+        </div>
+        <button class="n-delete" onclick="deleteNotif(event,'${n.id}')" aria-label="حذف الإشعار">🗑️</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── ACTIONS ── */
+function openNotif(id) {
+  const n = NOTIFS.find(x => x.id === id);
+  if (!n) return;
+  if (!readIds.includes(id)) {
+    readIds.push(id);
+    localStorage.setItem(NOTIFS_KEY, JSON.stringify(readIds));
+    const item = document.querySelector(`#wrap-${id} .n-item`);
+    item?.classList.remove('unread');
+    item?.querySelector('.n-unread-dot')?.remove();
+    updateBadges();
+  }
+  if (n.ctaUrl) window.location.href = n.ctaUrl;
+}
+
+function deleteNotif(e, id) {
+  e.stopPropagation();
+  const wrap = document.getElementById('wrap-' + id);
+  if (!wrap) return;
+  const inner = wrap.querySelector('.n-item-inner');
+  inner.style.transform = 'translateX(-70px)';
+  inner.style.opacity   = '0';
+  setTimeout(() => {
+    wrap.style.height   = wrap.offsetHeight + 'px';
+    wrap.style.overflow = 'hidden';
+    wrap.style.transition = 'height .3s ease, opacity .3s';
+    wrap.style.height = '0';
+    wrap.style.opacity = '0';
+    setTimeout(() => {
+      wrap.remove();
+      if (!readIds.includes(id)) {
+        readIds.push(id);
+        localStorage.setItem(NOTIFS_KEY, JSON.stringify(readIds));
+        updateBadges();
+      }
+    }, 320);
+  }, 280);
+  showToast('🗑️ تم حذف الإشعار');
+}
+
+function markAllRead() {
+  NOTIFS.forEach(n => { if (!readIds.includes(n.id)) readIds.push(n.id); });
+  localStorage.setItem(NOTIFS_KEY, JSON.stringify(readIds));
+  document.querySelectorAll('.n-item.unread').forEach(el => {
+    el.classList.remove('unread');
+    el.querySelector('.n-unread-dot')?.remove();
+  });
+  updateBadges();
+  showToast('✅ تم تعليم الكل مقروء');
+}
+
+function updateBadges() {
+  const unread = countUnread();
+  const badge = document.getElementById('badge-all');
+  if (badge) {
+    badge.textContent = unread;
+    badge.style.display = unread ? '' : 'none';
+  }
+  document.getElementById('markAllBtn').style.display = unread ? '' : 'none';
+}
+
+/* ── TABS ── */
+document.querySelectorAll('.n-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.n-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    this.classList.add('active'); this.setAttribute('aria-selected','true');
+    activeTab = this.dataset.tab;
+    render();
+  });
+});
+
+/* ── PERMISSION ── */
+async function requestPermission() {
+  if (!('Notification' in window)) { showToast('المتصفح لا يدعم الإشعارات', 'err'); return; }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    document.getElementById('permBanner').style.display = 'none';
+    showToast('✅ تم تفعيل الإشعارات');
+  } else showToast('تم رفض الإذن', 'err');
+}
+
+// إخفاء البانر إذا الإذن ممنوح مسبقاً
+if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+  document.getElementById('permBanner').style.display = 'none';
+}
+
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+render();
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

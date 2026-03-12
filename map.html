@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#1B4332">
+<meta name="description" content="خريطة المنيا الذكية — كل المحلات والخدمات على خريطة تفاعلية">
+<title>الخريطة الذكية — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── FULLSCREEN MAP LAYOUT ── */
+html,body{height:100%;overflow:hidden}
+.map-page{display:flex;flex-direction:column;height:100%}
+
+/* ── TOP BAR ── */
+.map-topbar{position:absolute;top:0;left:0;right:0;z-index:200;padding:12px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent);pointer-events:none}
+.map-topbar > *{pointer-events:all}
+.map-back{width:40px;height:40px;background:white;border-radius:12px;display:grid;place-items:center;font-size:20px;border:none;cursor:pointer;box-shadow:var(--shadow-md);transition:var(--t);flex-shrink:0;font-family:var(--font)}
+.map-back:active{transform:scale(.9)}
+.map-sbox{flex:1;display:flex;align-items:center;gap:8px;background:white;border-radius:50px;padding:9px 14px;box-shadow:var(--shadow-md)}
+.map-sbox input{flex:1;border:none;outline:none;font-size:13.5px;font-family:var(--font);color:var(--text-main);background:none}
+.map-sbox input::placeholder{color:var(--text-muted)}
+.map-sbox .si{color:var(--text-muted);font-size:15px}
+
+/* ── CATEGORY FILTER BAR ── */
+.map-cats{position:absolute;top:68px;left:0;right:0;z-index:190;display:flex;gap:8px;padding:0 14px;overflow-x:auto;scrollbar-width:none}
+.map-cats::-webkit-scrollbar{display:none}
+.mcat{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer;transition:var(--t);border:none;font-family:var(--font);box-shadow:0 2px 8px rgba(0,0,0,.18);white-space:nowrap}
+.mcat.active{background:var(--green);color:white}
+.mcat:not(.active){background:white;color:var(--text-main)}
+.mcat:active{transform:scale(.94)}
+
+/* ── MAP CONTAINER ── */
+.map-canvas{flex:1;position:relative;background:linear-gradient(145deg,#C8E6C9 0%,#A5D6A7 30%,#81C784 60%,#66BB6A 100%)}
+#mapEl{width:100%;height:100%;position:relative;overflow:hidden;user-select:none}
+
+/* ── SVG MAP BACKGROUND ── */
+.map-svg-bg{position:absolute;inset:0;width:100%;height:100%}
+
+/* ── MAP PINS ── */
+.map-pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1);z-index:10}
+.map-pin:hover,.map-pin.hovered{transform:translate(-50%,-100%) scale(1.25)}
+.map-pin.selected{transform:translate(-50%,-100%) scale(1.3);z-index:20}
+.pin-bubble{background:white;border-radius:12px;padding:5px 9px;box-shadow:0 4px 16px rgba(0,0,0,.22);display:flex;align-items:center;gap:5px;border:2px solid transparent;transition:var(--t);white-space:nowrap;min-width:32px;justify-content:center}
+.pin-bubble.cat-maintenance{border-color:#40916C}
+.pin-bubble.cat-food       {border-color:#F4A261}
+.pin-bubble.cat-health     {border-color:#E74C3C}
+.pin-bubble.cat-education  {border-color:#9B59B6}
+.pin-bubble.cat-delivery   {border-color:#3498DB}
+.pin-bubble.cat-market     {border-color:#1ABC9C}
+.pin-bubble.cat-open::after{content:'';position:absolute;top:-4px;right:-4px;width:10px;height:10px;background:#27AE60;border-radius:50%;border:2px solid white}
+.pin-icon{font-size:16px;line-height:1}
+.pin-label{font-size:10px;font-weight:800;color:var(--text-main);max-width:70px;overflow:hidden;text-overflow:ellipsis;display:none}
+.map-pin.selected .pin-label{display:block}
+.pin-tail{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid white;margin:0 auto;margin-top:-1px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.15))}
+
+/* ── MAP CONTROLS ── */
+.map-controls{position:absolute;left:14px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:8px}
+.map-ctrl-btn{width:42px;height:42px;background:white;border-radius:12px;display:grid;place-items:center;font-size:20px;border:none;cursor:pointer;box-shadow:var(--shadow-md);transition:var(--t);font-family:var(--font)}
+.map-ctrl-btn:active{transform:scale(.9);background:var(--surface2)}
+
+/* ── MY LOCATION DOT ── */
+.my-loc-dot{position:absolute;width:18px;height:18px;background:#4285F4;border-radius:50%;border:3px solid white;box-shadow:0 2px 10px rgba(66,133,244,.5);z-index:15;transform:translate(-50%,-50%);animation:loc-pulse 2s ease-in-out infinite}
+.my-loc-ring{position:absolute;width:50px;height:50px;border:2px solid rgba(66,133,244,.35);border-radius:50%;z-index:14;transform:translate(-50%,-50%);animation:ring-expand 2s ease-out infinite}
+@keyframes loc-pulse{0%,100%{box-shadow:0 2px 10px rgba(66,133,244,.5)}50%{box-shadow:0 2px 20px rgba(66,133,244,.8)}}
+@keyframes ring-expand{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(-50%,-50%) scale(2);opacity:0}}
+
+/* ── LAYERS PANEL ── */
+.layers-btn{position:absolute;left:14px;bottom:180px;z-index:200;width:42px;height:42px;background:var(--green);border-radius:12px;display:grid;place-items:center;font-size:20px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(45,106,79,.45);transition:var(--t);font-family:var(--font)}
+.layers-btn:active{transform:scale(.9)}
+.layers-panel{position:absolute;left:14px;bottom:232px;z-index:210;background:white;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:12px;width:170px;display:none}
+.layers-panel.show{display:block;animation:fade-up .2s ease}
+@keyframes fade-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.layer-item{display:flex;align-items:center;gap:10px;padding:8px 4px;cursor:pointer;border-bottom:1px solid var(--border)}
+.layer-item:last-child{border-bottom:none}
+.layer-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);display:grid;place-items:center;font-size:11px;flex-shrink:0;transition:var(--t)}
+.layer-check.on{background:var(--green);border-color:var(--green);color:white}
+.layer-label{font-size:12px;font-weight:700;color:var(--text-main)}
+
+/* ── BOTTOM CARD (pin info) ── */
+.map-bottom-card{position:absolute;bottom:70px;left:14px;right:14px;z-index:200;background:white;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:14px;transform:translateY(120%);transition:.35s cubic-bezier(.4,0,.2,1);border:1.5px solid var(--border)}
+.map-bottom-card.show{transform:translateY(0)}
+.mbc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.mbc-icon{width:50px;height:50px;background:var(--surface2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.mbc-info{flex:1}
+.mbc-name{font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:3px}
+.mbc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mbc-rating{font-size:11px;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:3px}
+.mbc-rating .st{color:var(--gold)}
+.mbc-status{font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:3px}
+.mbc-status.open{color:#27AE60}
+.mbc-status.closed{color:#E74C3C}
+.mbc-status .vdot{width:6px;height:6px;border-radius:50%}
+.mbc-status.open  .vdot{background:#27AE60;animation:blink 1.5s infinite}
+.mbc-status.closed .vdot{background:#E74C3C}
+.mbc-close{width:30px;height:30px;background:var(--surface2);border-radius:50%;display:grid;place-items:center;font-size:16px;flex-shrink:0;cursor:pointer;border:none;font-family:var(--font);transition:var(--t)}
+.mbc-close:active{background:var(--border)}
+.mbc-actions{display:flex;gap:8px}
+.mbc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;border-radius:10px;font-size:12px;font-weight:800;text-decoration:none;transition:var(--t);border:none;cursor:pointer;font-family:var(--font)}
+.mbc-btn.call{background:var(--green);color:white}
+.mbc-btn.wa  {background:#25D366;color:white}
+.mbc-btn.info{background:var(--surface2);color:var(--text-main)}
+.mbc-btn:active{opacity:.82}
+
+/* ── COMPASS ── */
+.map-compass{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:200;width:42px;height:42px;background:white;border-radius:50%;display:grid;place-items:center;font-size:22px;box-shadow:var(--shadow-md);cursor:pointer;border:none;transition:var(--t);font-family:var(--font)}
+.map-compass:active{transform:translateY(-50%) scale(.9)}
+
+/* ── SCALE BAR ── */
+.scale-bar{position:absolute;bottom:150px;right:14px;z-index:200;background:rgba(255,255,255,.9);border-radius:4px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--text-main);box-shadow:var(--shadow-sm)}
+
+/* ── RESULT COUNT PILL ── */
+.result-pill{position:absolute;bottom:155px;left:50%;transform:translateX(-50%);z-index:200;background:var(--green-dark);color:white;padding:5px 14px;border-radius:50px;font-size:12px;font-weight:700;box-shadow:var(--shadow-md);white-space:nowrap;pointer-events:none}
+
+/* ── STREET MODE (فلتر مبسّط) ── */
+.map-road{position:absolute;background:rgba(255,255,255,.7);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="map-page">
+
+<!-- ════════════ MAP AREA ════════════ -->
+<div class="map-canvas" id="mapContainer">
+  <div id="mapEl" aria-label="خريطة محافظة المنيا التفاعلية" role="application">
+
+    <!-- SVG Road Network (تمثيلي) -->
+    <svg class="map-svg-bg" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <!-- خلفية المناطق -->
+      <rect width="400" height="700" fill="#C8E6C9"/>
+      <!-- نهر النيل -->
+      <path d="M 190 0 Q 185 100 188 200 Q 190 350 185 500 Q 183 600 187 700" stroke="#90CAF9" stroke-width="22" fill="none" opacity=".8"/>
+      <path d="M 190 0 Q 185 100 188 200 Q 190 350 185 500 Q 183 600 187 700" stroke="#BBDEFB" stroke-width="14" fill="none" opacity=".6"/>
+      <!-- شوارع رئيسية -->
+      <line x1="0" y1="200" x2="400" y2="200" stroke="white" stroke-width="6" opacity=".7"/>
+      <line x1="0" y1="380" x2="400" y2="380" stroke="white" stroke-width="6" opacity=".7"/>
+      <line x1="0" y1="520" x2="400" y2="520" stroke="white" stroke-width="5" opacity=".6"/>
+      <line x1="120" y1="0" x2="120" y2="700" stroke="white" stroke-width="4" opacity=".5"/>
+      <line x1="260" y1="0" x2="260" y2="700" stroke="white" stroke-width="4" opacity=".5"/>
+      <line x1="50"  y1="0" x2="50"  y2="700" stroke="white" stroke-width="3" opacity=".4"/>
+      <line x1="330" y1="0" x2="330" y2="700" stroke="white" stroke-width="3" opacity=".4"/>
+      <!-- مناطق خضراء (حدائق/أراضي زراعية) -->
+      <rect x="20"  y="60"  width="80" height="60" rx="8" fill="#A5D6A7" opacity=".6"/>
+      <rect x="300" y="140" width="70" height="50" rx="8" fill="#A5D6A7" opacity=".6"/>
+      <rect x="30"  y="420" width="60" height="80" rx="8" fill="#A5D6A7" opacity=".6"/>
+      <!-- مباني (مناطق حضرية) -->
+      <rect x="130" y="90"  width="110" height="80" rx="6" fill="#EFEBE9" opacity=".7"/>
+      <rect x="270" y="90"  width="100" height="60" rx="6" fill="#EFEBE9" opacity=".7"/>
+      <rect x="130" y="220" width="100" height="100" rx="6" fill="#EFEBE9" opacity=".7"/>
+      <rect x="270" y="220" width="110" height="90" rx="6" fill="#EFEBE9" opacity=".7"/>
+      <rect x="130" y="400" width="95"  height="90" rx="6" fill="#EFEBE9" opacity=".7"/>
+      <!-- نصوص تمثيلية -->
+      <text x="195" y="350" text-anchor="middle" font-size="10" fill="#1565C0" opacity=".7" font-family="Cairo">نهر النيل</text>
+      <text x="200" y="155" text-anchor="middle" font-size="11" fill="#555" opacity=".8" font-family="Cairo" font-weight="bold">وسط المنيا</text>
+      <text x="200" y="290" text-anchor="middle" font-size="10" fill="#555" opacity=".7" font-family="Cairo">حي النيل</text>
+      <text x="200" y="455" text-anchor="middle" font-size="10" fill="#555" opacity=".7" font-family="Cairo">المنيا الجديدة</text>
+    </svg>
+
+    <!-- الدبابيس — تُولَّد بـ JS -->
+    <div id="pinsLayer" aria-live="polite" style="position:absolute;inset:0;z-index:10"></div>
+
+    <!-- موقعي -->
+    <div class="my-loc-ring" id="myLocRing" style="left:52%;top:40%;display:none"></div>
+    <div class="my-loc-dot"  id="myLocDot"  style="left:52%;top:40%;display:none" title="موقعي الحالي"></div>
+
+  </div>
+</div>
+
+<!-- ════════════ TOP BAR ════════════ -->
+<div class="map-topbar">
+  <button class="map-back" onclick="history.back()" aria-label="رجوع">←</button>
+  <div class="map-sbox" role="search">
+    <span class="si" aria-hidden="true">🔍</span>
+    <input type="search" id="mapSearch" placeholder="ابحث على الخريطة..." autocomplete="off" inputmode="search" aria-label="بحث على الخريطة">
+  </div>
+</div>
+
+<!-- ════════════ CATEGORY FILTER ════════════ -->
+<div class="map-cats" id="mapCats" role="group" aria-label="تصفية حسب القسم">
+  <button class="mcat active" data-cat="all"         onclick="filterCat(this)">🏠 الكل</button>
+  <button class="mcat" data-cat="maintenance"        onclick="filterCat(this)">🔧 صيانة</button>
+  <button class="mcat" data-cat="food"               onclick="filterCat(this)">🍽️ مطاعم</button>
+  <button class="mcat" data-cat="health"             onclick="filterCat(this)">🏥 صحة</button>
+  <button class="mcat" data-cat="education"          onclick="filterCat(this)">📚 تعليم</button>
+  <button class="mcat" data-cat="delivery"           onclick="filterCat(this)">🛵 توصيل</button>
+  <button class="mcat" data-cat="market"             onclick="filterCat(this)">🛒 سوق</button>
+</div>
+
+<!-- ════════════ MAP CONTROLS ════════════ -->
+<div class="map-controls">
+  <button class="map-ctrl-btn" onclick="zoomIn()"  aria-label="تكبير">＋</button>
+  <button class="map-ctrl-btn" onclick="zoomOut()" aria-label="تصغير">－</button>
+</div>
+<button class="map-ctrl-btn map-compass" onclick="resetNorth()" aria-label="اتجاه الشمال">🧭</button>
+
+<!-- LAYERS BUTTON -->
+<button class="layers-btn" onclick="toggleLayers()" aria-label="الطبقات" id="layersBtn">🗂️</button>
+<div class="layers-panel" id="layersPanel" role="menu" aria-label="طبقات الخريطة">
+  <div class="layer-item" onclick="toggleLayer('vendors')" id="lyr-vendors">
+    <div class="layer-check on" id="lc-vendors">✓</div>
+    <span class="layer-label">🏪 المزودون</span>
+  </div>
+  <div class="layer-item" onclick="toggleLayer('open')" id="lyr-open">
+    <div class="layer-check on" id="lc-open">✓</div>
+    <span class="layer-label">🟢 مفتوح الآن</span>
+  </div>
+  <div class="layer-item" onclick="toggleLayer('offers')" id="lyr-offers">
+    <div class="layer-check on" id="lc-offers">✓</div>
+    <span class="layer-label">🔥 العروض</span>
+  </div>
+  <div class="layer-item" onclick="toggleLayer('emergency')" id="lyr-emergency">
+    <div class="layer-check" id="lc-emergency"></div>
+    <span class="layer-label">🚨 طوارئ</span>
+  </div>
+</div>
+
+<!-- SCALE BAR -->
+<div class="scale-bar" aria-hidden="true">500 م</div>
+
+<!-- RESULT COUNT -->
+<div class="result-pill" id="resultPill">47 مزود على الخريطة</div>
+
+<!-- ════════════ BOTTOM CARD ════════════ -->
+<div class="map-bottom-card" id="mapBottomCard" role="dialog" aria-modal="false" aria-label="معلومات المزود">
+  <div class="mbc-top">
+    <div class="mbc-icon" id="mbcIcon" aria-hidden="true">🏪</div>
+    <div class="mbc-info">
+      <p class="mbc-name" id="mbcName">—</p>
+      <div class="mbc-meta">
+        <span class="mbc-rating"><span class="st">★</span><span id="mbcRating">—</span></span>
+        <span class="mbc-status open" id="mbcStatus"><span class="vdot"></span><span id="mbcStatusTxt">—</span></span>
+        <span style="font-size:10.5px;color:var(--text-muted)" id="mbcArea">—</span>
+      </div>
+    </div>
+    <button class="mbc-close" onclick="closeCard()" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="mbc-actions">
+    <a class="mbc-btn call" id="mbcCall" href="#" aria-label="اتصال">📞 اتصال</a>
+    <a class="mbc-btn wa"   id="mbcWa"   href="#" target="_blank" rel="noopener" aria-label="واتساب">💬 واتساب</a>
+    <button class="mbc-btn info" onclick="openVendor()" aria-label="التفاصيل">📋 تفاصيل</button>
+  </div>
+</div>
+
+</div><!-- end map-page -->
+
+<!-- ════════════ BOTTOM NAV ════════════ -->
+<nav class="bnav" style="position:fixed" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem active" aria-current="page"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn" aria-label="طلب طارئ">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ════════════ SCRIPT ════════════ -->
+<script>
+'use strict';
+
+/* ── PINS DATA ── */
+/* ── PINS: loaded from vendors-lite.json ── */
+let PINS = [];
+let _mapsLoaded = false;
+
+async function loadMapPins() {
+  try {
+    const r = await fetch('data/vendors-lite.json');
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    PINS = d.vendors;
+  } catch(e) {
+    // Fallback inline
+    PINS = [
+      {id:'v001',name:'أستاذ محمد الكهربائي',cat:'maintenance',icon:'⚡',x:45,y:45,rating:4.9,open:true,phone:'01012345678',area:'المنيا',offer:true,verified:true},
+      {id:'v002',name:'مطعم البيت الكبير',   cat:'food',       icon:'🍽️',x:52,y:56,rating:4.7,open:true,phone:'01098765432',area:'ملوي',  offer:true,verified:true},
+      {id:'v003',name:'دكتور أحمد',          cat:'health',     icon:'🏥',x:39,y:50,rating:4.8,open:false,phone:'01156789012',area:'المنيا',offer:false,verified:true},
+      {id:'v004',name:'سريع للتوصيل',        cat:'delivery',   icon:'🛵',x:62,y:62,rating:4.6,open:true,phone:'01234567890',area:'المنيا',offer:true,verified:false},
+      {id:'v005',name:'أستاذ عمر فيزياء',   cat:'education',  icon:'📚',x:57,y:33,rating:4.9,open:true,phone:'01312345678',area:'مغاغة',offer:true,verified:true},
+      {id:'v006',name:'سوق الجملة',          cat:'market',     icon:'🛒',x:29,y:68,rating:4.4,open:true,phone:'01612345678',area:'المنيا',offer:false,verified:false},
+      {id:'v007',name:'مهندس سباكة',         cat:'maintenance',icon:'🔧',x:54,y:60,rating:4.7,open:true,phone:'01712345678',area:'مطاي', offer:true,verified:true},
+      {id:'v008',name:'كشري المنيا',         cat:'food',       icon:'🍲',x:44,y:54,rating:4.8,open:true,phone:'01812345678',area:'المنيا',offer:true,verified:true},
+      {id:'v009',name:'مختبر الدقة',         cat:'health',     icon:'💊',x:68,y:78,rating:4.6,open:false,phone:'01912345678',area:'المنيا الجديدة',offer:true,verified:true},
+      {id:'v010',name:'تكييفات الراحة',      cat:'maintenance',icon:'❄️',x:21,y:31,rating:4.8,open:true,phone:'01322345678',area:'ملوي', offer:true,verified:true},
+    ];
+  }
+  _mapsLoaded = true;
+  document.getElementById('provOnlineCount').textContent = PINS.filter(p=>p.open).length + ' مزود متاح الآن';
+  renderPins();
+}
+
+
+/* ── STATE ── */
+let activeCat     = 'all';
+let activeLayers  = { vendors:true, open:true, offers:true, emergency:false };
+let selectedPin   = null;
+let currentVendor = null;
+let scale         = 1;
+let searchQ       = '';
+
+/* ── RENDER PINS ── */
+function renderPins() {
+  const layer  = document.getElementById('pinsLayer');
+  const visible = PINS.filter(p => {
+    if (!activeLayers.vendors)  return false;
+    if (activeCat !== 'all' && p.cat !== activeCat) return false;
+    if (searchQ && !p.name.includes(searchQ) && !p.area.includes(searchQ)) return false;
+    return true;
+  });
+  document.getElementById('resultPill').textContent = visible.length + ' مزود على الخريطة';
+  layer.innerHTML = visible.map(p => {
+    const showOffer = activeLayers.offers && p.offer;
+    const isOpen    = activeLayers.open ? true : !p.open; // طبقة مفتوح تؤثر على الأولوية
+    return `
+    <div class="map-pin" id="pin-${p.id}"
+         style="left:${p.x}%;top:${p.y}%"
+         onclick="selectPin('${p.id}')"
+         role="button" tabindex="0"
+         aria-label="${p.name} — ${p.open?'مفتوح':'مغلق'}">
+      <div class="pin-bubble cat-${p.cat} ${p.open?'cat-open':''}">
+        <span class="pin-icon">${p.icon}</span>
+        <span class="pin-label">${p.name}</span>
+        ${showOffer ? '<span style="font-size:9px;background:var(--gold);color:white;padding:1px 5px;border-radius:4px;margin-right:2px;font-weight:800">%</span>' : ''}
+      </div>
+      <div class="pin-tail"></div>
+    </div>`;
+  }).join('');
+}
+loadMapPins();
+
+/* ── SELECT PIN ── */
+function selectPin(id) {
+  if (selectedPin) document.getElementById('pin-' + selectedPin)?.classList.remove('selected');
+  selectedPin = id;
+  document.getElementById('pin-' + id)?.classList.add('selected');
+  const v = PINS.find(p => p.id === id);
+  if (!v) return;
+  currentVendor = v;
+  // fill bottom card
+  document.getElementById('mbcIcon').textContent     = v.icon;
+  document.getElementById('mbcName').textContent     = v.name;
+  document.getElementById('mbcRating').textContent   = v.rating;
+  document.getElementById('mbcArea').textContent     = '📍 ' + v.area;
+  const st = document.getElementById('mbcStatus');
+  const stTxt = document.getElementById('mbcStatusTxt');
+  st.className  = 'mbc-status ' + (v.open ? 'open' : 'closed');
+  stTxt.textContent = v.open ? 'مفتوح' : 'مغلق';
+  document.getElementById('mbcCall').href = 'tel:' + v.phone;
+  document.getElementById('mbcWa').href   = 'https://wa.me/2' + v.phone;
+  document.getElementById('mapBottomCard').classList.add('show');
+}
+
+function closeCard() {
+  document.getElementById('mapBottomCard').classList.remove('show');
+  if (selectedPin) { document.getElementById('pin-' + selectedPin)?.classList.remove('selected'); selectedPin = null; }
+}
+
+function openVendor() {
+  if (currentVendor) window.location.href = 'vendor.html?id=' + currentVendor.id;
+}
+
+/* ── CATEGORY FILTER ── */
+function filterCat(btn) {
+  document.querySelectorAll('.mcat').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCat = btn.dataset.cat;
+  closeCard();
+  renderPins();
+}
+
+/* ── LAYERS ── */
+function toggleLayers() {
+  const panel = document.getElementById('layersPanel');
+  panel.classList.toggle('show');
+}
+function toggleLayer(key) {
+  activeLayers[key] = !activeLayers[key];
+  const lc = document.getElementById('lc-' + key);
+  lc.classList.toggle('on', activeLayers[key]);
+  lc.textContent = activeLayers[key] ? '✓' : '';
+  renderPins();
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#layersPanel') && !e.target.closest('#layersBtn')) {
+    document.getElementById('layersPanel').classList.remove('show');
+  }
+});
+
+/* ── ZOOM (CSS transform mock) ── */
+const mapEl = document.getElementById('mapEl');
+function zoomIn()    { scale = Math.min(scale + 0.25, 2.5); applyZoom(); }
+function zoomOut()   { scale = Math.max(scale - 0.25, 0.6); applyZoom(); }
+function applyZoom() { mapEl.style.transform = `scale(${scale})`; mapEl.style.transformOrigin = 'center center'; }
+function resetNorth(){ showToast('🧭 تم إعادة ضبط الاتجاه'); }
+
+/* ── MY LOCATION ── */
+function showMyLoc() {
+  navigator.geolocation?.getCurrentPosition(
+    () => {
+      document.getElementById('myLocDot').style.display  = 'block';
+      document.getElementById('myLocRing').style.display = 'block';
+      showToast('📍 تم تحديد موقعك');
+    },
+    () => showToast('تعذّر تحديد الموقع', 'err')
+  );
+}
+
+/* ── SEARCH ── */
+const mapSearchInput = document.getElementById('mapSearch');
+mapSearchInput.addEventListener('input', function () {
+  searchQ = this.value.trim();
+  renderPins();
+});
+
+/* ── KEYBOARD: close card on Escape ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeCard();
+});
+
+/* ── TOAST ── */
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

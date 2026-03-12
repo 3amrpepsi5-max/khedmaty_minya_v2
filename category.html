@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<title>خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── HERO ── */
+.cat-hero{position:relative;overflow:hidden;padding:0}
+.cat-hero-bg{position:absolute;inset:0;background:linear-gradient(140deg,var(--c1,#1B4332),var(--c2,#2D6A4F));z-index:0}
+.cat-hero-emoji{position:absolute;font-size:130px;opacity:.1;bottom:-10px;left:-10px;pointer-events:none;z-index:1}
+.cat-hero-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:relative;z-index:5}
+.cat-back{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.cat-back:active{transform:scale(.9)}
+.cat-share{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:18px;color:white;border:none;cursor:pointer;font-family:var(--font)}
+.cat-hero-body{padding:6px 16px 20px;position:relative;z-index:5}
+.cat-hero-icon{font-size:40px;margin-bottom:8px;display:block}
+.cat-hero-title{font-size:22px;font-weight:900;color:white;margin-bottom:4px}
+.cat-hero-sub{font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.45;margin-bottom:10px}
+.cat-stats-row{display:flex;gap:8px}
+.cat-stat{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:6px 12px;font-size:11px;font-weight:800;color:white}
+
+/* ── SUB-CATS ── */
+.sub-cats{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;background:var(--surface);border-bottom:1.5px solid var(--border)}
+.sub-cats::-webkit-scrollbar{display:none}
+.sub-cat{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1.5px solid var(--border);border-radius:50px;font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:var(--t);white-space:nowrap;font-family:var(--font)}
+.sub-cat.active{background:var(--green-pale);border-color:var(--green);color:var(--green)}
+.sub-cat:active{transform:scale(.94)}
+
+/* ── SORT/FILTER ROW ── */
+.sf-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface)}
+.sf-label{font-size:12px;color:var(--text-muted);font-weight:600;flex:1}
+.sf-chip{display:flex;align-items:center;gap:4px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11.5px;font-weight:700;color:var(--text-main);cursor:pointer;font-family:var(--font);transition:var(--t)}
+.sf-chip.active{background:var(--green-pale);border-color:var(--green);color:var(--green)}
+.sf-chip:active{transform:scale(.93)}
+
+/* ── CARDS ── */
+.cat-grid{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.v-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;transition:var(--t);box-shadow:var(--shadow-sm)}
+.v-card:active{transform:scale(.98)}
+.vc-top{display:flex;align-items:stretch;gap:0}
+.vc-img{width:80px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;position:relative}
+.vc-open-dot{position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;border:2px solid white}
+.vc-open-dot.open{background:#27AE60;animation:blink 1.5s infinite}
+.vc-open-dot.closed{background:#E74C3C}
+.vc-body{flex:1;padding:11px 12px 8px}
+.vc-name{font-size:13.5px;font-weight:900;color:var(--text-main);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.vc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.vc-area{font-size:11px;color:var(--text-muted)}
+.vc-rating{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:800}
+.vc-rating .st{color:var(--gold)}
+.vc-rating .rc{color:var(--text-muted);font-weight:400;font-size:10px}
+.vc-tags{display:flex;gap:5px;flex-wrap:wrap}
+.vc-tag{font-size:9.5px;background:var(--surface2);color:var(--text-muted);padding:2px 7px;border-radius:4px;font-weight:700}
+.vc-tag.green{background:var(--green-pale);color:var(--green)}
+.vc-tag.gold{background:var(--gold-pale);color:var(--gold-dark)}
+.vc-actions{display:flex;gap:6px;padding:0 12px 10px}
+.vc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px;border-radius:9px;font-size:12px;font-weight:700;transition:var(--t);border:none;cursor:pointer;font-family:var(--font);text-decoration:none}
+.vc-btn.call{background:var(--green);color:white}
+.vc-btn.wa  {background:#25D366;color:white}
+.vc-btn.det {background:var(--surface2);color:var(--text-main);border:1px solid var(--border)}
+.vc-btn:active{opacity:.8}
+.vc-price{font-size:10.5px;color:var(--gold-dark);font-weight:700;background:var(--gold-pale);padding:2px 7px;border-radius:4px}
+.vc-fav{position:absolute;top:6px;left:6px;background:rgba(255,255,255,.85);border:none;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:14px;cursor:pointer;font-family:var(--font);transition:var(--t);z-index:2}
+.vc-fav:active{transform:scale(.85)}
+
+/* ── FEATURED CARD ── */
+.v-card.featured{border-color:var(--gold);background:linear-gradient(135deg,#FFFBF0,var(--surface))}
+.v-card.featured .vc-img{background:var(--gold-pale)}
+
+/* ── SKELETON ── */
+.sk-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:12px}
+.sk-row{display:flex;gap:12px;padding:12px}
+.sk-img{width:80px;height:80px;background:var(--surface2);border-radius:0;flex-shrink:0;animation:skPl 1.2s infinite}
+.sk-lines{flex:1;display:flex;flex-direction:column;gap:8px;padding-top:4px}
+.sk-line{height:12px;background:var(--surface2);border-radius:4px;animation:skPl 1.2s infinite}
+@keyframes skPl{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── EMPTY ── */
+.cat-empty{text-align:center;padding:60px 20px}
+.cat-empty-ico{font-size:54px;margin-bottom:12px}
+.cat-empty-title{font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:6px}
+.cat-empty-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{padding:4px 16px 16px;text-align:center}
+.load-more-btn{width:100%;padding:12px;background:var(--green-pale);border:1.5px solid var(--green);border-radius:var(--radius-md);font-size:13px;font-weight:800;color:var(--green);cursor:pointer;font-family:var(--font);transition:var(--t)}
+.load-more-btn:active{background:var(--green);color:white}
+</style>
+</head>
+<body>
+
+<!-- HERO (يتغيّر بناءً على القسم) -->
+<div class="cat-hero" id="catHero">
+  <div class="cat-hero-bg" id="heroBg"></div>
+  <div class="cat-hero-emoji" id="heroEmoji" aria-hidden="true"></div>
+  <div class="cat-hero-top">
+    <button class="cat-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <button class="cat-share" onclick="shareCategory()" aria-label="مشاركة">↗️</button>
+  </div>
+  <div class="cat-hero-body">
+    <span class="cat-hero-icon" id="heroIcon" aria-hidden="true"></span>
+    <h1 class="cat-hero-title" id="heroTitle">جاري التحميل...</h1>
+    <p class="cat-hero-sub" id="heroSub"></p>
+    <div class="cat-stats-row">
+      <span class="cat-stat" id="statCount">— مزود</span>
+      <span class="cat-stat" id="statOpen">— مفتوح الآن</span>
+      <span class="cat-stat" id="statVerified">— موثّق</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-CATEGORIES -->
+<div class="sub-cats" id="subCats" role="group" aria-label="تصفية"></div>
+
+<!-- SORT / FILTER -->
+<div class="sf-row">
+  <span class="sf-label" id="sfLabel">جاري التحميل...</span>
+  <button class="sf-chip" id="chipOpen"   onclick="toggleFilter('open')"   aria-pressed="false">🟢 مفتوح</button>
+  <button class="sf-chip" id="chipVerif"  onclick="toggleFilter('verified')" aria-pressed="false">✅ موثّق</button>
+  <button class="sf-chip" id="chipSort"   onclick="cycleSort()"             aria-pressed="false">⭐ تقييم</button>
+</div>
+
+<!-- SEARCH -->
+<div style="padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border)">
+  <div class="sbox" role="search">
+    <span class="si" aria-hidden="true">🔍</span>
+    <input type="search" id="catSearch" placeholder="ابحث في هذا القسم..." autocomplete="off" aria-label="بحث" oninput="handleSearch(this.value)">
+  </div>
+</div>
+
+<main class="page-body" style="padding-top:0;padding-bottom:90px">
+  <div class="cat-grid" id="catGrid" role="list"></div>
+  <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+    <button class="load-more-btn" onclick="loadMoreItems()" id="loadMoreBtn">تحميل المزيد ↓</button>
+  </div>
+</main>
+
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+/* ── CAT CONFIG ── */
+const CAT_CFG = {
+  maintenance: {
+    title:'الصيانة والإصلاح', icon:'🔧', sub:'كهرباء، سباكة، تكييف، دهانات، نجارة',
+    c1:'#1B4332', c2:'#2D6A4F',
+    subs:['الكل','⚡ كهرباء','🔧 سباكة','❄️ تكييف','🎨 دهانات','🪵 نجارة','🔥 غاز'],
+    subMap:{'⚡ كهرباء':'كهرباء','🔧 سباكة':'سباكة','❄️ تكييف':'تكييف','🎨 دهانات':'دهانات','🪵 نجارة':'نجارة','🔥 غاز':'غاز'}
+  },
+  food: {
+    title:'مطاعم وكافيهات', icon:'🍽️', sub:'أكل شعبي، مشويات، حلويات، مشروبات',
+    c1:'#7B341E', c2:'#C05621',
+    subs:['الكل','🍲 شعبي','🥩 مشويات','🍕 فاست فود','☕ كافيه','🍰 حلويات','🥙 ساندوتشات'],
+    subMap:{'🍲 شعبي':'شعبي','🥩 مشويات':'مشويات','🍕 فاست فود':'فاست فود','☕ كافيه':'كافيه','🍰 حلويات':'حلويات','🥙 ساندوتشات':'ساندوتشات'}
+  },
+  health: {
+    title:'الصحة والرعاية', icon:'🏥', sub:'أطباء، عيادات، مختبرات، صيدليات',
+    c1:'#1A365D', c2:'#2B6CB0',
+    subs:['الكل','👨‍⚕️ أطباء','💊 صيدليات','🔬 مختبرات','🦷 أسنان','👶 أطفال','🧓 رعاية مسنين'],
+    subMap:{'👨‍⚕️ أطباء':'طبيب','💊 صيدليات':'صيدلية','🔬 مختبرات':'مختبر','🦷 أسنان':'أسنان','👶 أطفال':'طبيب أطفال','🧓 رعاية مسنين':'رعاية منزلية'}
+  },
+  education: {
+    title:'التعليم والتدريب', icon:'📚', sub:'مدرّسون، مدارس، كورسات، حضانات',
+    c1:'#44337A', c2:'#6B46C1',
+    subs:['الكل','📐 ثانوي','📖 ابتدائي','🎓 جامعي','🌍 لغات','💻 كمبيوتر','🏫 مدارس'],
+    subMap:{'📐 ثانوي':'ثانوي','📖 ابتدائي':'ابتدائي','🎓 جامعي':'جامعي','🌍 لغات':'لغات','💻 كمبيوتر':'كمبيوتر','🏫 مدارس':'مدرسة'}
+  },
+  delivery: {
+    title:'خدمات التوصيل', icon:'🛵', sub:'توصيل منزلي، طلبات، مشاوير',
+    c1:'#2C5282', c2:'#3182CE',
+    subs:['الكل','📦 طلبات','🛒 بقالة','📋 مستندات','🚗 مشاوير'],
+    subMap:{'📦 طلبات':'طلبات','🛒 بقالة':'بقالة','📋 مستندات':'مستندات','🚗 مشاوير':'مشاوير'}
+  },
+  'real-estate': {
+    title:'العقارات', icon:'🏠', sub:'شقق، أراضي، إيجار، بيع، سمسرة',
+    c1:'#744210', c2:'#C05621',
+    subs:['الكل','🏢 شقق','🏡 فيلات','🌍 أراضي','🏗️ تشطيب'],
+    subMap:{'🏢 شقق':'شقق','🏡 فيلات':'فيلات','🌍 أراضي':'أراضي','🏗️ تشطيب':'تشطيب'}
+  },
+  agriculture: {
+    title:'الزراعة', icon:'🌾', sub:'بذور، أسمدة، معدات، مشاتل',
+    c1:'#1C4532', c2:'#276749',
+    subs:['الكل','🌱 بذور','🧪 أسمدة','🚜 معدات','🌻 مشاتل'],
+    subMap:{'🌱 بذور':'بذور','🧪 أسمدة':'أسمدة','🚜 معدات':'معدات','🌻 مشاتل':'مشتل'}
+  },
+  market: {
+    title:'السوق', icon:'🛒', sub:'بقالة، ملابس، مفروشات، إلكترونيات',
+    c1:'#234E52', c2:'#285E61',
+    subs:['الكل','🛍️ بقالة','👗 ملابس','🛋️ مفروشات','📱 إلكترونيات'],
+    subMap:{'🛍️ بقالة':'بقالة','👗 ملابس':'ملابس','🛋️ مفروشات':'مفروشات','📱 إلكترونيات':'إلكترونيات'}
+  },
+  jobs: {
+    title:'الوظائف', icon:'💼', sub:'فرص عمل، توظيف، وساطة',
+    c1:'#2D3748', c2:'#4A5568',
+    subs:['الكل','🏭 مصانع','🏪 محلات','🏗️ مقاولات','📋 إداري'],
+    subMap:{'🏭 مصانع':'مصانع','🏪 محلات':'محلات','🏗️ مقاولات':'مقاولات','📋 إداري':'إداري'}
+  },
+  government: {
+    title:'خدمات حكومية', icon:'🏛️', sub:'توثيق، معاملات، متابعة إجراءات',
+    c1:'#1A202C', c2:'#2D3748',
+    subs:['الكل','📋 توثيق','🏛️ شهر عقاري','⚖️ محاكم','🪪 بطاقات'],
+    subMap:{'📋 توثيق':'توثيق','🏛️ شهر عقاري':'شهر عقاري','⚖️ محاكم':'محاكم','🪪 بطاقات':'بطاقات'}
+  },
+  events: {
+    title:'المناسبات والأفراح', icon:'🎉', sub:'تنظيم حفلات، تصوير، ديكور، موسيقى',
+    c1:'#702459', c2:'#97266D',
+    subs:['الكل','💒 أفراح','📸 تصوير','🎶 موسيقى','🌸 ديكور','🍰 كيك'],
+    subMap:{'💒 أفراح':'أفراح','📸 تصوير':'تصوير','🎶 موسيقى':'موسيقى','🌸 ديكور':'ديكور','🍰 كيك':'كيك'}
+  },
+  transport: {
+    title:'النقل والمواصلات', icon:'🚗', sub:'تاكسي، نقل عفش، ميكروباص',
+    c1:'#1A365D', c2:'#2A4365',
+    subs:['الكل','🚗 تاكسي','🚚 نقل عفش','🚌 ميكروباص'],
+    subMap:{'🚗 تاكسي':'تاكسي','🚚 نقل عفش':'نقل عفش','🚌 ميكروباص':'ميكروباص'}
+  }
+};
+
+/* ── STATE ── */
+const urlCat  = new URLSearchParams(location.search).get('cat') || 'maintenance';
+const cfg     = CAT_CFG[urlCat] || CAT_CFG['maintenance'];
+let allVendors= [];
+let filtered  = [];
+let activeSub = 'الكل';
+let filters   = { open:false, verified:false };
+let sortMode  = 'rating';
+let searchQ   = '';
+let page      = 0;
+const PAGE_SZ = 10;
+let favs      = JSON.parse(localStorage.getItem('kh_favs') || '[]');
+
+/* ── INIT HERO ── */
+document.title = cfg.title + ' — خدماتي المنيا';
+document.getElementById('heroBg').style.cssText    = `position:absolute;inset:0;background:linear-gradient(140deg,${cfg.c1},${cfg.c2});z-index:0`;
+document.getElementById('heroEmoji').textContent   = cfg.icon;
+document.getElementById('heroIcon').textContent    = cfg.icon;
+document.getElementById('heroTitle').textContent   = cfg.title;
+document.getElementById('heroSub').textContent     = cfg.sub;
+document.getElementById('catSearch').placeholder   = 'ابحث في ' + cfg.title + '...';
+
+/* ── SUB-CATS ── */
+document.getElementById('subCats').innerHTML = cfg.subs.map(s => `
+  <button class="sub-cat ${s==='الكل'?'active':''}" data-sub="${s}" onclick="setSub(this)" aria-pressed="${s==='الكل'}">${s}</button>
+`).join('');
+
+/* ── SKELETON ── */
+function showSkeleton() {
+  document.getElementById('catGrid').innerHTML = Array(5).fill(`
+    <div class="sk-card">
+      <div class="sk-row">
+        <div class="sk-img"></div>
+        <div class="sk-lines">
+          <div class="sk-line" style="width:65%"></div>
+          <div class="sk-line" style="width:45%"></div>
+          <div class="sk-line" style="width:55%"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── LOAD DATA ── */
+async function loadData() {
+  showSkeleton();
+  try {
+    const [r1, r2] = await Promise.all([
+      fetch('data/vendors.page1.json').then(r=>r.json()),
+      fetch('data/vendors.page2.json').then(r=>r.json())
+    ]);
+    allVendors = [...r1.vendors, ...r2.vendors];
+  } catch(e) { allVendors = []; }
+  updateStats();
+  runFilter();
+}
+
+/* ── STATS ── */
+function updateStats() {
+  const catV = allVendors.filter(v => v.cat === urlCat);
+  document.getElementById('statCount').textContent    = catV.length + ' مزود';
+  document.getElementById('statOpen').textContent     = catV.filter(v=>v.open).length + ' مفتوح الآن';
+  document.getElementById('statVerified').textContent = catV.filter(v=>v.verified).length + ' موثّق';
+}
+
+/* ── FILTER ── */
+function runFilter() {
+  const subKey = activeSub === 'الكل' ? null : cfg.subMap?.[activeSub];
+  filtered = allVendors.filter(v => {
+    if (v.cat !== urlCat) return false;
+    if (subKey && v.sub !== subKey) return false;
+    if (filters.open     && !v.open)     return false;
+    if (filters.verified && !v.verified) return false;
+    if (searchQ) {
+      const q = searchQ;
+      return v.name.includes(q) || (v.area||'').includes(q) || (v.sub||'').includes(q) || (v.desc||'').includes(q);
+    }
+    return true;
+  });
+  if (sortMode === 'rating') filtered.sort((a,b) => b.rating - a.rating);
+  else if (sortMode === 'open') filtered.sort((a,b) => (b.open?1:0)-(a.open?1:0));
+  else if (sortMode === 'new')  filtered.sort((a,b) => b.id.localeCompare(a.id));
+  page = 0;
+  renderPage();
+}
+
+/* ── RENDER ── */
+function renderPage() {
+  const slice = filtered.slice(0, PAGE_SZ);
+  const grid  = document.getElementById('catGrid');
+  if (!slice.length) {
+    grid.innerHTML = `<div class="cat-empty"><div class="cat-empty-ico">${cfg.icon}</div><p class="cat-empty-title">لا يوجد مزودون</p><p class="cat-empty-sub">جرّب تعديل الفلتر أو البحث</p></div>`;
+    document.getElementById('loadMoreWrap').style.display = 'none';
+    document.getElementById('sfLabel').textContent = '0 نتيجة';
+    return;
+  }
+  page = 1;
+  grid.innerHTML = slice.map(renderCard).join('');
+  document.getElementById('sfLabel').textContent = filtered.length + ' مزود';
+  document.getElementById('loadMoreWrap').style.display = filtered.length > PAGE_SZ ? 'block' : 'none';
+  lazyIn();
+}
+
+function renderCard(v) {
+  const isFav = favs.includes(v.id);
+  const tags = v.tags || (v.verified ? ['موثّق'] : []);
+  const featured = v.featured || (v.plan === 'pro');
+  const offerActive = v.offer && v.offer.active;
+  return `
+  <div class="v-card ${featured?'featured':''}" onclick="goTo('vendor.html?id=${v.id}')" role="listitem" tabindex="0" aria-label="${v.name}">
+    <div class="vc-top">
+      <div class="vc-img">
+        ${v.icon}
+        <span class="vc-open-dot ${v.open?'open':'closed'}" title="${v.open?'مفتوح':'مغلق'}"></span>
+        <button class="vc-fav" onclick="toggleFav(event,'${v.id}')" aria-label="${isFav?'إزالة من المفضلة':'إضافة للمفضلة'}">${isFav?'❤️':'🤍'}</button>
+      </div>
+      <div class="vc-body">
+        <div class="vc-name">
+          ${v.name}
+          ${v.verified ? '<span title="موثّق" aria-label="موثّق">✅</span>' : ''}
+          ${featured ? '<span style="font-size:9px;background:var(--gold);color:var(--green-dark);padding:1px 5px;border-radius:3px;font-weight:900">مميز</span>' : ''}
+        </div>
+        <div class="vc-meta">
+          <span class="vc-area">📍 ${v.area || ''}</span>
+          ${v.priceRange ? `<span class="vc-price">${v.priceRange}</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <div class="vc-rating"><span class="st">★</span>${v.rating}<span class="rc">(${v.reviews||0})</span></div>
+          ${offerActive ? `<span style="font-size:10px;background:#FFF0E0;color:#C05621;padding:2px 6px;border-radius:4px;font-weight:800">🔥 خصم ${v.offer.pct}%</span>` : ''}
+        </div>
+        <div class="vc-tags">
+          ${tags.slice(0,3).map(t => `<span class="vc-tag ${t==='موثّق'?'green':t.includes('عرض')||t.includes('خصم')?'gold':''}">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="vc-actions">
+      <a href="tel:${v.phone}" class="vc-btn call" onclick="event.stopPropagation()" aria-label="اتصال">📞 اتصال</a>
+      <a href="https://wa.me/2${v.phone}" class="vc-btn wa" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="واتساب">💬 واتساب</a>
+      <button class="vc-btn det" onclick="event.stopPropagation();goTo('vendor.html?id=${v.id}')" aria-label="تفاصيل">👁️ تفاصيل</button>
+    </div>
+  </div>`;
+}
+
+/* ── LOAD MORE ── */
+function loadMoreItems() {
+  const btn = document.getElementById('loadMoreBtn');
+  btn.textContent = '⏳ جاري...';
+  setTimeout(() => {
+    const start = page * PAGE_SZ;
+    const slice = filtered.slice(start, start + PAGE_SZ);
+    document.getElementById('catGrid').insertAdjacentHTML('beforeend', slice.map(renderCard).join(''));
+    page++;
+    btn.textContent = 'تحميل المزيد ↓';
+    if (page * PAGE_SZ >= filtered.length) document.getElementById('loadMoreWrap').style.display = 'none';
+    lazyIn();
+  }, 300);
+}
+
+/* ── LAZY FADE IN ── */
+function lazyIn() {
+  if (!('IntersectionObserver' in window)) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){e.target.style.opacity='1';obs.unobserve(e.target);} });
+  }, {threshold:0.08});
+  document.querySelectorAll('.v-card:not([data-ob])').forEach(c => {
+    c.style.opacity='0'; c.style.transition='opacity .3s ease';
+    c.dataset.ob='1'; obs.observe(c);
+  });
+}
+
+/* ── SUB-CAT ── */
+function setSub(btn) {
+  document.querySelectorAll('.sub-cat').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+  activeSub = btn.dataset.sub;
+  runFilter();
+}
+
+/* ── FILTERS ── */
+function toggleFilter(key) {
+  filters[key] = !filters[key];
+  const chipId = key === 'open' ? 'chipOpen' : 'chipVerif';
+  document.getElementById(chipId).classList.toggle('active', filters[key]);
+  document.getElementById(chipId).setAttribute('aria-pressed', filters[key]);
+  runFilter();
+}
+
+/* ── SORT ── */
+const SORTS = ['rating','open','new'];
+const SORT_LABELS = ['⭐ تقييم','🟢 مفتوح','🆕 أحدث'];
+let sortIdx = 0;
+function cycleSort() {
+  sortIdx = (sortIdx+1) % SORTS.length;
+  sortMode = SORTS[sortIdx];
+  document.getElementById('chipSort').textContent = SORT_LABELS[sortIdx];
+  runFilter();
+}
+
+/* ── SEARCH ── */
+let _st;
+function handleSearch(q) {
+  clearTimeout(_st);
+  _st = setTimeout(() => { searchQ = q.trim(); runFilter(); }, 280);
+}
+
+/* ── FAV ── */
+function toggleFav(e, id) {
+  e.stopPropagation();
+  const idx = favs.indexOf(id);
+  if (idx === -1) { favs.push(id); showToast('❤️ تمت الإضافة للمفضلة'); }
+  else            { favs.splice(idx,1); showToast('💔 تمت الإزالة','err'); }
+  localStorage.setItem('kh_favs', JSON.stringify(favs));
+  // toggle icon in-place
+  const btn = e.currentTarget;
+  btn.textContent = favs.includes(id) ? '❤️' : '🤍';
+}
+
+/* ── SHARE ── */
+function shareCategory() {
+  if (navigator.share) {
+    navigator.share({ title: cfg.title + ' — خدماتي المنيا', url: location.href });
+  } else {
+    navigator.clipboard?.writeText(location.href);
+    showToast('📋 تم نسخ الرابط');
+  }
+}
+
+function goTo(url) { window.location.href = url; }
+
+function showToast(msg, type='ok') {
+  const c=document.getElementById('toasts'); const t=document.createElement('div');
+  t.className='toast '+type; t.textContent=msg; c.appendChild(t); setTimeout(()=>t.remove(),2800);
+}
+
+loadData();
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

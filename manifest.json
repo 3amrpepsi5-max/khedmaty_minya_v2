@@ -1,0 +1,27 @@
+{
+  "name": "خدماتي المنيا",
+  "short_name": "خدماتي",
+  "description": "كل حاجة في مكان واحد — منصة الخدمات المحلية لمحافظة المنيا",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#2D6A4F",
+  "background_color": "#F8F9F3",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "طلب عاجل",     "url": "/emergency.html",        "description": "اطلب خدمة الآن" },
+    { "name": "البحث",        "url": "/search.html",           "description": "ابحث عن خدمة" },
+    { "name": "الخريطة",      "url": "/map.html",              "description": "خريطة المنيا الذكية" }
+  ],
+  "categories": ["lifestyle", "utilities", "business"],
+  "prefer_related_applications": false
+}

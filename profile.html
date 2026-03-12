@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<meta name="description" content="حسابي — خدماتي المنيا">
+<title>حسابي — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── AUTH SCREENS ── */
+.auth-wrap{min-height:calc(100vh - 70px);display:flex;flex-direction:column;justify-content:center;padding:24px 20px 100px}
+.auth-logo{text-align:center;margin-bottom:28px}
+.auth-logo-icon{width:72px;height:72px;background:var(--gold);border-radius:20px;display:grid;place-items:center;font-size:34px;font-weight:900;color:var(--green-dark);margin:0 auto 10px;box-shadow:0 4px 20px rgba(244,162,97,.4);font-family:'Tajawal',sans-serif}
+.auth-logo-name{font-size:20px;font-weight:900;color:var(--text-main)}
+.auth-logo-sub{font-size:12px;color:var(--text-muted)}
+.auth-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1.5px solid var(--border);overflow:hidden}
+.auth-tabs{display:flex;border-bottom:1.5px solid var(--border)}
+.auth-tab{flex:1;padding:13px;font-size:14px;font-weight:800;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t)}
+.auth-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.auth-body{padding:20px}
+.a-field{margin-bottom:14px}
+.a-label{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px;display:block}
+.a-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;font-size:14px;font-family:var(--font);color:var(--text-main);outline:none;transition:var(--t)}
+.a-input:focus{border-color:var(--green);background:var(--surface);box-shadow:0 0 0 3px rgba(45,106,79,.1)}
+.a-input::placeholder{color:var(--text-muted)}
+.a-pw-wrap{position:relative}
+.a-pw-wrap .a-input{padding-left:42px}
+.a-pw-toggle{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-muted);padding:0}
+.a-btn{width:100%;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius-md);font-size:15px;font-weight:900;font-family:var(--font);cursor:pointer;transition:var(--t);margin-top:4px}
+.a-btn:active{opacity:.88;transform:scale(.98)}
+.a-btn:disabled{opacity:.55;pointer-events:none}
+.a-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--text-muted);font-size:12px}
+.a-divider::before,.a-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.a-social{display:flex;gap:10px}
+.a-social-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;background:var(--surface);font-family:var(--font);transition:var(--t);color:var(--text-main)}
+.a-social-btn:active{background:var(--surface2)}
+.a-forgot{display:block;text-align:center;font-size:12px;color:var(--green);font-weight:700;margin-top:12px;cursor:pointer}
+.a-terms{font-size:11px;color:var(--text-muted);text-align:center;margin-top:14px;line-height:1.5}
+.a-terms a{color:var(--green);font-weight:700}
+.pw-strength{height:4px;border-radius:2px;margin-top:5px;transition:all .3s;background:var(--border)}
+.pw-s1{background:#E74C3C;width:30%}
+.pw-s2{background:var(--gold);width:60%}
+.pw-s3{background:#27AE60;width:100%}
+
+/* ── PROFILE (logged in) ── */
+.profile-hero{background:linear-gradient(140deg,var(--green-dark),var(--green-mid));padding:16px 16px 30px;position:relative;overflow:hidden}
+.profile-hero::before{content:'';position:absolute;top:-30%;right:-10%;width:200px;height:200px;background:radial-gradient(circle,rgba(244,162,97,.2),transparent 70%);border-radius:50%;pointer-events:none}
+.p-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.p-page-title{font-size:17px;font-weight:900;color:white}
+.p-settings-btn{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px);font-family:var(--font)}
+.p-settings-btn:active{background:rgba(255,255,255,.25);transform:scale(.92)}
+.p-avatar-row{display:flex;align-items:flex-end;gap:14px}
+.p-avatar{width:72px;height:72px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-size:32px;border:3px solid rgba(255,255,255,.4);flex-shrink:0;cursor:pointer;position:relative}
+.p-avatar-edit{position:absolute;bottom:-2px;left:-2px;width:22px;height:22px;background:white;border-radius:50%;display:grid;place-items:center;font-size:11px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.p-user-info{flex:1}
+.p-user-name{font-size:18px;font-weight:900;color:white;margin-bottom:3px}
+.p-user-phone{font-size:12px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
+.p-verified-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(39,174,96,.25);border:1px solid rgba(39,174,96,.5);border-radius:50px;padding:3px 9px;font-size:10px;font-weight:800;color:#2ECC71;margin-top:4px}
+
+/* ── STATS ROW ── */
+.p-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);overflow:hidden;border-radius:var(--radius-md);margin:0 16px;transform:translateY(-16px);box-shadow:var(--shadow-md)}
+.p-stat{background:var(--surface);padding:14px 8px;text-align:center}
+.p-stat-val{font-size:20px;font-weight:900;color:var(--green-dark);line-height:1}
+.p-stat-label{font-size:10px;color:var(--text-muted);font-weight:600;margin-top:3px}
+
+/* ── MENU LIST ── */
+.menu-section{padding:0 16px;margin-bottom:10px}
+.menu-title{font-size:11px;font-weight:700;color:var(--text-muted);padding:8px 0 6px;letter-spacing:.5px;text-transform:uppercase}
+.menu-card{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden}
+.menu-item{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;transition:var(--t);text-decoration:none;color:var(--text-main);border-bottom:1px solid var(--border)}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:var(--surface2)}
+.menu-ico{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.menu-text{flex:1}
+.menu-label{font-size:13.5px;font-weight:800;color:var(--text-main)}
+.menu-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+.menu-arr{color:var(--text-muted);font-size:16px}
+.menu-badge{background:var(--gold);color:var(--green-dark);font-size:10px;font-weight:800;padding:2px 7px;border-radius:50px;flex-shrink:0}
+.menu-badge.red{background:var(--gold-dark);color:white}
+.menu-badge.green{background:#27AE60;color:white}
+
+/* ── RECENT ORDERS ── */
+.order-card{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:var(--t)}
+.order-card:active{transform:scale(.98)}
+.order-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.order-name{font-size:13.5px;font-weight:800;color:var(--text-main)}
+.order-status{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:50px}
+.order-status.done{background:#D5F5E3;color:#1E8449}
+.order-status.pending{background:#FEF9E7;color:#B7950B}
+.order-status.cancelled{background:#FADBD8;color:#922B21}
+.order-meta{display:flex;gap:10px;flex-wrap:wrap}
+.order-meta span{font-size:11px;color:var(--text-muted)}
+
+/* ── DARK MODE TOGGLE ── */
+.dm-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px}
+.dm-info{display:flex;align-items:center;gap:12px}
+.dm-ico{width:36px;height:36px;border-radius:11px;background:var(--surface2);display:grid;place-items:center;font-size:18px}
+.dm-toggle{width:48px;height:26px;background:var(--border);border-radius:13px;position:relative;cursor:pointer;transition:var(--t);border:none;flex-shrink:0}
+.dm-toggle.on{background:var(--green)}
+.dm-toggle::after{content:'';position:absolute;width:20px;height:20px;background:white;border-radius:50%;top:3px;right:3px;transition:var(--t);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.dm-toggle.on::after{right:25px}
+
+/* ── LOGOUT ── */
+.logout-btn{width:100%;padding:13px;background:var(--surface);color:#E74C3C;border:1.5px solid #FADBD8;border-radius:var(--radius-md);font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;transition:var(--t);display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:16px}
+.logout-btn:active{background:#FADBD8}
+
+/* ── VENDOR CTA ── */
+.vendor-cta{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--green-dark),var(--green));border-radius:var(--radius-md);padding:14px;margin:0 16px 14px;cursor:pointer;transition:var(--t)}
+.vendor-cta:active{transform:scale(.98)}
+.vendor-cta-ico{font-size:30px;flex-shrink:0}
+.vendor-cta-text{flex:1}
+.vendor-cta-title{font-size:13.5px;font-weight:900;color:white}
+.vendor-cta-sub{font-size:11px;color:rgba(255,255,255,.75)}
+.vendor-cta-arr{color:var(--gold);font-size:20px}
+</style>
+</head>
+<body id="profileBody">
+
+<!-- ════════════════════════════════════════
+     AUTH STATE (غير مسجّل)
+════════════════════════════════════════ -->
+<div id="authState">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-icon" aria-hidden="true">خ</div>
+      <p class="auth-logo-name">خدماتي المنيا</p>
+      <p class="auth-logo-sub">سجّل دخولك للاستفادة من كل المميزات</p>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" data-tab="login"    role="tab" aria-selected="true"  onclick="switchAuthTab('login')">تسجيل الدخول</button>
+        <button class="auth-tab"        data-tab="register" role="tab" aria-selected="false" onclick="switchAuthTab('register')">حساب جديد</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="auth-body" id="loginBody">
+        <div class="a-field">
+          <label class="a-label" for="loginPhone">رقم الهاتف</label>
+          <input type="tel" class="a-input" id="loginPhone" placeholder="01XXXXXXXXX" inputmode="tel" autocomplete="tel">
+        </div>
+        <div class="a-field">
+          <label class="a-label" for="loginPw">كلمة المرور</label>
+          <div class="a-pw-wrap">
+            <input type="password" class="a-input" id="loginPw" placeholder="••••••••" autocomplete="current-password">
+            <button class="a-pw-toggle" onclick="togglePw('loginPw',this)" aria-label="إظهار/إخفاء كلمة المرور">👁️</button>
+          </div>
+        </div>
+        <button class="a-btn" onclick="doLogin()" id="loginBtn">دخول ←</button>
+        <span class="a-forgot" onclick="showForgot()" role="button" tabindex="0">نسيت كلمة المرور؟</span>
+        <div class="a-divider">أو</div>
+        <div class="a-social">
+          <button class="a-social-btn" onclick="socialLogin('google')">🌐 Google</button>
+          <button class="a-social-btn" onclick="socialLogin('facebook')">📘 Facebook</button>
+        </div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-body" id="registerBody" style="display:none">
+        <div class="a-field">
+          <label class="a-label" for="regName">الاسم الكامل</label>
+          <input type="text" class="a-input" id="regName" placeholder="مثال: محمد أحمد" autocomplete="name">
+        </div>
+        <div class="a-field">
+          <label class="a-label" for="regPhone">رقم الهاتف</label>
+          <input type="tel" class="a-input" id="regPhone" placeholder="01XXXXXXXXX" inputmode="tel" autocomplete="tel">
+        </div>
+        <div class="a-field">
+          <label class="a-label" for="regPw">كلمة المرور</label>
+          <div class="a-pw-wrap">
+            <input type="password" class="a-input" id="regPw" placeholder="8 أحرف على الأقل" autocomplete="new-password" oninput="checkPwStrength(this.value)">
+            <button class="a-pw-toggle" onclick="togglePw('regPw',this)" aria-label="إظهار/إخفاء كلمة المرور">👁️</button>
+          </div>
+          <div class="pw-strength" id="pwStrength"></div>
+        </div>
+        <div class="a-field">
+          <label class="a-label" for="regArea">منطقتك في المنيا</label>
+          <select class="a-input" id="regArea" autocomplete="address-level2" aria-label="اختر منطقتك">
+            <option value="">اختر منطقتك...</option>
+            <option>المنيا</option><option>ملوي</option><option>مغاغة</option>
+            <option>بني مزار</option><option>مطاي</option><option>سمالوط</option>
+            <option>أبو قرقاص</option><option>دير مواس</option><option>العدوة</option>
+          </select>
+        </div>
+        <button class="a-btn" onclick="doRegister()" id="registerBtn">إنشاء حساب ✨</button>
+        <p class="a-terms">بالتسجيل أنت توافق على <a href="terms.html">الشروط والأحكام</a> و<a href="privacy.html">سياسة الخصوصية</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PROFILE STATE (مسجّل)
+════════════════════════════════════════ -->
+<div id="profileState" style="display:none;padding-bottom:90px">
+
+  <!-- Hero -->
+  <div class="profile-hero">
+    <div class="p-hero-top">
+      <span class="p-page-title">حسابي</span>
+      <button class="p-settings-btn" onclick="goTo('settings.html')" aria-label="الإعدادات">⚙️</button>
+    </div>
+    <div class="p-avatar-row">
+      <div class="p-avatar" onclick="changeAvatar()" role="button" tabindex="0" aria-label="تغيير الصورة الشخصية" id="pAvatar">
+        👤
+        <span class="p-avatar-edit" aria-hidden="true">✏️</span>
+      </div>
+      <div class="p-user-info">
+        <p class="p-user-name" id="pName">محمد أحمد</p>
+        <p class="p-user-phone" id="pPhone"><span>📞</span> 01012345678</p>
+        <span class="p-verified-badge">✅ حساب موثّق</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="p-stats" role="group" aria-label="إحصائياتك">
+    <div class="p-stat"><div class="p-stat-val" id="statOrders">7</div><div class="p-stat-label">طلباتي</div></div>
+    <div class="p-stat"><div class="p-stat-val" id="statFavs">12</div><div class="p-stat-label">المفضلة</div></div>
+    <div class="p-stat"><div class="p-stat-val" id="statReviews">4</div><div class="p-stat-label">تقييماتي</div></div>
+  </div>
+
+  <!-- Vendor CTA -->
+  <a href="vendor-register.html" class="vendor-cta" aria-label="سجّل نشاطك التجاري">
+    <span class="vendor-cta-ico">🏪</span>
+    <div class="vendor-cta-text">
+      <p class="vendor-cta-title">سجّل نشاطك التجاري</p>
+      <p class="vendor-cta-sub">ابدأ من 50 جنيه/شهر — اوصل لآلاف العملاء</p>
+    </div>
+    <span class="vendor-cta-arr">←</span>
+  </a>
+
+  <!-- Recent Orders -->
+  <div class="menu-section">
+    <p class="menu-title">آخر الطلبات</p>
+    <div id="recentOrders">
+      <div class="order-card" onclick="goTo('order.html?id=1')">
+        <div class="order-top">
+          <p class="order-name">⚡ صيانة كهرباء — أستاذ محمد</p>
+          <span class="order-status done">مكتمل</span>
+        </div>
+        <div class="order-meta">
+          <span>📅 الاثنين 3 مارس</span>
+          <span>💰 80 جنيه</span>
+          <span>⭐ قيّمت بـ 5</span>
+        </div>
+      </div>
+      <div class="order-card" onclick="goTo('order.html?id=2')">
+        <div class="order-top">
+          <p class="order-name">🍽️ مطعم البيت الكبير</p>
+          <span class="order-status done">مكتمل</span>
+        </div>
+        <div class="order-meta">
+          <span>📅 السبت 1 مارس</span>
+          <span>💰 120 جنيه</span>
+        </div>
+      </div>
+      <div class="order-card" onclick="goTo('order.html?id=3')">
+        <div class="order-top">
+          <p class="order-name">🚨 طلب طارئ — سباكة</p>
+          <span class="order-status pending">جاري</span>
+        </div>
+        <div class="order-meta">
+          <span>📅 اليوم</span>
+          <span>⏱️ في الطريق</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu: حسابي -->
+  <div class="menu-section">
+    <p class="menu-title">إدارة حسابي</p>
+    <div class="menu-card">
+      <a href="edit-profile.html" class="menu-item">
+        <div class="menu-ico" style="background:#E8F5E9">👤</div>
+        <div class="menu-text"><p class="menu-label">تعديل بياناتي</p><p class="menu-sub">الاسم والهاتف والعنوان</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="favorites.html" class="menu-item">
+        <div class="menu-ico" style="background:#FCE4EC">❤️</div>
+        <div class="menu-text"><p class="menu-label">المفضلة</p><p class="menu-sub" id="favCount">12 مزود محفوظ</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="my-reviews.html" class="menu-item">
+        <div class="menu-ico" style="background:#FFF8E1">⭐</div>
+        <div class="menu-text"><p class="menu-label">تقييماتي</p><p class="menu-sub">4 تقييمات مكتوبة</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="notifications.html" class="menu-item">
+        <div class="menu-ico" style="background:#E3F2FD">🔔</div>
+        <div class="menu-text"><p class="menu-label">الإشعارات</p><p class="menu-sub">3 إشعارات جديدة</p></div>
+        <span class="menu-badge">3</span>
+        <span class="menu-arr">←</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Menu: الخدمات -->
+  <div class="menu-section">
+    <p class="menu-title">الخدمات</p>
+    <div class="menu-card">
+      <a href="emergency.html" class="menu-item">
+        <div class="menu-ico" style="background:#FADBD8">🚨</div>
+        <div class="menu-text"><p class="menu-label">طلب طارئ</p><p class="menu-sub">مزود يوصلك في 15 دقيقة</p></div>
+        <span class="menu-badge red">جديد</span>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="map.html" class="menu-item">
+        <div class="menu-ico" style="background:#D8F3DC">🗺️</div>
+        <div class="menu-text"><p class="menu-label">الخريطة الذكية</p><p class="menu-sub">اكتشف المنيا بصرياً</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="offers.html" class="menu-item">
+        <div class="menu-ico" style="background:#FFF0E0">🔥</div>
+        <div class="menu-text"><p class="menu-label">عروض اليوم</p><p class="menu-sub">خصومات حصرية</p></div>
+        <span class="menu-badge green">5 عروض</span>
+        <span class="menu-arr">←</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Menu: الإعدادات -->
+  <div class="menu-section">
+    <p class="menu-title">الإعدادات</p>
+    <div class="menu-card">
+      <!-- Dark Mode -->
+      <div class="dm-row">
+        <div class="dm-info">
+          <div class="dm-ico">🌙</div>
+          <div>
+            <p class="menu-label">الوضع الداكن</p>
+            <p class="menu-sub" style="font-size:11px;color:var(--text-muted)">تغيير مظهر التطبيق</p>
+          </div>
+        </div>
+        <button class="dm-toggle" id="dmToggle" onclick="toggleDarkMode()" aria-label="تفعيل الوضع الداكن" role="switch" aria-checked="false"></button>
+      </div>
+      <div style="height:1px;background:var(--border);margin:0 14px"></div>
+      <a href="settings.html" class="menu-item">
+        <div class="menu-ico" style="background:var(--surface2)">⚙️</div>
+        <div class="menu-text"><p class="menu-label">إعدادات التطبيق</p><p class="menu-sub">الإشعارات والخصوصية</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="help.html" class="menu-item">
+        <div class="menu-ico" style="background:var(--surface2)">❓</div>
+        <div class="menu-text"><p class="menu-label">المساعدة والدعم</p><p class="menu-sub">تواصل معنا</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+      <a href="about.html" class="menu-item">
+        <div class="menu-ico" style="background:var(--surface2)">ℹ️</div>
+        <div class="menu-text"><p class="menu-label">عن التطبيق</p><p class="menu-sub">الإصدار 1.0 — خدماتي المنيا</p></div>
+        <span class="menu-arr">←</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Logout -->
+  <div class="menu-section">
+    <button class="logout-btn" onclick="doLogout()" aria-label="تسجيل الخروج">🚪 تسجيل الخروج</button>
+  </div>
+
+</div>
+
+<!-- ════════════ BOTTOM NAV ════════════ -->
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn" aria-label="طلب طارئ">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem active" aria-current="page"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ════════════ SCRIPT ════════════ -->
+<script>
+'use strict';
+
+/* ── SESSION (localStorage mock) ── */
+let user = JSON.parse(localStorage.getItem('kh_user') || 'null');
+let darkMode = localStorage.getItem('kh_dark') === '1';
+
+function init() {
+  if (user) showProfile();
+  else      showAuth();
+  applyDark();
+  // فاڤس
+  const favs = JSON.parse(localStorage.getItem('kh_favs') || '[]');
+  document.getElementById('statFavs').textContent = favs.length;
+  document.getElementById('favCount').textContent = favs.length + ' مزود محفوظ';
+}
+init();
+
+/* ── AUTH ── */
+function showAuth()    { document.getElementById('authState').style.display=''; document.getElementById('profileState').style.display='none'; }
+function showProfile() {
+  document.getElementById('authState').style.display='none';
+  document.getElementById('profileState').style.display='';
+  document.getElementById('pName').textContent  = user.name;
+  document.getElementById('pPhone').innerHTML   = '<span>📞</span> ' + user.phone;
+  document.getElementById('pAvatar').childNodes[0].textContent = user.avatar || '👤';
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => { t.classList.toggle('active', t.dataset.tab === tab); t.setAttribute('aria-selected', t.dataset.tab === tab); });
+  document.getElementById('loginBody').style.display    = tab === 'login'    ? '' : 'none';
+  document.getElementById('registerBody').style.display = tab === 'register' ? '' : 'none';
+}
+
+function doLogin() {
+  const phone = document.getElementById('loginPhone').value.trim();
+  const pw    = document.getElementById('loginPw').value;
+  if (!phone || phone.length < 11) { showToast('أدخل رقم هاتف صحيح', 'err'); return; }
+  if (!pw || pw.length < 6)        { showToast('أدخل كلمة المرور', 'err');    return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = '⏳ جاري الدخول...';
+  setTimeout(() => {
+    user = { name:'محمد أحمد', phone, avatar:'👤' };
+    localStorage.setItem('kh_user', JSON.stringify(user));
+    showToast('أهلاً بك يا محمد 👋');
+    showProfile();
+    btn.disabled = false; btn.textContent = 'دخول ←';
+  }, 1000);
+}
+
+function doRegister() {
+  const name  = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pw    = document.getElementById('regPw').value;
+  const area  = document.getElementById('regArea').value;
+  if (!name)                    { showToast('أدخل اسمك', 'err');              return; }
+  if (!phone || phone.length < 11) { showToast('أدخل رقم هاتف صحيح', 'err'); return; }
+  if (!pw || pw.length < 6)    { showToast('كلمة المرور 6 أحرف على الأقل','err'); return; }
+  if (!area)                   { showToast('اختر منطقتك', 'err');             return; }
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true; btn.textContent = '⏳ جاري التسجيل...';
+  setTimeout(() => {
+    user = { name, phone, avatar:'👤', area };
+    localStorage.setItem('kh_user', JSON.stringify(user));
+    showToast('مرحباً بك في خدماتي المنيا ✨');
+    showProfile();
+    btn.disabled = false; btn.textContent = 'إنشاء حساب ✨';
+  }, 1200);
+}
+
+function doLogout() {
+  if (!confirm('هل تريد تسجيل الخروج؟')) return;
+  localStorage.removeItem('kh_user');
+  user = null;
+  showToast('تم تسجيل الخروج');
+  setTimeout(showAuth, 800);
+}
+
+/* ── PASSWORD ── */
+function togglePw(id, btn) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+  btn.textContent = input.type === 'password' ? '👁️' : '🙈';
+}
+
+function checkPwStrength(pw) {
+  const el = document.getElementById('pwStrength');
+  if (!pw) { el.className = 'pw-strength'; return; }
+  if (pw.length < 6)      el.className = 'pw-strength pw-s1';
+  else if (pw.length < 10) el.className = 'pw-strength pw-s2';
+  else                     el.className = 'pw-strength pw-s3';
+}
+
+function showForgot() { showToast('📩 راسلنا على واتساب لإعادة تعيين كلمة المرور'); }
+function socialLogin(p) { showToast('قريباً — تسجيل بـ ' + p); }
+
+/* ── DARK MODE ── */
+function toggleDarkMode() {
+  darkMode = !darkMode;
+  localStorage.setItem('kh_dark', darkMode ? '1' : '0');
+  applyDark();
+}
+function applyDark() {
+  document.body.classList.toggle('dark', darkMode);
+  const t = document.getElementById('dmToggle');
+  if (t) { t.classList.toggle('on', darkMode); t.setAttribute('aria-checked', darkMode); }
+}
+
+/* ── AVATAR ── */
+function changeAvatar() { showToast('📸 ميزة تغيير الصورة قريباً!'); }
+
+/* ── HELPERS ── */
+function goTo(url) { window.location.href = url; }
+
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+}
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

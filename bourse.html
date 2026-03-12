@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<title>بورصة الأسعار — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── HEADER ── */
+.brs-header{position:sticky;top:0;z-index:100;background:var(--green);padding:12px 16px;box-shadow:0 2px 16px rgba(27,67,50,.3)}
+.brs-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.brs-back{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;font-family:var(--font);transition:var(--t);flex-shrink:0}
+.brs-back:active{transform:scale(.9)}
+.brs-title{font-size:16px;font-weight:900;color:white;flex:1}
+.live-pill{display:flex;align-items:center;gap:5px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.4);border-radius:50px;padding:4px 11px;font-size:11px;font-weight:800;color:#2ECC71;flex-shrink:0}
+.ldot{width:7px;height:7px;background:#2ECC71;border-radius:50%;animation:blink 1s infinite;flex-shrink:0}
+
+/* ── HERO BANNER ── */
+.brs-hero{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));padding:14px 16px;position:relative;overflow:hidden}
+.brs-hero-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-left:10px;font-size:90px;opacity:.1;pointer-events:none}
+.brs-hero-date{font-size:11px;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:3px}
+.brs-hero-title{font-size:17px;font-weight:900;color:white;margin-bottom:8px}
+.brs-hero-stats{display:flex;gap:10px}
+.brs-hstat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:7px 12px;text-align:center;flex:1}
+.brs-hstat-val{font-size:16px;font-weight:900;color:white;line-height:1}
+.brs-hstat-lbl{font-size:10px;color:rgba(255,255,255,.7);margin-top:2px}
+.brs-hstat.up   .brs-hstat-val{color:#FF6B6B}
+.brs-hstat.dn   .brs-hstat-val{color:#2ECC71}
+.brs-hstat.stbl .brs-hstat-val{color:var(--gold)}
+
+/* ── CATEGORY TABS ── */
+.brs-cats{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:84px;z-index:90}
+.brs-cats::-webkit-scrollbar{display:none}
+.brs-cat{flex-shrink:0;padding:11px 16px;font-size:13px;font-weight:700;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t);white-space:nowrap}
+.brs-cat.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* ── SEARCH & SORT ── */
+.brs-controls{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border)}
+.brs-search{flex:1;display:flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid var(--border);border-radius:50px;padding:7px 12px;transition:var(--t)}
+.brs-search:focus-within{border-color:var(--green);background:var(--surface)}
+.brs-search input{flex:1;background:none;border:none;outline:none;font-size:13px;font-family:var(--font);color:var(--text-main)}
+.brs-search input::placeholder{color:var(--text-muted)}
+.brs-sort-btn{width:38px;height:38px;background:var(--green-pale);border:1.5px solid var(--green);border-radius:10px;display:grid;place-items:center;font-size:18px;cursor:pointer;border-top:1.5px solid var(--green);transition:var(--t);font-family:var(--font)}
+.brs-sort-btn:active{background:var(--green);color:white}
+
+/* ── PRICE TICKER ── */
+.price-ticker{background:var(--green-dark);overflow:hidden;height:30px;display:flex;align-items:center}
+.ticker-track{display:flex;gap:0;animation:ticker 25s linear infinite;white-space:nowrap}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{padding:0 20px;font-size:11px;font-weight:700;color:white;display:flex;align-items:center;gap:5px;border-right:1px solid rgba(255,255,255,.15)}
+.ticker-item .ti-ico{font-size:13px}
+.ticker-item.up  .ti-price{color:#FF6B6B}
+.ticker-item.dn  .ti-price{color:#2ECC71}
+.ticker-item.stbl .ti-price{color:var(--gold)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── PRICE TABLE ── */
+.price-section{padding:12px 16px 0}
+.price-sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.price-sec-title{font-size:14px;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:6px}
+.price-sec-update{font-size:10.5px;color:var(--text-muted)}
+
+.price-table{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:14px}
+.pt-head{display:grid;grid-template-columns:1fr 80px 55px 45px;background:var(--surface2);padding:8px 12px;border-bottom:1.5px solid var(--border)}
+.pt-head span{font-size:10px;font-weight:800;color:var(--text-muted)}
+.pt-row{display:grid;grid-template-columns:1fr 80px 55px 45px;padding:10px 12px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:var(--t)}
+.pt-row:last-child{border-bottom:none}
+.pt-row:active{background:var(--surface2)}
+.pt-row.highlighted{background:rgba(244,162,97,.06)}
+.pt-name{display:flex;align-items:center;gap:7px}
+.pt-icon{font-size:20px;width:30px;flex-shrink:0;text-align:center}
+.pt-label{font-size:13px;font-weight:800;color:var(--text-main)}
+.pt-unit{font-size:10px;color:var(--text-muted);display:block}
+.pt-price{font-size:14px;font-weight:900;color:var(--text-main);font-family:'Tajawal',sans-serif}
+.pt-change{display:flex;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:800;padding:3px 6px;border-radius:6px}
+.pt-change.up  {background:#FDECEA;color:#E74C3C}
+.pt-change.dn  {background:#D5F5E3;color:#1E8449}
+.pt-change.stbl{background:#FFF8E1;color:#B7950B}
+.pt-fav{font-size:16px;cursor:pointer;background:none;border:none;font-family:var(--font);padding:0;transition:var(--t)}
+.pt-fav:active{transform:scale(.8)}
+
+/* ── CHART MINI ── */
+.price-chart-wrap{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.chart-title{font-size:14px;font-weight:900;color:var(--text-main)}
+.chart-period{display:flex;gap:4px}
+.cp-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);font-family:var(--font);transition:var(--t)}
+.cp-btn.active{background:var(--green);color:white;border-color:var(--green)}
+.chart-canvas{height:100px;position:relative;overflow:hidden}
+.chart-svg{width:100%;height:100%}
+.chart-labels{display:flex;justify-content:space-between;margin-top:4px}
+.chart-labels span{font-size:9.5px;color:var(--text-muted);font-weight:600}
+
+/* ── PRICE ALERT ── */
+.alert-cta{background:linear-gradient(135deg,var(--gold-pale),#FFF9F0);border:1.5px dashed var(--gold);border-radius:var(--radius-md);padding:14px;margin:0 16px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:var(--t)}
+.alert-cta:active{transform:scale(.98)}
+.alert-cta-icon{font-size:28px;flex-shrink:0}
+.alert-cta-text{flex:1}
+.alert-cta-title{font-size:13px;font-weight:900;color:var(--gold-dark)}
+.alert-cta-sub{font-size:11px;color:var(--text-muted)}
+
+/* ── REPORT ── */
+.report-btn{display:flex;align-items:center;gap:8px;padding:12px 16px;font-size:13px;font-weight:700;color:var(--green);cursor:pointer;background:none;border:none;font-family:var(--font);width:100%;transition:var(--t)}
+.report-btn:active{background:var(--green-pale)}
+</style>
+</head>
+<body>
+
+<header class="brs-header">
+  <div class="brs-hdr">
+    <button class="brs-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <span class="brs-title">📊 بورصة الأسعار</span>
+    <span class="live-pill"><span class="ldot"></span> مباشر</span>
+  </div>
+  <div class="sbox" role="search">
+    <span class="si" aria-hidden="true">🔍</span>
+    <input type="search" id="brsSearch" placeholder="ابحث عن سلعة..." autocomplete="off" aria-label="بحث">
+  </div>
+</header>
+
+<!-- PRICE TICKER -->
+<div class="price-ticker" aria-label="شريط الأسعار المتحرك" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- HERO -->
+<div class="brs-hero">
+  <div class="brs-hero-bg">📊</div>
+  <p class="brs-hero-date" id="heroDate">جاري التحميل...</p>
+  <p class="brs-hero-title">أسعار أسواق المنيا اليوم</p>
+  <div class="brs-hero-stats">
+    <div class="brs-hstat up">  <div class="brs-hstat-val" id="hUp">—</div>  <div class="brs-hstat-lbl">ارتفع</div></div>
+    <div class="brs-hstat dn">  <div class="brs-hstat-val" id="hDn">—</div>  <div class="brs-hstat-lbl">انخفض</div></div>
+    <div class="brs-hstat stbl"><div class="brs-hstat-val" id="hStbl">—</div><div class="brs-hstat-lbl">مستقر</div></div>
+  </div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="brs-cats" role="tablist" aria-label="فئات الأسعار">
+  <button class="brs-cat active" data-cat="all"     role="tab" aria-selected="true">الكل</button>
+  <button class="brs-cat" data-cat="vegetables"     role="tab" aria-selected="false">🥦 خضروات</button>
+  <button class="brs-cat" data-cat="fruits"         role="tab" aria-selected="false">🍎 فاكهة</button>
+  <button class="brs-cat" data-cat="meat"           role="tab" aria-selected="false">🥩 لحوم</button>
+  <button class="brs-cat" data-cat="poultry"        role="tab" aria-selected="false">🍗 دواجن</button>
+  <button class="brs-cat" data-cat="grains"         role="tab" aria-selected="false">🌾 حبوب</button>
+</div>
+
+<!-- CONTROLS -->
+<div class="brs-controls">
+  <div class="brs-search">
+    <span style="font-size:14px;color:var(--text-muted)">🔍</span>
+    <input type="search" id="brsSearch2" placeholder="ابحث في السلع..." autocomplete="off" aria-label="بحث في السلع">
+  </div>
+  <button class="brs-sort-btn" onclick="cycleSort()" id="sortBtn" aria-label="ترتيب">⇅</button>
+</div>
+
+<main class="page-body" style="padding-top:0;padding-bottom:90px" id="mainContent">
+
+  <!-- Mini Chart -->
+  <div class="price-chart-wrap" id="chartWrap">
+    <div class="chart-header">
+      <span class="chart-title">📈 <span id="chartItemName">الطماطم</span> — آخر 7 أيام</span>
+      <div class="chart-period">
+        <button class="cp-btn active" onclick="setChartPeriod(this,'7d')">7 أيام</button>
+        <button class="cp-btn" onclick="setChartPeriod(this,'30d')">شهر</button>
+      </div>
+    </div>
+    <div class="chart-canvas">
+      <svg class="chart-svg" id="chartSvg" viewBox="0 0 300 100" preserveAspectRatio="none"></svg>
+    </div>
+    <div class="chart-labels" id="chartLabels"></div>
+  </div>
+
+  <!-- Price Tables -->
+  <div id="priceContent"></div>
+
+  <!-- Alert CTA -->
+  <div class="alert-cta" onclick="showToast('🔔 ميزة تنبيهات الأسعار قريباً!')" role="button" tabindex="0">
+    <span class="alert-cta-icon">🔔</span>
+    <div class="alert-cta-text">
+      <p class="alert-cta-title">نبّهني لما يتغير السعر</p>
+      <p class="alert-cta-sub">حدد سلعة وسعر معين وهنبعتلك إشعار فوراً</p>
+    </div>
+    <span style="color:var(--gold);font-size:18px">←</span>
+  </div>
+
+  <!-- Report -->
+  <button class="report-btn" onclick="showToast('📩 شكراً! سيتم مراجعة السعر')">
+    📋 بلّغ عن سعر خاطئ أو ناقص
+  </button>
+
+</main>
+
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html"   class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"     class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+/* ── PRICES DATA ── */
+const PRICES = [
+  // خضروات
+  {id:'p1', cat:'vegetables', icon:'🍅', name:'طماطم',  price:8,  prev:10, unit:'للكيلو', history7:[12,11,10,10,9,10,8]},
+  {id:'p2', cat:'vegetables', icon:'🧅', name:'بصل',    price:12, prev:11, unit:'للكيلو', history7:[10,10,11,11,12,11,12]},
+  {id:'p3', cat:'vegetables', icon:'🥔', name:'بطاطس',  price:7,  prev:10, unit:'للكيلو', history7:[11,10,9,10,9,10,7]},
+  {id:'p4', cat:'vegetables', icon:'🧄', name:'ثوم',    price:45, prev:40, unit:'للكيلو', history7:[38,39,40,42,43,40,45]},
+  {id:'p5', cat:'vegetables', icon:'🥦', name:'كوسة',   price:6,  prev:7,  unit:'للكيلو', history7:[8,7,7,6,6,7,6]},
+  {id:'p6', cat:'vegetables', icon:'🥕', name:'جزر',    price:9,  prev:11, unit:'للكيلو', history7:[12,11,10,11,10,11,9]},
+  {id:'p7', cat:'vegetables', icon:'🍆', name:'باذنجان',price:5,  prev:5,  unit:'للكيلو', history7:[5,5,6,5,5,5,5]},
+  {id:'p8', cat:'vegetables', icon:'🌽', name:'ذرة',    price:4,  prev:3,  unit:'للكيلو', history7:[3,3,3,4,4,3,4]},
+  {id:'p9', cat:'vegetables', icon:'🫑', name:'فلفل',   price:15, prev:18, unit:'للكيلو', history7:[20,18,17,18,16,18,15]},
+  // فاكهة
+  {id:'f1', cat:'fruits', icon:'🍊', name:'برتقال',  price:10, prev:12, unit:'للكيلو', history7:[14,13,12,11,11,12,10]},
+  {id:'f2', cat:'fruits', icon:'🍌', name:'موز',     price:18, prev:16, unit:'للكيلو', history7:[15,15,16,17,17,16,18]},
+  {id:'f3', cat:'fruits', icon:'🍎', name:'تفاح',    price:25, prev:25, unit:'للكيلو', history7:[24,25,25,26,25,25,25]},
+  {id:'f4', cat:'fruits', icon:'🍇', name:'عنب',     price:30, prev:28, unit:'للكيلو', history7:[26,27,28,29,28,28,30]},
+  {id:'f5', cat:'fruits', icon:'🍉', name:'بطيخ',   price:5,  prev:4,  unit:'للكيلو', history7:[3,3,4,4,5,4,5]},
+  // لحوم
+  {id:'m1', cat:'meat', icon:'🥩', name:'لحم بتلو', price:280, prev:270, unit:'للكيلو', history7:[260,265,268,270,272,270,280]},
+  {id:'m2', cat:'meat', icon:'🐑', name:'لحم ضاني', price:320, prev:320, unit:'للكيلو', history7:[315,318,320,320,320,320,320]},
+  {id:'m3', cat:'meat', icon:'🥓', name:'كبدة',     price:120, prev:110, unit:'للكيلو', history7:[105,108,110,112,115,110,120]},
+  // دواجن
+  {id:'c1', cat:'poultry', icon:'🍗', name:'فراخ بلدي', price:85, prev:90, unit:'للكيلو', history7:[95,92,90,88,88,90,85]},
+  {id:'c2', cat:'poultry', icon:'🐔', name:'فراخ هجين', price:55, prev:55, unit:'للكيلو', history7:[54,55,55,56,55,55,55]},
+  {id:'c3', cat:'poultry', icon:'🥚', name:'بيض',       price:90, prev:85, unit:'للطبق',  history7:[80,82,85,85,88,85,90]},
+  // حبوب
+  {id:'g1', cat:'grains', icon:'🌾', name:'قمح',   price:12,  prev:12,  unit:'للكيلو', history7:[11,12,12,12,12,12,12]},
+  {id:'g2', cat:'grains', icon:'🫘', name:'فول',   price:25,  prev:22,  unit:'للكيلو', history7:[20,21,22,23,23,22,25]},
+  {id:'g3', cat:'grains', icon:'🌽', name:'ذرة صفرا',price:10,prev:10, unit:'للكيلو', history7:[9,10,10,10,10,10,10]},
+];
+
+/* ── STATE ── */
+let activeCat  = 'all';
+let searchQ    = '';
+let sortMode   = 'default'; // default | price-asc | price-desc | change
+let favPrices  = JSON.parse(localStorage.getItem('kh_price_favs') || '[]');
+let chartItem  = PRICES[0];
+
+/* ── TICKER ── */
+function buildTicker() {
+  const items = [...PRICES, ...PRICES]; // duplicate for seamless loop
+  document.getElementById('tickerTrack').innerHTML = items.map(p => {
+    const chg = p.price - p.prev;
+    const cls = chg > 0 ? 'up' : chg < 0 ? 'dn' : 'stbl';
+    const arr = chg > 0 ? '↑' : chg < 0 ? '↓' : '→';
+    return `<span class="ticker-item ${cls}"><span class="ti-ico">${p.icon}</span><span>${p.name}</span><span class="ti-price">${p.price}ج ${arr}</span></span>`;
+  }).join('');
+}
+buildTicker();
+
+/* ── HERO DATE ── */
+const now = new Date();
+const DAYS = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+document.getElementById('heroDate').textContent = `${DAYS[now.getDay()]} ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+
+/* ── HERO STATS ── */
+const upCount   = PRICES.filter(p => p.price > p.prev).length;
+const dnCount   = PRICES.filter(p => p.price < p.prev).length;
+const stblCount = PRICES.filter(p => p.price === p.prev).length;
+document.getElementById('hUp').textContent   = upCount   + ' سلعة';
+document.getElementById('hDn').textContent   = dnCount   + ' سلعة';
+document.getElementById('hStbl').textContent = stblCount + ' سلعة';
+
+/* ── CHART ── */
+function drawChart(item, period) {
+  chartItem = item;
+  document.getElementById('chartItemName').textContent = item.name;
+  const data = period === '30d'
+    ? [...item.history7, ...item.history7.map(v => v + Math.floor(Math.random()*3-1)), ...item.history7.map(v => v + Math.floor(Math.random()*3-1)), ...item.history7.slice(0,9)]
+    : item.history7;
+  const min = Math.min(...data) * .9;
+  const max = Math.max(...data) * 1.1;
+  const w = 300, h = 100;
+  const pts = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - ((v - min) / (max - min)) * h * .85 - h * .07;
+    return `${x},${y}`;
+  });
+  const path    = 'M ' + pts.join(' L ');
+  const fillPts = `M ${pts[0]} L ${pts.join(' L ')} L ${300},${h} L 0,${h} Z`;
+  const isUp    = data[data.length-1] >= data[0];
+  const stroke  = isUp ? '#E74C3C' : '#27AE60';
+  const fill    = isUp ? 'rgba(231,76,60,.1)' : 'rgba(39,174,96,.1)';
+  document.getElementById('chartSvg').innerHTML = `
+    <path d="${fillPts}" fill="${fill}"/>
+    <path d="${path}" stroke="${stroke}" stroke-width="2" fill="none" stroke-linejoin="round"/>
+    ${pts.map((pt,i) => i === pts.length-1 ? `<circle cx="${pt.split(',')[0]}" cy="${pt.split(',')[1]}" r="3.5" fill="${stroke}"/>` : '').join('')}`;
+  const labels = period === '7d'
+    ? ['7أيام','6','5','4','3','أمس','اليوم']
+    : Array.from({length:5}, (_,i) => `${30-i*7}ي`).reverse();
+  document.getElementById('chartLabels').innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+}
+drawChart(chartItem, '7d');
+
+function setChartPeriod(btn, period) {
+  document.querySelectorAll('.cp-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawChart(chartItem, period);
+}
+
+/* ── RENDER TABLE ── */
+function getFiltered() {
+  let items = PRICES.filter(p => {
+    if (activeCat !== 'all' && p.cat !== activeCat) return false;
+    if (searchQ && !p.name.includes(searchQ)) return false;
+    return true;
+  });
+  if (sortMode === 'price-asc')  items.sort((a,b) => a.price - b.price);
+  if (sortMode === 'price-desc') items.sort((a,b) => b.price - a.price);
+  if (sortMode === 'change')     items.sort((a,b) => Math.abs(b.price-b.prev) - Math.abs(a.price-a.prev));
+  return items;
+}
+
+function renderPrices() {
+  const items = getFiltered();
+  const el    = document.getElementById('priceContent');
+  if (!items.length) {
+    el.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-muted)">لا توجد سلع تطابق البحث</p>';
+    return;
+  }
+
+  // تجميع حسب الفئة
+  const groups = {};
+  const catNames = {vegetables:'🥦 خضروات',fruits:'🍎 فاكهة',meat:'🥩 لحوم',poultry:'🍗 دواجن',grains:'🌾 حبوب'};
+  items.forEach(p => {
+    if (!groups[p.cat]) groups[p.cat] = [];
+    groups[p.cat].push(p);
+  });
+
+  el.innerHTML = Object.entries(groups).map(([cat, catItems]) => `
+    <div class="price-section">
+      <div class="price-sec-head">
+        <span class="price-sec-title">${catNames[cat] || cat}</span>
+        <span class="price-sec-update">آخر تحديث: منذ ساعة</span>
+      </div>
+      <div class="price-table">
+        <div class="pt-head">
+          <span>السلعة</span>
+          <span>السعر</span>
+          <span>التغيير</span>
+          <span></span>
+        </div>
+        ${catItems.map(p => {
+          const chg   = p.price - p.prev;
+          const cls   = chg > 0 ? 'up' : chg < 0 ? 'dn' : 'stbl';
+          const arr   = chg > 0 ? '↑' : chg < 0 ? '↓' : '—';
+          const isFav = favPrices.includes(p.id);
+          return `
+          <div class="pt-row ${isFav?'highlighted':''}" onclick="selectChartItem('${p.id}')" role="row" tabindex="0" aria-label="${p.name} ${p.price} جنيه">
+            <div class="pt-name">
+              <span class="pt-icon" aria-hidden="true">${p.icon}</span>
+              <div>
+                <span class="pt-label">${p.name}</span>
+                <span class="pt-unit">${p.unit}</span>
+              </div>
+            </div>
+            <div class="pt-price">${p.price} ج</div>
+            <div class="pt-change ${cls}">${arr} ${Math.abs(chg) || '0'}</div>
+            <button class="pt-fav" onclick="togglePriceFav(event,'${p.id}')" aria-label="${isFav?'إزالة من المفضلة':'إضافة للمفضلة'}">${isFav?'⭐':'☆'}</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function selectChartItem(id) {
+  const item = PRICES.find(p => p.id === id);
+  if (item) {
+    drawChart(item, '7d');
+    document.getElementById('chartWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+}
+
+/* ── SORT ── */
+const SORT_MODES = ['default','price-asc','price-desc','change'];
+const SORT_ICONS = ['⇅','↑ سعر','↓ سعر','📊 تغيير'];
+let sortIdx = 0;
+function cycleSort() {
+  sortIdx = (sortIdx + 1) % SORT_MODES.length;
+  sortMode = SORT_MODES[sortIdx];
+  document.getElementById('sortBtn').textContent = SORT_ICONS[sortIdx];
+  renderPrices();
+}
+
+/* ── PRICE FAV ── */
+function togglePriceFav(e, id) {
+  e.stopPropagation();
+  const idx = favPrices.indexOf(id);
+  if (idx === -1) { favPrices.push(id); showToast('⭐ تمت الإضافة للمتابعة'); }
+  else            { favPrices.splice(idx,1); showToast('تم الإزالة','err'); }
+  localStorage.setItem('kh_price_favs', JSON.stringify(favPrices));
+  renderPrices();
+}
+
+/* ── TABS ── */
+document.querySelectorAll('.brs-cat').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.brs-cat').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    this.classList.add('active'); this.setAttribute('aria-selected','true');
+    activeCat = this.dataset.cat;
+    renderPrices();
+  });
+});
+
+/* ── SEARCH ── */
+document.getElementById('brsSearch2').addEventListener('input', function () {
+  searchQ = this.value.trim();
+  renderPrices();
+});
+
+/* ── AUTO REFRESH (mock: يغير سعر عشوائي كل 30 ثانية) ── */
+setInterval(() => {
+  const randomItem = PRICES[Math.floor(Math.random() * PRICES.length)];
+  const delta = Math.floor(Math.random() * 3) - 1;
+  if (delta !== 0) {
+    randomItem.prev  = randomItem.price;
+    randomItem.price = Math.max(1, randomItem.price + delta);
+    randomItem.history7.push(randomItem.price);
+    randomItem.history7.shift();
+    renderPrices();
+    buildTicker();
+    showToast(`📊 تحديث: ${randomItem.name} أصبح ${randomItem.price} ج`);
+  }
+}, 30000);
+
+function showToast(msg, type='ok') {
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className='toast '+type; t.textContent=msg;
+  c.appendChild(t); setTimeout(()=>t.remove(),2800);
+}
+
+renderPrices();
+
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

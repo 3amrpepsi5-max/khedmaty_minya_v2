@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#C0392B">
+<meta name="description" content="طلب عاجل — خدماتي المنيا">
+<title>طلب عاجل — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+:root{--red:#C0392B;--red-dark:#96281B;--red-light:#FADBD8;--red-mid:#E74C3C}
+
+/* ── HERO ── */
+.em-page-hero{background:linear-gradient(140deg,var(--red-dark),var(--red));padding:0;position:relative;overflow:hidden}
+.em-hero-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:relative;z-index:5}
+.em-back{width:38px;height:38px;background:rgba(255,255,255,.18);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px);font-family:var(--font)}
+.em-back:active{transform:scale(.9)}
+.em-hero-body{position:relative;z-index:5;padding:8px 16px 28px;text-align:center}
+.em-circle{width:80px;height:80px;background:rgba(255,255,255,.15);border-radius:50%;display:grid;place-items:center;font-size:38px;margin:0 auto 14px;animation:em-pulse 2s ease-in-out infinite;border:2px solid rgba(255,255,255,.3)}
+@keyframes em-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.3)}60%{box-shadow:0 0 0 16px rgba(255,255,255,0)}}
+.em-hero-title{font-size:22px;font-weight:900;color:white;margin-bottom:6px}
+.em-hero-sub{font-size:13px;color:rgba(255,255,255,.78);line-height:1.55}
+.em-hero-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:180px;opacity:.06;pointer-events:none;user-select:none}
+
+/* ── TIMER BADGE ── */
+.timer-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:50px;padding:6px 16px;color:white;font-size:13px;font-weight:700;margin-top:12px;backdrop-filter:blur(4px)}
+.timer-dot{width:8px;height:8px;background:#2ECC71;border-radius:50%;animation:blink 1s infinite;flex-shrink:0}
+
+/* ── STEPS ── */
+.steps-row{display:flex;gap:0;padding:14px 16px;background:var(--surface);border-bottom:1.5px solid var(--border)}
+.step{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;top:14px;left:-50%;width:100%;height:2px;background:var(--border);z-index:0}
+.step.done:not(:last-child)::after,.step.active:not(:last-child)::after{background:var(--red)}
+.step-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;position:relative;z-index:1;transition:var(--t)}
+.step.todo  .step-num{background:var(--surface2);color:var(--text-muted);border:2px solid var(--border)}
+.step.active .step-num{background:var(--red);color:white;border:2px solid var(--red);box-shadow:0 0 0 4px rgba(192,57,43,.2)}
+.step.done  .step-num{background:var(--red-dark);color:white;border:2px solid var(--red-dark)}
+.step-label{font-size:9.5px;font-weight:700;color:var(--text-muted);text-align:center;line-height:1.2}
+.step.active .step-label,.step.done .step-label{color:var(--red)}
+
+/* ── FORM ── */
+.em-form{padding:16px}
+.form-sec{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px}
+.form-sec-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.form-sec-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.form-sec-icon.red{background:var(--red-light)}
+.form-sec-icon.green{background:var(--green-pale)}
+.form-sec-icon.gold{background:var(--gold-pale)}
+.form-sec-title{font-size:14px;font-weight:900;color:var(--text-main)}
+
+/* ── SERVICE TYPE GRID ── */
+.stype-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}
+.stype-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;border-radius:var(--radius-sm);background:var(--surface2);border:2px solid transparent;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.stype-btn:active{transform:scale(.93)}
+.stype-btn.selected{background:var(--red-light);border-color:var(--red)}
+.stype-icon{font-size:26px}
+.stype-label{font-size:10.5px;font-weight:800;color:var(--text-main)}
+
+/* ── INPUT FIELDS ── */
+.field-wrap{padding:10px 14px}
+.field-label{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.field-label .req{color:var(--red);font-size:14px}
+.field-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13.5px;font-family:var(--font);color:var(--text-main);outline:none;transition:var(--t)}
+.field-input:focus{border-color:var(--red);background:var(--surface);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
+.field-input::placeholder{color:var(--text-muted)}
+textarea.field-input{resize:none;height:90px;line-height:1.5}
+.field-divider{height:1px;background:var(--border);margin:0 14px}
+
+/* ── URGENCY SLIDER ── */
+.urgency-wrap{padding:10px 14px 14px}
+.urgency-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);font-weight:600;margin-bottom:6px}
+.urgency-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(to left,var(--red),var(--gold),#27AE60);outline:none;cursor:pointer}
+.urgency-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:white;border:3px solid var(--red);box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer}
+.urgency-val{text-align:center;font-size:12px;font-weight:800;color:var(--red);margin-top:6px}
+
+/* ── LOCATION ── */
+.loc-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;background:none;border:none;cursor:pointer;font-family:var(--font);text-align:right;transition:var(--t)}
+.loc-btn:active{background:var(--surface2)}
+.loc-icon{width:38px;height:38px;background:var(--red-light);border-radius:11px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.loc-text{flex:1}
+.loc-title{font-size:13px;font-weight:800;color:var(--text-main)}
+.loc-sub{font-size:11px;color:var(--text-muted)}
+.loc-arr{color:var(--text-muted);font-size:18px}
+.loc-detected{display:none;padding:8px 14px 12px;font-size:12px;color:var(--green);font-weight:700;background:var(--green-pale);border-top:1px solid var(--border)}
+
+/* ── NEARBY PROVIDERS ── */
+.nearby-list{padding:8px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.nearby-card{display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:var(--radius-sm);padding:10px;border:1.5px solid var(--border);cursor:pointer;transition:var(--t)}
+.nearby-card.selected-prov{background:var(--red-light);border-color:var(--red)}
+.nearby-card:active{transform:scale(.97)}
+.nearby-icon{font-size:26px;width:44px;height:44px;background:var(--surface);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nearby-info{flex:1}
+.nearby-name{font-size:13px;font-weight:800;color:var(--text-main);margin-bottom:2px}
+.nearby-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nearby-dist{font-size:10.5px;color:var(--text-muted)}
+.nearby-time{font-size:10.5px;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:4px;font-weight:700}
+.nearby-rating{font-size:10.5px;color:var(--gold);font-weight:700}
+.nearby-sel{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:grid;place-items:center;transition:var(--t)}
+.nearby-card.selected-prov .nearby-sel{background:var(--red);border-color:var(--red);color:white;font-size:12px}
+
+/* ── SUBMIT BUTTON ── */
+.em-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--red-dark),var(--red));color:white;border:none;border-radius:var(--radius-md);font-size:16px;font-weight:900;font-family:var(--font);cursor:pointer;transition:var(--t);box-shadow:0 4px 18px rgba(192,57,43,.45);display:flex;align-items:center;justify-content:center;gap:8px;margin:0 16px 16px;width:calc(100% - 32px)}
+.em-submit:active{transform:scale(.97);opacity:.9}
+.em-submit:disabled{opacity:.55;pointer-events:none}
+
+/* ── SUCCESS STATE ── */
+.success-state{display:none;text-align:center;padding:40px 20px 30px}
+.success-icon{font-size:64px;margin-bottom:14px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-title{font-size:22px;font-weight:900;color:var(--green-dark);margin-bottom:8px}
+.success-sub{font-size:13.5px;color:var(--text-muted);line-height:1.6;margin-bottom:24px}
+.success-eta{display:inline-flex;align-items:center;gap:8px;background:var(--green-pale);border:1.5px solid var(--green);border-radius:var(--radius-md);padding:12px 20px;font-size:14px;font-weight:800;color:var(--green-dark);margin-bottom:20px}
+.success-card{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);padding:16px;margin-bottom:20px;text-align:right}
+.track-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;background:var(--green);color:white;border-radius:var(--radius-md);font-size:14px;font-weight:800;font-family:var(--font);border:none;cursor:pointer;margin-bottom:10px;transition:var(--t)}
+.track-btn:active{opacity:.85}
+.cancel-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;background:var(--surface2);color:var(--text-muted);border-radius:var(--radius-md);font-size:13px;font-weight:700;font-family:var(--font);border:1.5px solid var(--border);cursor:pointer;transition:var(--t)}
+.cancel-btn:active{background:var(--red-light);color:var(--red)}
+
+/* ── HOTLINES ── */
+.hotlines{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 16px}
+.hotline-card{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);cursor:pointer;text-decoration:none;transition:var(--t)}
+.hotline-card:active{transform:scale(.95)}
+.hotline-icon{font-size:24px}
+.hotline-label{font-size:11px;font-weight:800;color:var(--text-main)}
+.hotline-num{font-size:13px;font-weight:900;color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- ════════════ HERO ════════════ -->
+<section class="em-page-hero">
+  <div class="em-hero-bg" aria-hidden="true">🚨</div>
+  <div class="em-hero-top">
+    <button class="em-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <span style="font-size:13px;color:rgba(255,255,255,.8);font-weight:700">طلب طارئ</span>
+    <div style="width:38px"></div>
+  </div>
+  <div class="em-hero-body">
+    <div class="em-circle" aria-hidden="true">🚨</div>
+    <h1 class="em-hero-title">محتاج حد دلوقتي؟</h1>
+    <p class="em-hero-sub">اختار نوع الخدمة وحدد موقعك<br>وهنوصّلك مزود في أقل وقت ممكن</p>
+    <div class="timer-badge">
+      <span class="timer-dot"></span>
+      <span id="provOnline">47 مزود متاح الآن</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ STEPS ════════════ -->
+<div class="steps-row" id="stepsRow" aria-label="خطوات الطلب">
+  <div class="step active" id="step1">
+    <div class="step-num">1</div>
+    <div class="step-label">نوع الخدمة</div>
+  </div>
+  <div class="step todo" id="step2">
+    <div class="step-num">2</div>
+    <div class="step-label">الموقع</div>
+  </div>
+  <div class="step todo" id="step3">
+    <div class="step-num">3</div>
+    <div class="step-label">التفاصيل</div>
+  </div>
+  <div class="step todo" id="step4">
+    <div class="step-num">4</div>
+    <div class="step-label">تأكيد</div>
+  </div>
+</div>
+
+<!-- ════════════ FORM ════════════ -->
+<main id="formMain">
+<div class="em-form">
+
+  <!-- ── STEP 1: نوع الخدمة ── -->
+  <div class="form-sec" id="secType">
+    <div class="form-sec-head">
+      <div class="form-sec-icon red" aria-hidden="true">🔧</div>
+      <span class="form-sec-title">نوع الخدمة المطلوبة <span style="color:var(--red)">*</span></span>
+    </div>
+    <div class="stype-grid" id="stypeGrid" role="group" aria-label="اختر نوع الخدمة">
+      <button class="stype-btn" data-type="كهرباء"  onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">⚡</span><span class="stype-label">كهرباء</span></button>
+      <button class="stype-btn" data-type="سباكة"   onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🔧</span><span class="stype-label">سباكة</span></button>
+      <button class="stype-btn" data-type="غاز"     onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🔥</span><span class="stype-label">غاز</span></button>
+      <button class="stype-btn" data-type="طبي"     onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🏥</span><span class="stype-label">طبي</span></button>
+      <button class="stype-btn" data-type="حريق"    onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🧯</span><span class="stype-label">حريق</span></button>
+      <button class="stype-btn" data-type="تكييف"   onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">❄️</span><span class="stype-label">تكييف</span></button>
+      <button class="stype-btn" data-type="نجارة"   onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🪵</span><span class="stype-label">نجارة</span></button>
+      <button class="stype-btn" data-type="دهانات"  onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🎨</span><span class="stype-label">دهانات</span></button>
+      <button class="stype-btn" data-type="أخرى"    onclick="selectType(this)" aria-pressed="false"><span class="stype-icon">🛠️</span><span class="stype-label">أخرى</span></button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: الموقع ── -->
+  <div class="form-sec" id="secLoc">
+    <div class="form-sec-head">
+      <div class="form-sec-icon red" aria-hidden="true">📍</div>
+      <span class="form-sec-title">موقعك <span style="color:var(--red)">*</span></span>
+    </div>
+    <button class="loc-btn" onclick="detectLocation()" id="locBtn" aria-label="تحديد موقعي تلقائياً">
+      <div class="loc-icon" aria-hidden="true">📍</div>
+      <div class="loc-text">
+        <p class="loc-title">تحديد موقعي تلقائياً</p>
+        <p class="loc-sub" id="locSub">اضغط للسماح بتحديد الموقع</p>
+      </div>
+      <span class="loc-arr" aria-hidden="true">←</span>
+    </button>
+    <div class="loc-detected" id="locDetected">
+      ✅ <span id="locText">تم تحديد موقعك</span>
+    </div>
+    <div class="field-divider"></div>
+    <div class="field-wrap">
+      <p class="field-label">أو اكتب عنوانك يدوياً</p>
+      <input type="text" class="field-input" id="manualAddr" placeholder="مثال: شارع النيل، أمام مسجد النور، المنيا" autocomplete="street-address">
+    </div>
+  </div>
+
+  <!-- ── STEP 3: التفاصيل ── -->
+  <div class="form-sec" id="secDetails">
+    <div class="form-sec-head">
+      <div class="form-sec-icon gold" aria-hidden="true">📝</div>
+      <span class="form-sec-title">تفاصيل المشكلة</span>
+    </div>
+    <div class="field-wrap">
+      <p class="field-label">وصف المشكلة <span class="req">*</span></p>
+      <textarea class="field-input" id="problemDesc" placeholder="اشرح المشكلة باختصار... مثال: انهار الكهرباء في الشقة كلها منذ ساعة" aria-label="وصف المشكلة"></textarea>
+    </div>
+    <div class="field-divider"></div>
+    <div class="field-wrap">
+      <p class="field-label">رقم هاتفك <span class="req">*</span></p>
+      <input type="tel" class="field-input" id="userPhone" placeholder="01XXXXXXXXX" inputmode="tel" autocomplete="tel" aria-label="رقم هاتفك">
+    </div>
+    <div class="field-divider"></div>
+    <div class="urgency-wrap">
+      <p class="field-label" style="margin-bottom:10px">درجة الاستعجال</p>
+      <div class="urgency-labels">
+        <span>عادي</span>
+        <span>عاجل</span>
+        <span>طارئ جداً</span>
+      </div>
+      <input type="range" class="urgency-slider" id="urgencySlider" min="1" max="3" value="2" step="1" aria-label="درجة الاستعجال">
+      <p class="urgency-val" id="urgencyVal">عاجل</p>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: اختيار المزود ── -->
+  <div class="form-sec" id="secProviders">
+    <div class="form-sec-head">
+      <div class="form-sec-icon green" aria-hidden="true">👷</div>
+      <span class="form-sec-title">أقرب المزودين المتاحين</span>
+    </div>
+    <div class="nearby-list" id="nearbyList">
+      <!-- يُحشى بـ JS بعد تحديد نوع الخدمة -->
+      <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px">
+        <span style="font-size:32px;display:block;margin-bottom:8px">👆</span>
+        اختر نوع الخدمة أولاً لعرض المزودين القريبين
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── SUBMIT ── -->
+<button class="em-submit" id="submitBtn" onclick="submitRequest()" disabled aria-label="إرسال الطلب">
+  🚨 أرسل الطلب الآن
+</button>
+
+<!-- ── HOTLINES ── -->
+<div class="section" style="padding-bottom:0">
+  <div class="sec-head">
+    <h2 class="sec-title"><span class="dot"></span> 📞 أرقام الطوارئ</h2>
+  </div>
+</div>
+<div class="hotlines" role="list">
+  <a href="tel:123"   class="hotline-card" role="listitem" aria-label="إسعاف 123"><span class="hotline-icon">🚑</span><span class="hotline-label">إسعاف</span><span class="hotline-num">123</span></a>
+  <a href="tel:180"   class="hotline-card" role="listitem" aria-label="شرطة 122"><span class="hotline-icon">🚔</span><span class="hotline-label">شرطة</span><span class="hotline-num">122</span></a>
+  <a href="tel:180"   class="hotline-card" role="listitem" aria-label="حريق 180"><span class="hotline-icon">🚒</span><span class="hotline-label">حريق</span><span class="hotline-num">180</span></a>
+  <a href="tel:08008880700" class="hotline-card" role="listitem" aria-label="كهرباء 08008880700"><span class="hotline-icon">⚡</span><span class="hotline-label">كهرباء</span><span class="hotline-num">0800888</span></a>
+</div>
+<div style="height:20px"></div>
+
+</main>
+
+<!-- ════════════ SUCCESS STATE ════════════ -->
+<div class="success-state" id="successState">
+  <div class="success-icon">✅</div>
+  <h2 class="success-title">تم إرسال طلبك!</h2>
+  <p class="success-sub">تم إشعار المزودين القريبين منك<br>هيوصلك حد في أقرب وقت ممكن</p>
+  <div class="success-eta">⏱️ الوصول المتوقع: <span id="etaText">15–20 دقيقة</span></div>
+  <div class="success-card" id="successCard"></div>
+  <button class="track-btn" onclick="trackOrder()">📍 تتبع المزود</button>
+  <button class="cancel-btn" onclick="cancelOrder()">إلغاء الطلب</button>
+</div>
+
+<!-- ════════════ BOTTOM NAV ════════════ -->
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html" class="nitem"><span class="nic">🏠</span><span class="nlb">الرئيسية</span></a>
+  <a href="map.html"   class="nitem"><span class="nic">🗺️</span><span class="nlb">الخريطة</span></a>
+  <div class="nctr"><a href="emergency.html" class="nctr-btn" style="background:var(--red)" aria-label="طارئ">🚨</a></div>
+  <a href="search.html"  class="nitem"><span class="nic">🔍</span><span class="nlb">بحث</span></a>
+  <a href="profile.html" class="nitem"><span class="nic">👤</span><span class="nlb">حسابي</span></a>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="assertive"></div>
+
+<!-- ════════════ SCRIPT ════════════ -->
+<script>
+'use strict';
+
+/* ── MOCK PROVIDERS ── */
+const EM_PROVIDERS = {
+  'كهرباء': [{id:'p1',name:'أستاذ محمد الكهربائي',icon:'⚡',dist:'0.8 كم',eta:'10 دق',rating:'4.9'},{id:'p2',name:'محمود فني كهرباء',icon:'🔌',dist:'1.4 كم',eta:'15 دق',rating:'4.7'}],
+  'سباكة':  [{id:'p3',name:'مهندس سباكة معتمد',icon:'🔧',dist:'1.1 كم',eta:'12 دق',rating:'4.8'},{id:'p4',name:'عم حسن السباك',icon:'🪠',dist:'2.0 كم',eta:'20 دق',rating:'4.5'}],
+  'غاز':    [{id:'p5',name:'فني غاز متخصص',icon:'🔥',dist:'0.6 كم',eta:'8 دق', rating:'4.9'}],
+  'طبي':    [{id:'p6',name:'دكتور أحمد — طب عام',icon:'🏥',dist:'1.5 كم',eta:'15 دق',rating:'4.8'},{id:'p7',name:'ممرضة منزلية — أسماء',icon:'💊',dist:'0.9 كم',eta:'10 دق',rating:'4.7'}],
+  'حريق':   [{id:'p8',name:'فريق إطفاء خاص',icon:'🧯',dist:'2.2 كم',eta:'18 دق',rating:'5.0'}],
+  'تكييف':  [{id:'p9',name:'تكييفات الراحة',icon:'❄️',dist:'1.3 كم',eta:'14 دق',rating:'4.8'}],
+  'نجارة':  [{id:'p10',name:'نجار أثاث محترف',icon:'🪵',dist:'1.8 كم',eta:'20 دق',rating:'4.6'}],
+  'دهانات': [{id:'p11',name:'أستاذ علاء دهانات',icon:'🎨',dist:'2.5 كم',eta:'25 دق',rating:'4.5'}],
+  'أخرى':   [{id:'p12',name:'فني عام متنوع',icon:'🛠️',dist:'1.0 كم',eta:'12 دق',rating:'4.7'}],
+};
+
+/* ── STATE ── */
+let selType = null, selProvider = null, locCoords = null;
+
+/* ── URGENCY SLIDER ── */
+const URGENCY_LABELS = ['','عادي','عاجل','طارئ جداً'];
+const slider = document.getElementById('urgencySlider');
+slider.addEventListener('input', () => {
+  document.getElementById('urgencyVal').textContent = URGENCY_LABELS[slider.value];
+});
+
+/* ── SELECT TYPE ── */
+function selectType(btn) {
+  document.querySelectorAll('.stype-btn').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('selected');
+  btn.setAttribute('aria-pressed','true');
+  selType = btn.dataset.type;
+  setStep(2);
+  renderProviders(selType);
+  checkReady();
+}
+
+/* ── RENDER PROVIDERS ── */
+function renderProviders(type) {
+  const list = EM_PROVIDERS[type] || [];
+  const el = document.getElementById('nearbyList');
+  if (!list.length) { el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px">لا يوجد مزودون متاحون الآن</p>'; return; }
+  el.innerHTML = list.map(p => `
+    <div class="nearby-card" id="prov-${p.id}" onclick="selectProvider('${p.id}')" role="button" tabindex="0" aria-label="اختر ${p.name}">
+      <div class="nearby-icon" aria-hidden="true">${p.icon}</div>
+      <div class="nearby-info">
+        <p class="nearby-name">${p.name}</p>
+        <div class="nearby-meta">
+          <span class="nearby-dist">📍 ${p.dist}</span>
+          <span class="nearby-time">⏱️ ${p.eta}</span>
+          <span class="nearby-rating">★ ${p.rating}</span>
+        </div>
+      </div>
+      <div class="nearby-sel" id="sel-${p.id}"></div>
+    </div>`).join('');
+}
+
+function selectProvider(id) {
+  selProvider = id;
+  document.querySelectorAll('.nearby-card').forEach(c => c.classList.remove('selected-prov'));
+  document.querySelectorAll('.nearby-sel').forEach(s => s.textContent = '');
+  document.getElementById('prov-' + id)?.classList.add('selected-prov');
+  const selEl = document.getElementById('sel-' + id);
+  if (selEl) selEl.textContent = '✓';
+  setStep(4);
+  checkReady();
+}
+
+/* ── LOCATION ── */
+function detectLocation() {
+  const sub = document.getElementById('locSub');
+  sub.textContent = '⏳ جاري تحديد موقعك...';
+  navigator.geolocation?.getCurrentPosition(
+    pos => {
+      locCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      sub.textContent = '✅ تم تحديد الموقع بنجاح';
+      const detected = document.getElementById('locDetected');
+      document.getElementById('locText').textContent = `${locCoords.lat.toFixed(4)}, ${locCoords.lng.toFixed(4)}`;
+      detected.style.display = 'block';
+      setStep(3);
+      checkReady();
+      showToast('📍 تم تحديد موقعك');
+    },
+    () => {
+      sub.textContent = 'تعذّر التحديد التلقائي — اكتب العنوان يدوياً';
+      showToast('تعذّر تحديد الموقع', 'err');
+    }
+  ) ?? showToast('المتصفح لا يدعم GPS', 'err');
+}
+
+document.getElementById('manualAddr').addEventListener('input', function () {
+  if (this.value.trim().length > 5) { setStep(3); checkReady(); }
+});
+
+/* ── STEPS ── */
+function setStep(n) {
+  [1,2,3,4].forEach(i => {
+    const el = document.getElementById('step' + i);
+    el.className = 'step ' + (i < n ? 'done' : i === n ? 'active' : 'todo');
+  });
+}
+
+/* ── CHECK READY ── */
+function checkReady() {
+  const hasType  = !!selType;
+  const hasLoc   = !!locCoords || document.getElementById('manualAddr').value.trim().length > 5;
+  const hasPhone = document.getElementById('userPhone').value.trim().length >= 11;
+  const hasDesc  = document.getElementById('problemDesc').value.trim().length >= 5;
+  document.getElementById('submitBtn').disabled = !(hasType && hasLoc);
+}
+
+['userPhone','problemDesc'].forEach(id => {
+  document.getElementById(id).addEventListener('input', checkReady);
+});
+
+/* ── SUBMIT ── */
+function submitRequest() {
+  const phone = document.getElementById('userPhone').value.trim();
+  const desc  = document.getElementById('problemDesc').value.trim();
+  if (!phone || phone.length < 11) { showToast('أدخل رقم هاتفك صحيح', 'err'); return; }
+  if (!desc) { showToast('اشرح المشكلة باختصار', 'err'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled  = true;
+  btn.innerHTML = '⏳ جاري الإرسال...';
+
+  // محاكاة إرسال
+  setTimeout(() => {
+    showSuccess();
+  }, 1400);
+}
+
+function showSuccess() {
+  document.getElementById('formMain').style.display = 'none';
+  document.getElementById('stepsRow').style.display = 'none';
+  const ss = document.getElementById('successState');
+  ss.style.display = 'block';
+
+  const provEl = selProvider ? document.querySelector('#prov-' + selProvider) : null;
+  const provName = provEl?.querySelector('.nearby-name')?.textContent || 'أقرب مزود متاح';
+  const provEta  = provEl?.querySelector('.nearby-time')?.textContent  || '⏱️ 15 دق';
+
+  document.getElementById('etaText').textContent = provEta.replace('⏱️ ','');
+  document.getElementById('successCard').innerHTML = `
+    <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;font-weight:700">تفاصيل الطلب</p>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--text-muted)">نوع الخدمة</span><strong>${selType}</strong></div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--text-muted)">المزود</span><strong>${provName}</strong></div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--text-muted)">الاستعجال</span><strong>${URGENCY_LABELS[document.getElementById('urgencySlider').value]}</strong></div>
+    </div>`;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function trackOrder()  { showToast('🗺️ ميزة التتبع قريباً!'); }
+function cancelOrder() {
+  if (confirm('هل تريد إلغاء الطلب؟')) {
+    document.getElementById('successState').style.display = 'none';
+    document.getElementById('formMain').style.display     = 'block';
+    document.getElementById('stepsRow').style.display     = 'flex';
+    window.scrollTo({ top:0, behavior:'smooth' });
+    showToast('تم إلغاء الطلب');
+  }
+}
+
+const URGENCY_LABELS = ['','عادي','عاجل','طارئ جداً'];
+
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+}
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

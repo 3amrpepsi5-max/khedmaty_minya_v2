@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<meta name="description" content="تفاصيل مزود الخدمة — خدماتي المنيا">
+<title>بيانات المزود — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"
+<link rel="stylesheet" href="css/effects.css">>
+<style>
+/* ── VENDOR PAGE ── */
+.v-hero{position:relative;background:linear-gradient(140deg,var(--green-dark),var(--green-mid));min-height:220px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.v-hero-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:120px;opacity:.12;pointer-events:none;user-select:none}
+.v-hero-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;z-index:5}
+.v-back{width:38px;height:38px;background:rgba(0,0,0,.25);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;border:none;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px)}
+.v-back:active{background:rgba(0,0,0,.4);transform:scale(.92)}
+.v-top-actions{display:flex;gap:8px}
+.v-top-btn{width:38px;height:38px;background:rgba(0,0,0,.25);border-radius:11px;display:grid;place-items:center;font-size:19px;color:white;border:none;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px)}
+.v-top-btn:active{background:rgba(0,0,0,.4);transform:scale(.92)}
+.v-hero-content{position:relative;z-index:5;padding:16px 16px 20px;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 100%)}
+.v-badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.v-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:700}
+.v-badge.verified{background:rgba(39,174,96,.25);color:#27AE60;border:1px solid rgba(39,174,96,.4)}
+.v-badge.open{background:rgba(39,174,96,.25);color:#27AE60;border:1px solid rgba(39,174,96,.4)}
+.v-badge.closed{background:rgba(231,76,60,.25);color:#E74C3C;border:1px solid rgba(231,76,60,.4)}
+.v-badge.cat{background:rgba(255,255,255,.2);color:white}
+.v-name{font-size:22px;font-weight:900;color:white;line-height:1.2;margin-bottom:6px}
+.v-area{font-size:12px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
+
+/* ── ACTION BUTTONS ROW ── */
+.v-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:var(--surface);border-bottom:1.5px solid var(--border)}
+.v-act-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:var(--radius-sm);background:var(--surface2);border:none;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.v-act-btn:active{transform:scale(.93);background:var(--green-pale)}
+.v-act-btn .vai{font-size:22px}
+.v-act-btn .val{font-size:10px;font-weight:700;color:var(--text-main)}
+
+/* ── RATING BAR ── */
+.v-rating-wrap{padding:16px;background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);border:1.5px solid var(--border)}
+.v-rating-big{font-size:48px;font-weight:900;color:var(--text-main);line-height:1;margin-bottom:2px}
+.v-rating-stars{color:var(--gold);font-size:20px;letter-spacing:2px;margin-bottom:4px}
+.v-rating-count{font-size:12px;color:var(--text-muted)}
+.v-bars{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.v-bar-row{display:flex;align-items:center;gap:8px;font-size:11px}
+.v-bar-label{width:20px;text-align:left;color:var(--text-muted);font-weight:700;flex-shrink:0}
+.v-bar-track{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.v-bar-fill{height:100%;background:var(--gold);border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.v-bar-pct{width:30px;text-align:left;color:var(--text-muted);font-size:10px;flex-shrink:0}
+
+/* ── INFO CARD ── */
+.info-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);border:1.5px solid var(--border);overflow:hidden}
+.info-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-ico{width:36px;height:36px;background:var(--surface2);border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.info-text{flex:1}
+.info-label{font-size:10.5px;color:var(--text-muted);font-weight:600;margin-bottom:2px}
+.info-val{font-size:13.5px;font-weight:700;color:var(--text-main)}
+.info-link{color:var(--green)}
+.copy-btn{font-size:16px;background:none;border:none;cursor:pointer;padding:0;transition:var(--t)}
+.copy-btn:active{transform:scale(.8)}
+
+/* ── HOURS ── */
+.hours-grid{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.hour-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--border)}
+.hour-row:last-child{border-bottom:none}
+.hour-day{font-weight:700;color:var(--text-main)}
+.hour-time{color:var(--text-muted)}
+.hour-row.today .hour-day{color:var(--green)}
+.hour-row.today .hour-time{color:var(--green);font-weight:700}
+
+/* ── REVIEWS ── */
+.review-card{background:var(--surface);border-radius:var(--radius-md);padding:13px;border:1.5px solid var(--border);margin-bottom:10px}
+.rv-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.rv-avatar{width:38px;height:38px;border-radius:50%;background:var(--green-pale);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.rv-name{font-size:13px;font-weight:800;color:var(--text-main)}
+.rv-date{font-size:10px;color:var(--text-muted)}
+.rv-stars{color:var(--gold);font-size:13px;margin-bottom:6px}
+.rv-text{font-size:12.5px;color:var(--text-main);line-height:1.55}
+
+/* ── WRITE REVIEW ── */
+.write-rv{background:var(--gold-pale);border:1.5px dashed var(--gold);border-radius:var(--radius-md);padding:14px;text-align:center;cursor:pointer;transition:var(--t)}
+.write-rv:active{transform:scale(.98)}
+.write-rv p{font-size:13px;font-weight:700;color:var(--gold-dark)}
+
+/* ── MAP PREVIEW ── */
+.map-prev{height:140px;background:linear-gradient(135deg,var(--green-pale),var(--surface2));border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:40px;border:1.5px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:var(--t)}
+.map-prev:active{transform:scale(.98)}
+.map-prev-label{position:absolute;bottom:10px;right:50%;transform:translateX(50%);background:var(--green);color:white;padding:5px 14px;border-radius:50px;font-size:11px;font-weight:800}
+
+/* ── STICKY BOTTOM BAR ── */
+.v-sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--surface);border-top:1.5px solid var(--border);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0));display:flex;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
+.v-sticky-wa{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:white;padding:13px;border-radius:var(--radius-md);font-size:14px;font-weight:800;cursor:pointer;text-decoration:none;transition:var(--t)}
+.v-sticky-wa:active{opacity:.85;transform:scale(.98)}
+.v-sticky-call{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--green);color:white;padding:13px;border-radius:var(--radius-md);font-size:14px;font-weight:800;cursor:pointer;text-decoration:none;transition:var(--t)}
+.v-sticky-call:active{opacity:.85;transform:scale(.98)}
+.v-body-pad{padding-bottom:90px}
+
+/* ── TABS ── */
+.v-tabs{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:0;z-index:90}
+.v-tab{flex:1;padding:12px 8px;font-size:13px;font-weight:700;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t)}
+.v-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.v-tab-panel{display:none}
+.v-tab-panel.active{display:block}
+@keyframes skPulse{0%,100%{opacity:1}50%{opacity:.35}}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     VENDOR HERO
+════════════════════════════════════════ -->
+<section class="v-hero" id="vHero">
+  <div class="v-hero-bg" id="vHeroBg" aria-hidden="true">⚡</div>
+  <div class="v-hero-top">
+    <button class="v-back" onclick="history.back()" aria-label="رجوع">←</button>
+    <div class="v-top-actions">
+      <button class="v-top-btn" id="favBtn" onclick="toggleFav()" aria-label="إضافة للمفضلة">🤍</button>
+      <button class="v-top-btn" onclick="shareVendor()" aria-label="مشاركة">📤</button>
+    </div>
+  </div>
+  <div class="v-hero-content">
+    <div class="v-badge-row" id="vBadges"></div>
+    <h1 class="v-name" id="vName">جاري التحميل...</h1>
+    <p class="v-area" id="vArea"><span aria-hidden="true">📍</span> <span id="vAreaTxt">—</span></p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     ACTION BUTTONS
+════════════════════════════════════════ -->
+<div class="v-actions" role="group" aria-label="إجراءات سريعة">
+  <button class="v-act-btn" id="actCall" aria-label="اتصال">
+    <span class="vai">📞</span><span class="val">اتصال</span>
+  </button>
+  <button class="v-act-btn" id="actWa" aria-label="واتساب">
+    <span class="vai">💬</span><span class="val">واتساب</span>
+  </button>
+  <button class="v-act-btn" onclick="openMap()" aria-label="الموقع">
+    <span class="vai">📍</span><span class="val">الموقع</span>
+  </button>
+  <button class="v-act-btn" onclick="reportVendor()" aria-label="إبلاغ">
+    <span class="vai">🚩</span><span class="val">إبلاغ</span>
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════
+     TABS
+════════════════════════════════════════ -->
+<div class="v-tabs" role="tablist">
+  <button class="v-tab active" data-panel="info"    role="tab" aria-selected="true" >📋 المعلومات</button>
+  <button class="v-tab"        data-panel="reviews" role="tab" aria-selected="false">⭐ التقييمات</button>
+  <button class="v-tab"        data-panel="gallery" role="tab" aria-selected="false">🖼️ الصور</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE BODY
+════════════════════════════════════════ -->
+<main class="page-body v-body-pad" style="padding-top:0">
+
+  <!-- ── TAB: INFO ── -->
+  <div class="v-tab-panel active" id="panel-info">
+
+    <!-- Rating summary -->
+    <div class="section">
+      <div class="v-rating-wrap" id="ratingWrap">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div>
+            <div class="v-rating-big" id="ratingBig">—</div>
+            <div class="v-rating-stars" id="ratingStars">★★★★★</div>
+            <div class="v-rating-count" id="ratingCount">— تقييم</div>
+          </div>
+          <div class="v-bars" style="flex:1" id="ratingBars"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Info rows -->
+    <div class="section">
+      <div class="sec-head">
+        <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> بيانات المزود</h2>
+      </div>
+      <div class="info-card" id="infoCard">
+        <!-- يُحشى بالـ JS -->
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Map Preview -->
+    <div class="section">
+      <div class="sec-head">
+        <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> الموقع</h2>
+      </div>
+      <div class="map-prev" onclick="openMap()" role="button" tabindex="0" aria-label="افتح الموقع على الخريطة">
+        <span aria-hidden="true">🗺️</span>
+        <span class="map-prev-label">افتح في الخريطة ←</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Similar vendors -->
+    <div class="section">
+      <div class="sec-head">
+        <h2 class="sec-title"><span class="dot" aria-hidden="true"></span> مزودون مشابهون</h2>
+        <a href="search.html" class="sec-link">عرض الكل ←</a>
+      </div>
+      <div id="similarVendors"></div>
+    </div>
+
+  </div>
+
+  <!-- ── TAB: REVIEWS ── -->
+  <div class="v-tab-panel" id="panel-reviews">
+    <div class="section">
+      <div class="write-rv" onclick="writeReview()" role="button" tabindex="0" aria-label="اكتب تقييمك">
+        <p>✏️ اكتب تقييمك الآن — ساعد غيرك في الاختيار</p>
+      </div>
+    </div>
+    <div class="section" style="padding-top:0" id="reviewsList">
+      <!-- يُحشى بالـ JS -->
+    </div>
+  </div>
+
+  <!-- ── TAB: GALLERY ── -->
+  <div class="v-tab-panel" id="panel-gallery">
+    <div class="section">
+      <div id="galleryGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+        <!-- يُحشى بالـ JS -->
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ════════════════════════════════════════
+     STICKY BOTTOM BAR
+════════════════════════════════════════ -->
+<div class="v-sticky-bar">
+  <a id="stickyCall" href="#" class="v-sticky-call" aria-label="اتصال">📞 اتصل الآن</a>
+  <a id="stickyWa"   href="#" class="v-sticky-wa" target="_blank" rel="noopener" aria-label="واتساب">💬 واتساب</a>
+</div>
+
+<!-- TOAST -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── LOAD VENDOR FROM JSON ── */
+let vendor = null;
+let allVendors = [];
+
+async function loadVendor() {
+  const urlId = new URLSearchParams(location.search).get('id') || 'v001';
+  showSkeleton();
+  try {
+    // جرّب page1 أولاً ثم page2
+    for (const page of [1, 2]) {
+      const r = await fetch(`data/vendors.page${page}.json`);
+      if (!r.ok) continue;
+      const d = await r.json();
+      allVendors = allVendors.concat(d.vendors);
+      vendor = d.vendors.find(v => v.id === urlId);
+      if (vendor) break;
+    }
+  } catch(e) {}
+
+  // Fallback inline إذا فشل الـ fetch
+  if (!vendor) {
+    vendor = {
+      id:'v001', name:'أستاذ محمد الكهربائي', cat:'maintenance',
+      catLabel:'🔧 صيانة', icon:'⚡', rating:4.9, reviews:312,
+      open:true, area:'المنيا — شارع جمال عبد الناصر',
+      address:'شارع جمال عبد الناصر، أمام مسجد النور',
+      phone:'01012345678', verified:true, badge:'موثّق',
+      desc:'فني كهرباء معتمد بخبرة 15 سنة في كل أعمال الكهرباء المنزلية والتجارية. متاح 24 ساعة للحالات الطارئة.',
+      priceRange:'50–150 ج', experience:'15 سنة',
+      hours:{السبت:{open:true,from:'08:00',to:'22:00'},الأحد:{open:true,from:'08:00',to:'22:00'},الاثنين:{open:true,from:'08:00',to:'22:00'},الثلاثاء:{open:true,from:'08:00',to:'22:00'},الأربعاء:{open:true,from:'08:00',to:'22:00'},الخميس:{open:true,from:'08:00',to:'20:00'},الجمعة:{open:false}},
+      tags:['موثّق','متاح الآن','طوارئ'],
+      offer:{active:true,pct:47,code:'ELEC47'}
+    };
+  }
+
+  // تحويل بيانات JSON لتناسب renderVendor
+  normalizeVendor(vendor);
+  hideSkeleton();
+  renderVendor();
+}
+
+function normalizeVendor(v) {
+  // catLabel
+  const catMap = {maintenance:'🔧 صيانة',food:'🍽️ مطعم',health:'🏥 صحة',
+    delivery:'🛵 توصيل',education:'📚 تعليم','real-estate':'🏠 عقارات',
+    agriculture:'🌾 زراعة',market:'🛒 سوق',jobs:'💼 وظائف',
+    transport:'🚗 نقل',events:'🎉 مناسبات',government:'🏛️ حكومي'};
+  v.catLabel = v.catLabel || catMap[v.cat] || v.cat;
+  // badge
+  v.badge = v.badge || (v.tags && v.tags[0]) || (v.verified ? 'موثّق' : '');
+  // hours array للعرض
+  const DAYS_ORDER = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+  const todayIdx = new Date().getDay(); // 0=أحد
+  const todayAr  = DAYS_ORDER[todayIdx === 0 ? 1 : todayIdx === 6 ? 0 : todayIdx];
+  if (v.hours && !Array.isArray(v.hours)) {
+    if (v.hours['24h']) {
+      v.hoursArr = DAYS_ORDER.map(d => ({day:d,t:'24 ساعة',today:d===todayAr}));
+    } else {
+      v.hoursArr = DAYS_ORDER.map(d => {
+        const h = v.hours[d];
+        return {day:d, t:h && h.open ? (h.from+' – '+h.to) : 'مغلق', today:d===todayAr};
+      });
+    }
+  } else {
+    v.hoursArr = v.hoursArr || v.hours || [];
+  }
+  // ratingBars
+  v.ratingBars = v.ratingBars || [
+    {stars:5,pct:Math.round(v.rating*15)},
+    {stars:4,pct:18},{stars:3,pct:8},{stars:2,pct:3},{stars:1,pct:2}
+  ];
+  // gallery
+  const iconMap = {maintenance:['⚡','🔌','🪛','💡','🔧','⚙️'],food:['🍲','🥘','🍛','🥗','🍗','🥩'],health:['💊','🩺','🏥','🧬','💉','🔬'],'real-estate':['🏠','🏡','🔑','📋','🏗️','🏢'],education:['📚','✏️','🎓','📖','🖊️','📐'],delivery:['🛵','📦','🚚','📍','⏱️','✅'],agriculture:['🌾','🌱','🚜','💧','🌿','🌻'],market:['🛒','🛍️','💰','📊','🏪','🎁'],jobs:['💼','📋','🤝','🏆','💡','📊']};
+  v.gallery = v.gallery || iconMap[v.cat] || ['🔧','⚙️','🛠️','✅','📋','💯'];
+  // reviews mock if none
+  v.reviewsArr = v.reviewsArr || [
+    {name:'أحمد محمد',avatar:'👨',date:'منذ 3 أيام',stars:5,text:'محترف جداً وأسعاره معقولة. أنصح بيه جداً.'},
+    {name:'فاطمة علي',avatar:'👩',date:'منذ أسبوع',stars:5,text:'تعاملت معاه أكتر من مرة. دايما في الموعد وشغله نظيف.'},
+  ];
+}
+
+/* ── SKELETON ── */
+function showSkeleton() {
+  ['vName','vAreaTxt','infoCard','reviewsList','galleryGrid','similarVendors'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.dataset.orig = el.innerHTML; el.innerHTML = '<div style="height:14px;background:var(--surface2);border-radius:4px;width:60%;animation:skPulse 1.2s infinite"></div>'; }
+  });
+}
+function hideSkeleton() {
+  document.querySelectorAll('[data-orig]').forEach(el => { el.innerHTML = el.dataset.orig || ''; delete el.dataset.orig; });
+}
+
+/* ── INIT ── */
+let isFav = false;
+loadVendor();
+
+function renderVendor() {
+  // Hero
+  document.title = vendor.name + ' — خدماتي المنيا';
+  document.getElementById('vHeroBg').textContent  = vendor.icon;
+  document.getElementById('vName').textContent     = vendor.name;
+  document.getElementById('vAreaTxt').textContent  = vendor.area;
+
+  // Badges
+  const bRow = document.getElementById('vBadges');
+  bRow.innerHTML =
+    `<span class="v-badge cat">${vendor.catLabel}</span>` +
+    (vendor.verified ? `<span class="v-badge verified">✅ موثّق</span>` : '') +
+    `<span class="v-badge ${vendor.open?'open':'closed'}">${vendor.open?'🟢 مفتوح الآن':'🔴 مغلق'}</span>` +
+    (vendor.badge ? `<span class="v-badge cat">🏆 ${vendor.badge}</span>` : '') +
+    (vendor.offer && vendor.offer.active ? `<span class="v-badge" style="background:#FFF0E0;color:#C0392B;border:1px solid #F4A261">🔥 خصم ${vendor.offer.pct}%</span>` : '');
+
+  // Rating
+  document.getElementById('ratingBig').textContent   = vendor.rating.toFixed(1);
+  document.getElementById('ratingStars').textContent = '★'.repeat(Math.round(vendor.rating)) + '☆'.repeat(5 - Math.round(vendor.rating));
+  document.getElementById('ratingCount').textContent = vendor.reviews + ' تقييم';
+  document.getElementById('ratingBars').innerHTML = vendor.ratingBars.map(b => `
+    <div class="v-bar-row">
+      <span class="v-bar-label">${b.stars}★</span>
+      <div class="v-bar-track"><div class="v-bar-fill" style="width:0" data-w="${b.pct}%"></div></div>
+      <span class="v-bar-pct">${b.pct}%</span>
+    </div>`).join('');
+  // Animate bars
+  setTimeout(() => document.querySelectorAll('.v-bar-fill').forEach(f => f.style.width = f.dataset.w), 100);
+
+  // Info card
+  const todayHours = (vendor.hoursArr || []).find(h => h.today);
+  document.getElementById('infoCard').innerHTML = `
+    <div class="info-row">
+      <div class="info-ico">📝</div>
+      <div class="info-text">
+        <p class="info-label">نبذة</p>
+        <p class="info-val" style="font-size:12.5px;line-height:1.55;font-weight:600">${vendor.desc}</p>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-ico">📞</div>
+      <div class="info-text">
+        <p class="info-label">رقم الهاتف</p>
+        <p class="info-val"><a href="tel:${vendor.phone}" class="info-link">${vendor.phone}</a></p>
+      </div>
+      <button class="copy-btn" onclick="copyPhone()" aria-label="نسخ الرقم">📋</button>
+    </div>
+    <div class="info-row">
+      <div class="info-ico">📍</div>
+      <div class="info-text">
+        <p class="info-label">العنوان</p>
+        <p class="info-val">${vendor.area}</p>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-ico">🕐</div>
+      <div class="info-text">
+        <p class="info-label">مواعيد العمل${todayHours ? ' — اليوم: <strong style="color:var(--green)">' + todayHours.t + '</strong>' : ''}</p>
+        <div class="hours-grid">
+          ${(vendor.hoursArr || []).map(h => `
+            <div class="hour-row ${h.today?'today':''}">
+              <span class="hour-day">${h.day}</span>
+              <span class="hour-time">${h.t}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  // Action buttons
+  document.getElementById('actCall').onclick = () => window.location.href = 'tel:' + vendor.phone;
+  document.getElementById('actWa').onclick   = () => window.open('https://wa.me/2' + vendor.phone, '_blank');
+
+  // Sticky bar
+  document.getElementById('stickyCall').href = 'tel:' + vendor.phone;
+  document.getElementById('stickyWa').href   = 'https://wa.me/2' + vendor.phone;
+
+  // Fav button
+  updateFavBtn();
+
+  // Reviews
+  document.getElementById('reviewsList').innerHTML = (vendor.reviewsArr || []).map(r => `
+    <div class="review-card">
+      <div class="rv-head">
+        <div class="rv-avatar" aria-hidden="true">${r.avatar}</div>
+        <div>
+          <p class="rv-name">${r.name}</p>
+          <p class="rv-date">${r.date}</p>
+        </div>
+      </div>
+      <div class="rv-stars" aria-label="${r.stars} نجوم">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <p class="rv-text">${r.text}</p>
+    </div>`).join('');
+
+  // Gallery
+  document.getElementById('galleryGrid').innerHTML = vendor.gallery.map(g => `
+    <div style="aspect-ratio:1;background:var(--surface2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:36px;border:1.5px solid var(--border)" aria-hidden="true">${g}</div>
+  `).join('');
+
+  // Similar vendors
+  const similar = allVendors.filter(v => v.cat === vendor.cat && v.id !== vendor.id).slice(0,3);
+  if (similar.length) {
+    document.getElementById('similarVendors').innerHTML = similar.map(v => `
+      <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-bottom:10px;cursor:pointer" onclick="window.location.href='vendor.html?id=${v.id}'" role="button" tabindex="0">
+        <div style="font-size:30px;width:50px;height:50px;background:var(--surface2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">${v.icon}</div>
+        <div style="flex:1">
+          <p style="font-size:13px;font-weight:800;margin-bottom:3px">${v.name}</p>
+          <p style="font-size:11px;color:var(--text-muted)">★ ${v.rating} · ${v.area}</p>
+        </div>
+        <span style="color:var(--text-muted);font-size:18px">←</span>
+      </div>`).join('');
+  } else {
+    document.getElementById('similarVendors').innerHTML = '<p style="font-size:13px;color:var(--text-muted);text-align:center;padding:16px">لا يوجد مزودون مشابهون حالياً</p>';
+  }
+}
+
+/* ── TABS ── */
+document.querySelectorAll('.v-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.v-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    document.querySelectorAll('.v-tab-panel').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    this.setAttribute('aria-selected','true');
+    document.getElementById('panel-' + this.dataset.panel).classList.add('active');
+  });
+});
+
+/* ── FAV ── */
+function toggleFav() {
+  let favs = JSON.parse(localStorage.getItem('kh_favs') || '[]');
+  const idx = favs.indexOf(vendor.id);
+  if (idx === -1) { favs.push(vendor.id); isFav = true;  showToast('❤️ تمت الإضافة للمفضلة'); }
+  else            { favs.splice(idx,1);    isFav = false; showToast('💔 تمت الإزالة','err'); }
+  localStorage.setItem('kh_favs', JSON.stringify(favs));
+  updateFavBtn();
+}
+
+function updateFavBtn() {
+  const btn = document.getElementById('favBtn');
+  btn.textContent = isFav ? '❤️' : '🤍';
+  btn.setAttribute('aria-label', isFav ? 'إزالة من المفضلة' : 'إضافة للمفضلة');
+}
+
+/* ── SHARE ── */
+async function shareVendor() {
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: vendor.name, text: vendor.desc, url: location.href });
+    } catch (_) {}
+  } else {
+    await navigator.clipboard.writeText(location.href);
+    showToast('📋 تم نسخ الرابط');
+  }
+}
+
+/* ── COPY PHONE ── */
+async function copyPhone() {
+  try {
+    await navigator.clipboard.writeText(vendor.phone);
+    showToast('📋 تم نسخ الرقم');
+  } catch (_) {
+    showToast('تعذّر النسخ', 'err');
+  }
+}
+
+/* ── MAP ── */
+function openMap() {
+  const url = `https://maps.google.com/?q=${encodeURIComponent(vendor.area + '، المنيا، مصر')}`;
+  window.open(url, '_blank', 'noopener');
+}
+
+/* ── REPORT ── */
+function reportVendor() {
+  showToast('📩 شكراً — سيتم مراجعة البلاغ');
+}
+
+/* ── WRITE REVIEW ── */
+function writeReview() {
+  showToast('✏️ ميزة التقييم قريباً!');
+}
+
+/* ── TOAST ── */
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+/* ── SW ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+}
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>

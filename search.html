@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#2D6A4F">
+<meta name="description" content="ابحث عن أي خدمة في محافظة المنيا">
+<title>البحث — خدماتي المنيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/effects.css">
+<style>
+/* ── SEARCH PAGE SPECIFIC ── */
+.srch-header{position:sticky;top:0;z-index:100;background:var(--green);padding:10px 16px 12px}
+.srch-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.back-btn{width:38px;height:38px;background:rgba(255,255,255,.15);border-radius:11px;display:grid;place-items:center;font-size:20px;color:white;flex-shrink:0;transition:var(--t);cursor:pointer;border:none}
+.back-btn:active{background:rgba(255,255,255,.25);transform:scale(.92)}
+.srch-title{font-size:16px;font-weight:900;color:white;flex:1}
+.srch-sbox{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:50px;padding:9px 14px;transition:var(--t)}
+.srch-sbox:focus-within{background:rgba(255,255,255,.22);border-color:var(--gold)}
+.srch-sbox input{flex:1;background:none;border:none;outline:none;color:white;font-size:14px;font-family:var(--font)}
+.srch-sbox input::placeholder{color:rgba(255,255,255,.5)}
+.srch-sbox .si{color:rgba(255,255,255,.65);font-size:16px}
+.srch-sbox .mic{color:var(--gold);font-size:16px;background:none;border:none;cursor:pointer;transition:var(--t)}
+.srch-sbox .mic:active{transform:scale(1.2)}
+
+/* ── FILTER TABS ── */
+.filter-wrap{background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:84px;z-index:90}
+.filter-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.filter-tabs::-webkit-scrollbar{display:none}
+.ftab{flex-shrink:0;padding:11px 16px;font-size:13px;font-weight:700;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font);transition:var(--t);white-space:nowrap}
+.ftab.active{color:var(--green);border-bottom-color:var(--green)}
+.ftab:active{background:var(--surface2)}
+
+/* ── SORT & FILTER BAR ── */
+.sort-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border)}
+.sort-bar::-webkit-scrollbar{display:none}
+.sort-chip{display:flex;align-items:center;gap:4px;padding:6px 12px;border:1.5px solid var(--border);border-radius:50px;font-size:11.5px;font-weight:700;color:var(--text-main);background:var(--surface);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:var(--t);font-family:var(--font)}
+.sort-chip.active{background:var(--green-pale);border-color:var(--green);color:var(--green)}
+.sort-chip:active{transform:scale(.95)}
+.sort-chip .arr{font-size:10px}
+
+/* ── RESULTS ── */
+.results-wrap{padding:12px 16px}
+.results-count{font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:12px}
+.results-count strong{color:var(--green)}
+
+/* ── RESULT CARD (list mode) ── */
+.rcard{background:var(--surface);border-radius:var(--radius-md);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:12px;display:flex;align-items:stretch;overflow:hidden;cursor:pointer;transition:var(--t);-webkit-tap-highlight-color:transparent}
+.rcard:active{transform:scale(.98);background:var(--surface2)}
+.rcard-img{width:88px;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:36px}
+.rcard-body{flex:1;padding:11px 12px 0}
+.rcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.rcard-name{font-size:14px;font-weight:900;color:var(--text-main);line-height:1.3;flex:1}
+.rcard-fav{width:30px;height:30px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;font-size:16px;display:grid;place-items:center;flex-shrink:0;transition:var(--t)}
+.rcard-fav.liked{background:#FFE4E4}
+.rcard-fav:active{transform:scale(.85)}
+.rcard-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.rcard-cat{font-size:10px;background:var(--green-pale);color:var(--green);padding:2px 7px;border-radius:4px;font-weight:700}
+.rcard-area{font-size:10.5px;color:var(--text-muted);display:flex;align-items:center;gap:3px}
+.rcard-rating{display:flex;align-items:center;gap:3px;font-size:11.5px;font-weight:800;color:var(--text-main)}
+.rcard-rating .st{color:var(--gold)}
+.rcard-rating .rc{color:var(--text-muted);font-weight:400;font-size:10px}
+.rcard-status{display:flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700}
+.rcard-status.open{color:#27AE60}
+.rcard-status.closed{color:#E74C3C}
+.rcard-status .vdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.rcard-status.open .vdot{background:#27AE60;animation:blink 1.5s infinite}
+.rcard-status.closed .vdot{background:#E74C3C}
+.rcard-actions{display:flex;gap:6px;padding:8px 12px 10px}
+.rcard-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 0;border-radius:9px;font-size:12px;font-weight:700;transition:var(--t);text-align:center}
+.rcard-btn.phn{background:var(--green);color:white}
+.rcard-btn.wa{background:#25D366;color:white}
+.rcard-btn:active{opacity:.8}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:60px 20px}
+.empty-icon{font-size:56px;margin-bottom:12px}
+.empty-title{font-size:18px;font-weight:900;color:var(--text-main);margin-bottom:6px}
+.empty-sub{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:20px}
+.empty-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;border:none;font-family:var(--font)}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{text-align:center;padding:12px 16px 20px}
+.load-more-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--green);color:var(--green);padding:10px 28px;border-radius:50px;font-size:13px;font-weight:800;cursor:pointer;font-family:var(--font);transition:var(--t)}
+.load-more-btn:active{background:var(--green-pale)}
+.load-more-btn.loading{opacity:.6;pointer-events:none}
+
+/* ── FILTER BOTTOM SHEET ── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;opacity:0;pointer-events:none;transition:.3s}
+.sheet-overlay.show{opacity:1;pointer-events:all}
+.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;z-index:501;transform:translateY(100%);transition:.35s cubic-bezier(.4,0,.2,1);max-height:80vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0)}
+.sheet.show{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.sheet-head h3{font-size:16px;font-weight:900}
+.sheet-close{width:34px;height:34px;background:var(--surface2);border-radius:50%;display:grid;place-items:center;font-size:18px;cursor:pointer;border:none;font-family:var(--font)}
+.sheet-body{padding:16px 18px}
+.sh-sec{margin-bottom:20px}
+.sh-sec-title{font-size:13px;font-weight:800;color:var(--text-main);margin-bottom:10px}
+.sh-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sh-chip{padding:7px 14px;border:1.5px solid var(--border);border-radius:50px;font-size:12px;font-weight:700;color:var(--text-main);background:var(--surface);cursor:pointer;font-family:var(--font);transition:var(--t)}
+.sh-chip.active{background:var(--green-pale);border-color:var(--green);color:var(--green)}
+.sh-chip:active{transform:scale(.94)}
+.sh-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;position:sticky;bottom:0;background:var(--surface)}
+.sh-reset{flex:1;padding:11px;border:1.5px solid var(--border);border-radius:50px;font-size:13px;font-weight:700;color:var(--text-muted);background:none;cursor:pointer;font-family:var(--font)}
+.sh-apply{flex:2;padding:11px;border-radius:50px;font-size:13px;font-weight:800;color:white;background:var(--green);border:none;cursor:pointer;font-family:var(--font)}
+
+/* ── TRENDING TAGS ── */
+.trending{padding:12px 16px 0}
+.trending-title{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:8px}
+.trending-tags{display:flex;flex-wrap:wrap;gap:7px}
+.ttag{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1.5px solid var(--border);border-radius:50px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--text-main);cursor:pointer;transition:var(--t);font-family:var(--font)}
+.ttag:active{background:var(--green-pale);color:var(--green)}
+
+/* ── RECENT SEARCHES ── */
+.recent{padding:12px 16px 6px}
+.recent-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.recent-title{font-size:12px;font-weight:700;color:var(--text-muted)}
+.recent-clear{font-size:11px;font-weight:700;color:var(--gold-dark);cursor:pointer;background:none;border:none;font-family:var(--font)}
+.recent-list{display:flex;flex-direction:column;gap:2px}
+.ritem{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--t)}
+.ritem:active{background:var(--surface2)}
+.ritem .ri{font-size:14px;color:var(--text-muted)}
+.ritem .rt{font-size:13px;font-weight:600;color:var(--text-main);flex:1}
+.ritem .rx{font-size:16px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:0 4px;font-family:var(--font)}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle{display:flex;gap:4px;background:var(--surface2);border-radius:9px;padding:3px}
+.vt-btn{width:34px;height:28px;border-radius:7px;display:grid;place-items:center;font-size:15px;cursor:pointer;background:none;border:none;transition:var(--t);color:var(--text-muted)}
+.vt-btn.active{background:var(--surface);color:var(--green);box-shadow:var(--shadow-sm)}
+
+/* ── GRID MODE ── */
+.results-wrap.grid-mode .rcard{flex-direction:column;width:calc(50% - 6px)}
+.results-wrap.grid-mode .rcards-inner{display:flex;flex-wrap:wrap;gap:12px}
+.results-wrap.grid-mode .rcard-img{width:100%;height:100px;border-radius:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+
+<!-- ── SEARCH HEADER ── -->
+<header class="srch-header" id="srchHeader">
+  <div class="srch-top">
+    <button class="back-btn" onclick="history.back()" aria-label="رجوع">←</button>
+    <span class="srch-title">البحث</span>
+  </div>
+  <div class="srch-sbox" role="search">
+    <span class="si" aria-hidden="true">🔍</span>
+    <input
+      type="search"
+      id="srchInput"
+      placeholder="ابحث عن خدمة أو محل أو منطقة..."
+      autocomplete="off"
+      inputmode="search"
+      aria-label="بحث"
+      autofocus
+    >
+    <button class="mic" onclick="startVoiceSearch()" aria-label="بحث صوتي" id="micBtn">🎙️</button>
+  </div>
+</header>
+
+<!-- ── FILTER TABS ── -->
+<div class="filter-wrap" id="filterWrap">
+  <div class="filter-tabs" role="tablist" aria-label="تصفية حسب القسم">
+    <button class="ftab active" data-cat="all"         role="tab" aria-selected="true">الكل</button>
+    <button class="ftab" data-cat="maintenance"        role="tab" aria-selected="false">🔧 الصيانة</button>
+    <button class="ftab" data-cat="food"               role="tab" aria-selected="false">🍽️ مطاعم</button>
+    <button class="ftab" data-cat="health"             role="tab" aria-selected="false">🏥 الصحة</button>
+    <button class="ftab" data-cat="education"          role="tab" aria-selected="false">📚 التعليم</button>
+    <button class="ftab" data-cat="delivery"           role="tab" aria-selected="false">🛵 التوصيل</button>
+    <button class="ftab" data-cat="real-estate"        role="tab" aria-selected="false">🏠 عقارات</button>
+    <button class="ftab" data-cat="agriculture"        role="tab" aria-selected="false">🌾 الزراعة</button>
+    <button class="ftab" data-cat="market"             role="tab" aria-selected="false">🛒 السوق</button>
+    <button class="ftab" data-cat="jobs"               role="tab" aria-selected="false">💼 وظائف</button>
+  </div>
+</div>
+
+<!-- ── SORT & FILTER BAR ── -->
+<div class="sort-bar" id="sortBar">
+  <button class="sort-chip" id="filterBtn" onclick="openSheet()" aria-label="فلترة">⚙️ فلترة</button>
+  <button class="sort-chip active" data-sort="best"   onclick="setSort(this,'best')">الأعلى تقييماً <span class="arr">▼</span></button>
+  <button class="sort-chip" data-sort="near"          onclick="setSort(this,'near')">📍 الأقرب</button>
+  <button class="sort-chip" data-sort="open"          onclick="setSort(this,'open')">🟢 مفتوح</button>
+  <button class="sort-chip" data-sort="new"           onclick="setSort(this,'new')">✨ الأحدث</button>
+  <div class="view-toggle" style="margin-right:auto;flex-shrink:0">
+    <button class="vt-btn active" id="listBtn" onclick="setView('list')" aria-label="عرض قائمة">☰</button>
+    <button class="vt-btn"        id="gridBtn" onclick="setView('grid')" aria-label="عرض شبكة">⊞</button>
+  </div>
+</div>
+
+<!-- ════════════ MAIN CONTENT ════════════ -->
+<main id="mainContent">
+
+  <!-- ── EMPTY / HOME STATE (تظهر لما مفيش بحث) ── -->
+  <div id="homeState">
+    <!-- Recent searches -->
+    <div class="recent" id="recentWrap">
+      <div class="recent-head">
+        <span class="recent-title">🕐 البحث الأخير</span>
+        <button class="recent-clear" onclick="clearRecent()" aria-label="مسح السجل">مسح الكل</button>
+      </div>
+      <div class="recent-list" id="recentList"></div>
+    </div>
+
+    <!-- Trending tags -->
+    <div class="trending">
+      <p class="trending-title">🔥 الأكثر بحثاً الآن</p>
+      <div class="trending-tags" id="trendingTags">
+        <button class="ttag" onclick="quickSearch('كهربائي')">⚡ كهربائي</button>
+        <button class="ttag" onclick="quickSearch('سباك')">🔧 سباك</button>
+        <button class="ttag" onclick="quickSearch('مطعم')">🍽️ مطعم</button>
+        <button class="ttag" onclick="quickSearch('توصيل')">🛵 توصيل</button>
+        <button class="ttag" onclick="quickSearch('دكتور')">🏥 دكتور</button>
+        <button class="ttag" onclick="quickSearch('مدرس')">📚 مدرس</button>
+        <button class="ttag" onclick="quickSearch('نجار')">🪵 نجار</button>
+        <button class="ttag" onclick="quickSearch('دهان')">🎨 دهان</button>
+        <button class="ttag" onclick="quickSearch('تكييف')">❄️ تكييف</button>
+        <button class="ttag" onclick="quickSearch('عقارات')">🏠 عقارات</button>
+        <button class="ttag" onclick="quickSearch('محامي')">⚖️ محامي</button>
+        <button class="ttag" onclick="quickSearch('صيدلية')">💊 صيدلية</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESULTS STATE ── -->
+  <div id="resultsState" hidden>
+    <div class="results-wrap" id="resultsWrap">
+      <p class="results-count" id="resultsCount"></p>
+      <div id="rcards" class="rcards-inner"></div>
+    </div>
+    <div class="load-more-wrap" id="loadMoreWrap" hidden>
+      <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">تحميل المزيد ↓</button>
+    </div>
+  </div>
+
+  <!-- ── EMPTY RESULTS ── -->
+  <div id="emptyState" hidden class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <p class="empty-title">مش لاقيناش!</p>
+    <p class="empty-sub" id="emptyMsg">لا توجد نتائج لـ "<span id="emptyQ"></span>"<br>جرّب كلمة أخرى أو اختر قسم مختلف</p>
+    <button class="empty-btn" onclick="clearSearch()">🔄 ابحث من جديد</button>
+  </div>
+
+</main>
+
+<!-- ════════════ BOTTOM NAV ════════════ -->
+<nav class="bnav" aria-label="التنقل الرئيسي">
+  <a href="index.html" class="nitem">
+    <span class="nic" aria-hidden="true">🏠</span>
+    <span class="nlb">الرئيسية</span>
+  </a>
+  <a href="map.html" class="nitem">
+    <span class="nic" aria-hidden="true">🗺️</span>
+    <span class="nlb">الخريطة</span>
+  </a>
+  <div class="nctr">
+    <a href="emergency.html" class="nctr-btn" aria-label="طلب طارئ">🚨</a>
+  </div>
+  <a href="search.html" class="nitem active" aria-current="page">
+    <span class="nic" aria-hidden="true">🔍</span>
+    <span class="nlb">بحث</span>
+  </a>
+  <a href="profile.html" class="nitem">
+    <span class="nic" aria-hidden="true">👤</span>
+    <span class="nlb">حسابي</span>
+  </a>
+</nav>
+
+<!-- ════════════ FILTER SHEET ════════════ -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+<div class="sheet" id="filterSheet" role="dialog" aria-modal="true" aria-label="فلترة النتائج">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h3>⚙️ فلترة النتائج</h3>
+    <button class="sheet-close" onclick="closeSheet()" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="sheet-body">
+
+    <div class="sh-sec">
+      <p class="sh-sec-title">📍 المنطقة</p>
+      <div class="sh-chips" id="areaChips">
+        <button class="sh-chip active" data-area="all">الكل</button>
+        <button class="sh-chip" data-area="minya">المنيا</button>
+        <button class="sh-chip" data-area="mallawi">ملوي</button>
+        <button class="sh-chip" data-area="minia-qism">قسم أول</button>
+        <button class="sh-chip" data-area="maghagha">مغاغة</button>
+        <button class="sh-chip" data-area="beni-mazar">بني مزار</button>
+        <button class="sh-chip" data-area="matay">مطاي</button>
+        <button class="sh-chip" data-area="samalut">سمالوط</button>
+        <button class="sh-chip" data-area="abu-qurqas">أبو قرقاص</button>
+        <button class="sh-chip" data-area="dayr-mawas">دير مواس</button>
+        <button class="sh-chip" data-area="el-adwa">العدوة</button>
+        <button class="sh-chip" data-area="markaz-minya">مركز المنيا</button>
+      </div>
+    </div>
+
+    <div class="sh-sec">
+      <p class="sh-sec-title">⭐ التقييم</p>
+      <div class="sh-chips" id="ratingChips">
+        <button class="sh-chip active" data-rating="0">الكل</button>
+        <button class="sh-chip" data-rating="4.5">4.5+ ★</button>
+        <button class="sh-chip" data-rating="4">4.0+ ★</button>
+        <button class="sh-chip" data-rating="3.5">3.5+ ★</button>
+      </div>
+    </div>
+
+    <div class="sh-sec">
+      <p class="sh-sec-title">🕐 الحالة</p>
+      <div class="sh-chips" id="statusChips">
+        <button class="sh-chip active" data-status="all">الكل</button>
+        <button class="sh-chip" data-status="open">مفتوح الآن</button>
+        <button class="sh-chip" data-status="closed">مغلق</button>
+      </div>
+    </div>
+
+    <div class="sh-sec">
+      <p class="sh-sec-title">✅ التحقق</p>
+      <div class="sh-chips" id="verifiedChips">
+        <button class="sh-chip active" data-verified="all">الكل</button>
+        <button class="sh-chip" data-verified="verified">✅ موثّق فقط</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="sh-footer">
+    <button class="sh-reset" onclick="resetFilters()">إعادة ضبط</button>
+    <button class="sh-apply" onclick="applyFilters()">عرض النتائج</button>
+  </div>
+</div>
+
+<!-- ════════════ TOAST ════════════ -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script>
+'use strict';
+
+/* ────────── JSON LOADER ────────── */
+let ALL_VENDORS = [];
+let _loadedPages = 0;
+let _totalPages  = 2;
+let _loading     = false;
+
+async function loadPage(page) {
+  if (_loading || page > _totalPages) return;
+  _loading = true;
+  try {
+    const r = await fetch(`data/vendors.page${page}.json`);
+    if (!r.ok) throw new Error('fetch failed');
+    const d = await r.json();
+    // دمج الـ tags من الـ badge أو verified
+    d.vendors.forEach(v => {
+      v.badge = v.tags?.[0] || (v.verified ? 'موثّق' : '');
+    });
+    ALL_VENDORS = ALL_VENDORS.concat(d.vendors);
+    _loadedPages = page;
+    _totalPages  = d.meta.pages;
+  } catch(e) {
+    console.warn('vendors JSON not found, using empty', e);
+  }
+  _loading = false;
+}
+
+/* ────────── STATE ────────── */
+let _vendorsDummy = [
+  { id:'v001', name:'أستاذ محمد الكهربائي',    cat:'maintenance', icon:'⚡', rating:4.9, reviews:312, open:true,  area:'المنيا',    phone:'01012345678', verified:true,  badge:'موثّق' },
+  { id:'v002', name:'مطعم البيت الكبير',        cat:'food',        icon:'🍽️', rating:4.7, reviews:189, open:true,  area:'ملوي',       phone:'01098765432', verified:true,  badge:'توصيل مجاني' },
+  { id:'v003', name:'دكتور أحمد — طب عام',      cat:'health',      icon:'🏥', rating:4.8, reviews:245, open:false, area:'المنيا',    phone:'01156789012', verified:true,  badge:'' },
+  { id:'v004', name:'سريع للتوصيل',              cat:'delivery',    icon:'🛵', rating:4.6, reviews:98,  open:true,  area:'المنيا',    phone:'01234567890', verified:false, badge:'24 ساعة' },
+  { id:'v005', name:'أستاذ عمر — فيزياء وكيمياء',cat:'education',  icon:'📚', rating:4.9, reviews:421, open:true,  area:'مغاغة',     phone:'01312345678', verified:true,  badge:'⭐ الأعلى' },
+  { id:'v006', name:'شقق مصر الجديدة',           cat:'real-estate', icon:'🏠', rating:4.3, reviews:67,  open:true,  area:'سمالوط',    phone:'01412345678', verified:false, badge:'' },
+  { id:'v007', name:'مزرعة أبو النور',           cat:'agriculture', icon:'🌾', rating:4.5, reviews:83,  open:true,  area:'ملوي',       phone:'01512345678', verified:true,  badge:'منتجات طازجة' },
+  { id:'v008', name:'سوق الجملة — خضار وفاكهة',  cat:'market',      icon:'🛒', rating:4.4, reviews:156, open:true,  area:'المنيا',    phone:'01612345678', verified:false, badge:'' },
+  { id:'v009', name:'مهندس سباكة معتمد',         cat:'maintenance', icon:'🔧', rating:4.7, reviews:203, open:true,  area:'مطاي',      phone:'01712345678', verified:true,  badge:'' },
+  { id:'v010', name:'كشري المنيا الأصلي',        cat:'food',        icon:'🍲', rating:4.8, reviews:334, open:true,  area:'المنيا',    phone:'01812345678', verified:true,  badge:'🔥 مشهور' },
+  { id:'v011', name:'عيادة الحياة',              cat:'health',      icon:'💊', rating:4.6, reviews:178, open:false, area:'بني مزار',  phone:'01912345678', verified:true,  badge:'' },
+  { id:'v012', name:'محمد نجار — أثاث وديكور',   cat:'maintenance', icon:'🪵', rating:4.5, reviews:92,  open:true,  area:'أبو قرقاص', phone:'01022345678', verified:false, badge:'' },
+  { id:'v013', name:'مدرسة الأمل — الإنجليزية',  cat:'education',   icon:'🎓', rating:4.7, reviews:267, open:true,  area:'المنيا',    phone:'01122345678', verified:true,  badge:'أونلاين' },
+  { id:'v014', name:'فلل العمر للإيجار',         cat:'real-estate', icon:'🏡', rating:4.4, reviews:45,  open:true,  area:'المنيا',    phone:'01222345678', verified:false, badge:'' },
+  { id:'v015', name:'تكييفات الراحة',            cat:'maintenance', icon:'❄️', rating:4.8, reviews:289, open:true,  area:'ملوي',       phone:'01322345678', verified:true,  badge:'صيانة وتركيب' },
+  { id:'v016', name:'مطعم الشاورما الأصلية',     cat:'food',        icon:'🥙', rating:4.6, reviews:412, open:true,  area:'مغاغة',     phone:'01422345678', verified:false, badge:'' },
+  { id:'v017', name:'دكتور ياسر — أطفال',        cat:'health',      icon:'👶', rating:4.9, reviews:521, open:true,  area:'المنيا',    phone:'01522345678', verified:true,  badge:'⭐ الأفضل' },
+  { id:'v018', name:'وظائف خالية — مصانع', cat:'jobs', icon:'💼', rating:4.2, reviews:34, open:true, area:'ملوي', phone:'01622345678', verified:false, badge:'10 وظائف' },
+];
+
+/* ────────── STATE ────────── */
+let currentQ      = '';
+let currentCat    = 'all';
+let currentSort   = 'best';
+let currentView   = 'list';
+let currentPage   = 0;
+const PAGE_SIZE   = 8;
+let filtered      = [];
+let favorites     = JSON.parse(localStorage.getItem('kh_favs') || '[]');
+let recentSearches= JSON.parse(localStorage.getItem('kh_recent') || '[]');
+let activeFilters = { area:'all', rating:0, status:'all', verified:'all' };
+
+/* ────────── DOM REFS ────────── */
+const srchInput   = document.getElementById('srchInput');
+const homeState   = document.getElementById('homeState');
+const resultsState= document.getElementById('resultsState');
+const emptyState  = document.getElementById('emptyState');
+const rcards      = document.getElementById('rcards');
+const resultsWrap = document.getElementById('resultsWrap');
+
+/* ────────── SKELETON LOADER ────────── */
+function showSkeletons(n = 4) {
+  rcards.innerHTML = Array.from({length:n}, () => `
+    <div class="rcard skel" aria-hidden="true" style="min-height:90px;background:var(--surface2);border-radius:var(--radius-md);animation:pulse 1.2s ease-in-out infinite">
+      <div style="display:flex;gap:12px;padding:12px">
+        <div style="width:54px;height:54px;border-radius:14px;background:var(--border);flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="height:14px;background:var(--border);border-radius:4px;margin-bottom:8px;width:65%"></div>
+          <div style="height:11px;background:var(--border);border-radius:4px;margin-bottom:6px;width:40%"></div>
+          <div style="height:11px;background:var(--border);border-radius:4px;width:55%"></div>
+        </div>
+      </div>
+    </div>`).join('');
+  homeState.style.display    = 'none';
+  resultsState.style.display = 'block';
+  emptyState.style.display   = 'none';
+}
+
+/* ────────── LOAD MORE SENTINEL (IntersectionObserver) ────────── */
+let _sentinel = null;
+let _iObserver = null;
+
+function setupSentinel() {
+  if (_iObserver) _iObserver.disconnect();
+  let sentinel = document.getElementById('loadSentinel');
+  if (!sentinel) {
+    sentinel = document.createElement('div');
+    sentinel.id = 'loadSentinel';
+    sentinel.style.cssText = 'height:1px;margin-top:-1px';
+    document.querySelector('.page-body').appendChild(sentinel);
+  }
+  _iObserver = new IntersectionObserver(async entries => {
+    if (!entries[0].isIntersecting) return;
+    // تحميل صفحة JSON جديدة إذا كانت هناك
+    if (_loadedPages < _totalPages && !_loading) {
+      await loadPage(_loadedPages + 1);
+      runFilter();
+      return;
+    }
+    // عرض صفحة نتائج جديدة
+    if (currentPage * PAGE_SIZE < filtered.length) {
+      currentPage++;
+      appendResults();
+    } else {
+      _iObserver.disconnect();
+    }
+  }, { threshold: 0.1 });
+  _iObserver.observe(sentinel);
+}
+
+/* ────────── INIT ────────── */
+async function init() {
+  // تحميل الصفحة الأولى من JSON
+  await loadPage(1);
+  // دمج مع الـ fallback إذا فشل التحميل
+  if (ALL_VENDORS.length === 0) ALL_VENDORS = _vendorsDummy;
+
+  const urlQ = new URLSearchParams(location.search).get('q');
+  const urlCat = new URLSearchParams(location.search).get('cat');
+  if (urlCat) {
+    currentCat = urlCat;
+    document.querySelectorAll('.ftab').forEach(t => {
+      t.classList.toggle('active', t.dataset.cat === urlCat);
+    });
+  }
+  if (urlQ) { srchInput.value = urlQ; doSearch(urlQ); }
+  else renderRecent();
+
+  // تحميل صفحة 2 في الخلفية (preload)
+  setTimeout(() => loadPage(2), 1500);
+}
+
+srchInput.addEventListener('input', function () {
+  const q = this.value.trim();
+  if (!q) { showHome(); return; }
+  clearTimeout(this._t);
+  this._t = setTimeout(() => doSearch(q), 320);
+});
+srchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch(srchInput.value.trim());
+});
+
+init();
+
+/* ────────── SEARCH ────────── */
+function doSearch(q) {
+  currentQ    = q;
+  currentPage = 0;
+  if (!q) { showHome(); return; }
+  saveRecent(q);
+  showSkeletons();
+  // محاكاة تأخير شبكة خفيف
+  setTimeout(runFilter, 200);
+}
+
+function runFilter() {
+  let res = ALL_VENDORS.filter(v => {
+    const matchQ    = !currentQ || v.name.includes(currentQ) || (v.cat||'').includes(currentQ) || (v.area||'').includes(currentQ) || (v.badge||'').includes(currentQ) || (v.sub||'').includes(currentQ);
+    const matchCat  = currentCat === 'all' || v.cat === currentCat;
+    const matchArea = activeFilters.area === 'all' || v.area === activeFilters.area;
+    const matchRat  = v.rating >= activeFilters.rating;
+    const matchStat = activeFilters.status === 'all' || (activeFilters.status === 'open' ? v.open : !v.open);
+    const matchVer  = activeFilters.verified === 'all' || v.verified;
+    return matchQ && matchCat && matchArea && matchRat && matchStat && matchVer;
+  });
+
+  // Sort
+  if (currentSort === 'best') res.sort((a,b) => b.rating - a.rating);
+  else if (currentSort === 'new') res.sort((a,b) => b.id.localeCompare(a.id));
+  else if (currentSort === 'open') res.sort((a,b) => (b.open ? 1:0) - (a.open ? 1:0));
+
+  filtered = res;
+  renderResults();
+}
+
+function renderResults() {
+  homeState.hidden    = true;
+  emptyState.hidden   = true;
+  resultsState.hidden = false;
+  resultsState.style.display = 'block';
+  const count = filtered.length;
+  const totalLabel = _loadedPages < _totalPages ? count + '+ نتيجة' : count + ' نتيجة';
+  document.getElementById('resultsCount').innerHTML =
+    `وجدنا <strong>${totalLabel}</strong>${currentQ ? ` لـ "${currentQ}"` : ''}`;
+  if (!count) {
+    rcards.innerHTML = '';
+    resultsState.hidden = true;
+    emptyState.hidden   = false;
+    document.getElementById('emptyQ').textContent = currentQ;
+    document.getElementById('loadMoreWrap').hidden = true;
+    return;
+  }
+  rcards.innerHTML = filtered.slice(0, PAGE_SIZE).map(renderCard).join('');
+  currentPage = 1;
+  document.getElementById('loadMoreWrap').hidden =
+    filtered.length <= PAGE_SIZE && _loadedPages >= _totalPages;
+  setupSentinel();
+  lazyLoadIcons();
+}
+
+function appendResults() {
+  const slice = filtered.slice(currentPage * PAGE_SIZE, (currentPage+1) * PAGE_SIZE);
+  if (!slice.length) return;
+  rcards.insertAdjacentHTML('beforeend', slice.map(renderCard).join(''));
+  currentPage++;
+  document.getElementById('loadMoreWrap').hidden =
+    currentPage * PAGE_SIZE >= filtered.length && _loadedPages >= _totalPages;
+  lazyLoadIcons();
+}
+
+function lazyLoadIcons() {
+  if (!('IntersectionObserver' in window)) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){e.target.style.opacity='1';obs.unobserve(e.target);} });
+  }, {threshold:0.1});
+  document.querySelectorAll('.rcard:not([data-observed])').forEach(c => {
+    c.style.opacity='0'; c.style.transition='opacity .3s ease';
+    c.dataset.observed='1'; obs.observe(c);
+  });
+}
+
+
+function renderCard(v) {
+  const isFav = favorites.includes(v.id);
+  return `
+  <div class="rcard" onclick="goTo('vendor.html?id=${v.id}')" role="listitem" tabindex="0" aria-label="${v.name}">
+    <div class="rcard-img" aria-hidden="true">${v.icon}</div>
+    <div style="flex:1;display:flex;flex-direction:column">
+      <div class="rcard-body">
+        <div class="rcard-top">
+          <p class="rcard-name">${v.name}${v.verified ? ' <span title="موثّق" aria-label="موثّق">✅</span>' : ''}</p>
+          <button class="rcard-fav ${isFav?'liked':''}" onclick="toggleFav(event,'${v.id}')" aria-label="${isFav?'إزالة من المفضلة':'إضافة للمفضلة'}">${isFav?'❤️':'🤍'}</button>
+        </div>
+        <div class="rcard-meta">
+          <span class="rcard-cat">${catLabel(v.cat)}</span>
+          <span class="rcard-area">📍 ${v.area}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="rcard-rating"><span class="st">★</span>${v.rating}<span class="rc">(${v.reviews})</span></span>
+          <span class="rcard-status ${v.open?'open':'closed'}"><span class="vdot"></span>${v.open?'مفتوح':'مغلق'}</span>
+          ${v.badge ? `<span style="font-size:10px;background:var(--gold-pale);color:var(--gold-dark);padding:2px 7px;border-radius:4px;font-weight:700">${v.badge}</span>` : ''}
+        </div>
+      </div>
+      <div class="rcard-actions">
+        <a href="tel:${v.phone}" class="rcard-btn phn" onclick="event.stopPropagation()" aria-label="اتصال بـ${v.name}">📞 اتصال</a>
+        <a href="https://wa.me/2${v.phone}" class="rcard-btn wa" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="واتساب ${v.name}">💬 واتساب</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function catLabel(c) {
+  const m = {maintenance:'🔧 صيانة',food:'🍽️ مطعم',health:'🏥 صحة',delivery:'🛵 توصيل',
+             education:'📚 تعليم','real-estate':'🏠 عقارات',agriculture:'🌾 زراعة',
+             market:'🛒 سوق',jobs:'💼 وظائف'};
+  return m[c] || c;
+}
+
+/* ────────── LOAD MORE ────────── */
+async function loadMore() {
+  const btn = document.getElementById('loadMoreBtn');
+  btn.classList.add('loading'); btn.textContent = '⏳ جار التحميل...';
+  // تحميل الصفحة التالية من JSON إذا لزم
+  if (_loadedPages < _totalPages) {
+    await loadPage(_loadedPages + 1);
+    runFilter();
+  } else {
+    appendResults();
+  }
+  btn.classList.remove('loading'); btn.textContent = 'تحميل المزيد ↓';
+}
+
+
+/* ────────── FILTER TABS ────────── */
+document.querySelectorAll('.ftab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.ftab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected','false');
+    });
+    this.classList.add('active');
+    this.setAttribute('aria-selected','true');
+    currentCat  = this.dataset.cat;
+    currentPage = 0;
+    if (currentQ || currentCat !== 'all') runFilter();
+  });
+});
+
+/* ────────── SORT ────────── */
+function setSort(el, sort) {
+  document.querySelectorAll('.sort-chip[data-sort]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentSort = sort;
+  if (sort === 'near') {
+    navigator.geolocation?.getCurrentPosition(
+      () => { showToast('📍 تم تحديد موقعك'); runFilter(); },
+      ()  => showToast('تعذّر تحديد الموقع', 'err')
+    );
+  } else runFilter();
+}
+
+/* ────────── VIEW TOGGLE ────────── */
+function setView(v) {
+  currentView = v;
+  document.getElementById('listBtn').classList.toggle('active', v === 'list');
+  document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+  resultsWrap.classList.toggle('grid-mode', v === 'grid');
+}
+
+/* ────────── FAVORITES ────────── */
+function toggleFav(e, id) {
+  e.stopPropagation();
+  const idx = favorites.indexOf(id);
+  if (idx === -1) { favorites.push(id); showToast('❤️ تمت الإضافة للمفضلة'); }
+  else            { favorites.splice(idx,1); showToast('💔 تمت الإزالة من المفضلة','err'); }
+  localStorage.setItem('kh_favs', JSON.stringify(favorites));
+  // تحديث الزر
+  const btn = e.currentTarget;
+  const liked = favorites.includes(id);
+  btn.classList.toggle('liked', liked);
+  btn.textContent = liked ? '❤️' : '🤍';
+  btn.setAttribute('aria-label', liked ? 'إزالة من المفضلة' : 'إضافة للمفضلة');
+}
+
+/* ────────── RECENT SEARCHES ────────── */
+function saveRecent(q) {
+  recentSearches = [q, ...recentSearches.filter(r => r !== q)].slice(0, 6);
+  localStorage.setItem('kh_recent', JSON.stringify(recentSearches));
+  renderRecent();
+}
+
+function renderRecent() {
+  const el = document.getElementById('recentList');
+  const wrap = document.getElementById('recentWrap');
+  if (!recentSearches.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  el.innerHTML = recentSearches.map((r,i) => `
+    <div class="ritem" onclick="quickSearch('${r}')">
+      <span class="ri">🕐</span>
+      <span class="rt">${r}</span>
+      <button class="rx" onclick="removeRecent(event,${i})" aria-label="حذف">✕</button>
+    </div>`).join('');
+}
+
+function removeRecent(e, i) {
+  e.stopPropagation();
+  recentSearches.splice(i, 1);
+  localStorage.setItem('kh_recent', JSON.stringify(recentSearches));
+  renderRecent();
+}
+
+function clearRecent() {
+  recentSearches = [];
+  localStorage.setItem('kh_recent', '[]');
+  renderRecent();
+}
+
+/* ────────── QUICK SEARCH ────────── */
+function quickSearch(q) {
+  srchInput.value = q;
+  doSearch(q);
+  srchInput.focus();
+}
+
+function showHome() {
+  currentQ = '';
+  homeState.hidden    = false;
+  resultsState.hidden = true;
+  emptyState.hidden   = true;
+}
+
+function clearSearch() {
+  srchInput.value = '';
+  showHome();
+  srchInput.focus();
+}
+
+/* ────────── FILTER SHEET ────────── */
+function openSheet() {
+  document.getElementById('sheetOverlay').classList.add('show');
+  document.getElementById('filterSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet() {
+  document.getElementById('sheetOverlay').classList.remove('show');
+  document.getElementById('filterSheet').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// Single-select chips inside sheet
+['areaChips','ratingChips','statusChips','verifiedChips'].forEach(id => {
+  document.getElementById(id)?.querySelectorAll('.sh-chip').forEach(chip => {
+    chip.addEventListener('click', function () {
+      this.closest('.sh-chips').querySelectorAll('.sh-chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});
+
+function resetFilters() {
+  activeFilters = { area:'all', rating:0, status:'all', verified:'all' };
+  ['areaChips','ratingChips','statusChips','verifiedChips'].forEach(id => {
+    const chips = document.getElementById(id)?.querySelectorAll('.sh-chip');
+    chips?.forEach((c,i) => c.classList.toggle('active', i === 0));
+  });
+}
+
+function applyFilters() {
+  const area    = document.querySelector('#areaChips .sh-chip.active')?.dataset.area    || 'all';
+  const rating  = parseFloat(document.querySelector('#ratingChips .sh-chip.active')?.dataset.rating || '0');
+  const status  = document.querySelector('#statusChips .sh-chip.active')?.dataset.status  || 'all';
+  const verified= document.querySelector('#verifiedChips .sh-chip.active')?.dataset.verified || 'all';
+  activeFilters = { area, rating, status, verified };
+  closeSheet();
+  runFilter();
+  // تحديث شكل زر الفلترة
+  const hasFilter = area !== 'all' || rating > 0 || status !== 'all' || verified !== 'all';
+  document.getElementById('filterBtn').classList.toggle('active', hasFilter);
+}
+
+/* ────────── VOICE SEARCH ────────── */
+function startVoiceSearch() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('البحث الصوتي متاح على Chrome', 'err'); return; }
+  const rec = new SR();
+  rec.lang = 'ar-EG';
+  const btn = document.getElementById('micBtn');
+  btn.textContent = '🔴';
+  rec.start();
+  rec.onresult = e => {
+    const q = e.results[0][0].transcript;
+    srchInput.value = q;
+    doSearch(q);
+    btn.textContent = '🎙️';
+  };
+  rec.onerror = () => { btn.textContent = '🎙️'; showToast('تعذّر البحث الصوتي','err'); };
+  rec.onend   = () => { btn.textContent = '🎙️'; };
+}
+
+/* ────────── HELPERS ────────── */
+function goTo(url) { window.location.href = url; }
+
+function showToast(msg, type = 'ok') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+/* ── SW ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(()=>{}));
+}
+</script>
+<script src="js/effects.js"></script>
+</body>
+</html>
